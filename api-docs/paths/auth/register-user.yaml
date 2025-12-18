@@ -1,0 +1,15 @@
+post:
+  summary: User login
+  tags:
+    - Auth
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../_schemas.yaml#/components/RegisterUserReq'
+  responses:
+    '200':
+      description: Register successful
+    '401':
+      description: Invalid credentials

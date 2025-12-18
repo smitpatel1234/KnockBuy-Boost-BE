@@ -1,0 +1,7 @@
+tags:
+  - name: Auth
+    description: Authentication endpoints
+  - name: User 
+    description: User management endpoints
+  - name: Variant
+    description: Variant management endpoints

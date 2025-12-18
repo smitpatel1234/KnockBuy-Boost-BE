@@ -1,0 +1,35 @@
+openapi: 3.0.0
+info:
+  title: E-commerce API
+  description: API Documentation
+  version: 1.0.0
+
+servers:
+  - url: /
+
+paths:
+  $ref: './_paths.yaml'
+
+components:
+  parameters:
+    $ref: './_parameters.yaml'
+  schemas:
+    RegisterUserReq:
+      $ref: './schemas/auth/register-user-req.yaml'
+    LoginUserReq:
+      $ref: './schemas/auth/login-user-req.yaml'
+    UpdateUserReq:
+      $ref: './schemas/user/update-user.yaml'
+    DeleteUserReq:
+      $ref: './schemas/user/delete-user.yaml'
+    CreateVariantPropertyReq:
+      $ref: './schemas/variant/variant-property.yaml'
+    UpdateVariantPropertyReq:
+      $ref: './schemas/variant/update-variant-property.yaml'
+    DeleteVariantPropertyReq:
+      $ref: './schemas/variant/delete-variant-property.yaml'
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

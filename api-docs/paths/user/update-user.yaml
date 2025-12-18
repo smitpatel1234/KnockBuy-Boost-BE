@@ -1,0 +1,15 @@
+put:
+  summary: User update
+  tags:
+    - User
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../_schemas.yaml#/components/UpdateUserReq'
+  responses:
+    '200':
+      description: update successful
+    '401':
+      description: Invalid values

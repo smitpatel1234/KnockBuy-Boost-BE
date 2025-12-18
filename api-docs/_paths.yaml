@@ -1,0 +1,20 @@
+/auth/register:
+  $ref: './paths/auth/register-user.yaml'
+/auth/login:
+  $ref: './paths/auth/login-user.yaml'
+/auth/logout:
+  $ref: './paths/auth/logout-user.yaml'
+/auth/google:
+  $ref: './paths/auth/google-login.yaml'
+/user/update-user:
+  $ref: './paths/user/update-user.yaml'
+/user/delete-user:
+  $ref: './paths/user/delete-user.yaml'
+/variant/create-variant-property:
+  $ref: './paths/variant/create-variant-property.yaml'
+/variant/update-variant-property:
+  $ref: './paths/variant/update-variant-property.yaml'
+/variant/delete-variant-property:
+  $ref: './paths/variant/delete-variant-property.yaml'
+variant/get-all-variant-properties:
+  $ref: './paths/variant/get-all-variant-properties.yaml'

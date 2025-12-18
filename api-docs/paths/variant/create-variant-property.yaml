@@ -1,0 +1,15 @@
+post:
+  summary: Create variant property
+  tags:
+    - Variant
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../_schemas.yaml#/components/CreateVariantPropertyReq'
+  responses:
+    '200':
+      description: Create variant property successful
+    '401':
+      description: Invalid values

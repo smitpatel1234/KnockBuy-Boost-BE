@@ -1,0 +1,18 @@
+components:
+   RegisterUserReq:
+      $ref: 'schemas/auth/register-user-req.yaml'
+   LoginUserReq:
+      $ref: 'schemas/auth/login-user-req.yaml'
+   UpdateUserReq:
+      $ref: 'schemas/user/update-user.yaml'
+   DeleteUserReq:
+      $ref: 'schemas/user/delete-user.yaml'        
+   CreateVariantPropertyReq:
+      $ref: 'schemas/variant/variant-property.yaml'
+   UpdateVariantPropertyReq:
+      $ref: 'schemas/variant/update-variant-property.yaml'
+   DeleteVariantPropertyReq:
+      $ref: 'schemas/variant/delete-variant-property.yaml'   
+
+      
+

@@ -1,0 +1,15 @@
+delete:
+  summary: Variant Property Delete
+  tags:
+    - Variant
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../_schemas.yaml#/components/DeleteVariantPropertyReq'
+  responses:
+    '200':
+      description: delete successful
+    '401':
+      description: Invalid values

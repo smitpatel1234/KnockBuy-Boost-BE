@@ -1,0 +1,9 @@
+type: object
+properties:
+  property_name:
+    type: string
+    example: color
+
+
+required:
+  - property_name

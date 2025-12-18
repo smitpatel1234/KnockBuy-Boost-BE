@@ -1,0 +1,9 @@
+get:
+  summary: User login
+  tags:
+    - Auth
+  responses:
+    '200':
+      description: Logout successful 
+    '401':
+      description: Not logged in

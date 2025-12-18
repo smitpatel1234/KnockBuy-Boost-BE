@@ -1,0 +1,17 @@
+get:
+  summary: Variant Property get All
+  tags:
+    - Variant
+  requestBody:
+    
+  responses:
+    '200':
+      description: fetch successful
+      content:
+        application/json:
+          schema:
+            $ref: '../../_schemas.yaml#/components/UpdateVariantPropertyReq' 
+    '401':
+      description: Invalid values
+
+ 

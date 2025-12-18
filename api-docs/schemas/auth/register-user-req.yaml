@@ -1,0 +1,19 @@
+type: object
+properties:
+  email:
+    type: string
+    example: user@example.com
+  password:
+    type: string
+    example: Password123&
+  username:
+    type: string 
+    example: Johndoe12
+  phone_number:
+    type: number
+    example: 1234567890
+required:
+  - email
+  - password
+  - username
+  - phone_number

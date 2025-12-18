@@ -1,0 +1,28 @@
+type: object
+properties:
+  user_id:
+    type: string
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  email:
+    type: string
+    example: user@example.com
+  password:
+    type: string
+    example: Password123&
+  username:
+    type: string 
+    example: Johndoe12
+  phone_number:
+    type: number
+    example: 1234567890
+  wishlist_name:
+    type: string
+    example: wishlist_name
+required:
+  - id
+  - email
+  - password
+  - username
+  - phone_number
+  - wishlist_name
