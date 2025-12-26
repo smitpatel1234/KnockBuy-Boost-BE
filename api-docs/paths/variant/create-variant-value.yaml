@@ -1,0 +1,21 @@
+post:
+  summary: Create Variant Value
+  tags:
+    - Variant Values
+  security:
+    - BearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../_schemas.yaml#/components/CreateVariantValueReq'
+  responses:
+    '201':
+      description: Variant value created successfully
+    '400':
+      description: Bad request - Invalid input
+    '401':
+      description: Unauthorized - Missing or invalid authentication token
+    '500':
+      description: Internal server error

@@ -1,0 +1,39 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.AddressRepo = void 0;
+const address_1 = require("../orm/entities/address");
+const transaction_1 = require("../helper/transaction");
+const logger_1 = require("../helper/logger");
+exports.AddressRepo = {
+    addAddress: async (entityManager, addAddress) => {
+        return await entityManager.getRepository(address_1.Address).save(addAddress);
+    },
+    deleteAddress: async (entityManager, deleteAddress) => {
+        const address_id = deleteAddress;
+        const res = await entityManager
+            .getRepository(address_1.Address)
+            .softDelete({ address_id: address_id });
+        return (res.affected ?? 0) > 0 ? true : false;
+    },
+    getAllAddressByUserID: async (entityManager, user_id) => {
+        return await entityManager
+            .getRepository(address_1.Address)
+            .find({ where: { user_id: user_id } });
+    },
+    updateAddress: async (entityManager, address) => {
+        logger_1.logger.info(address);
+        const res = await entityManager
+            .getRepository(address_1.Address)
+            .createQueryBuilder("address")
+            .where({ address_id: address.address_id })
+            .update(address)
+            .execute();
+        return (res.affected ?? 0) > 0 ? true : false;
+    },
+    getAddressByID: async (entityManager, address_id) => {
+        return await entityManager
+            .getRepository(address_1.Address)
+            .findOneOrFail({ where: { address_id: address_id } });
+    },
+    wrapTransaction: transaction_1.wrapTransaction,
+};

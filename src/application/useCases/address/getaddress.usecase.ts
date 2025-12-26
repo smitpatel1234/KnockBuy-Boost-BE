@@ -1,0 +1,8 @@
+import { EntityManager } from "typeorm";
+import { AddressRepoPort } from "../../port/address-repo.port";
+import { ApplicationError,ApplicationErrorType } from "../../../infrastructure/helper/middleware/GlobelErrorHandler";
+export const get_address = async (entityManager:EntityManager ,AddressRepo: AddressRepoPort ,user_id: string) => {
+    const address = await AddressRepo.getAddressByID(entityManager,user_id);
+    if(!address) throw new ApplicationError(ApplicationErrorType.NOT_FOUND,"Address not found");
+    return address;
+};

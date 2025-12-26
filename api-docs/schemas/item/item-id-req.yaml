@@ -1,0 +1,7 @@
+type: object
+properties:
+  item_id:
+    type: string
+    format: uuid
+required:
+  - item_id

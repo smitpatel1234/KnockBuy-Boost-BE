@@ -8,7 +8,7 @@ export class Order {
 	@PrimaryGeneratedColumn('uuid')
 	order_id!: string
 
-	@ManyToOne(() => Address) //many address can map to one order
+	@ManyToOne(() => Address)
 	@JoinColumn({ name: 'address_id' })
 	address!: Address
 
@@ -18,12 +18,9 @@ export class Order {
 	@Column({ type: 'varchar', nullable: true, length: 50 })
 	status?: string
 
-	@ManyToOne(() => User) // many user can map to one order
+	@ManyToOne(() => User)
 	@JoinColumn({ name: 'user_id' })
 	user!: User
-
-	@Column({ type: 'decimal', nullable: true, precision: 12, scale: 2 })
-	TotalAmount?: number
 
 	@Column({ type: 'timestamp', nullable: true })
 	invoice_date?: Date
@@ -43,7 +40,7 @@ export class Order {
 	@Column({ type: 'varchar', nullable: true, length: 50 })
 	payment_method?: string
 
-	@OneToMany(() => OrderItems, oi => oi.order) 
+	@OneToMany(() => OrderItems, oi => oi.order)
 	order_items?: OrderItems[]
 }
 

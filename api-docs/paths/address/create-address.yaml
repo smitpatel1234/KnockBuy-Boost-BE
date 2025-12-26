@@ -1,0 +1,15 @@
+post:
+  summary: Create Address 
+  tags:
+    - Address
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../_schemas.yaml#/components/AddAddressReq'
+  responses:
+    '201':
+      description: Address created successfully
+    '500':
+      description: Server error

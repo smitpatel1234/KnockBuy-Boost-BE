@@ -20,7 +20,7 @@ properties:
     type: string
     example: wishlist_name
 required:
-  - id
+  - user_id
   - email
   - password
   - username

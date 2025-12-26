@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.deleteVariantValueController = exports.updateVariantValueController = exports.createVariantValueController = exports.getAllVariantValuesController = void 0;
+var getallvariantvalues_controller_1 = require("./getallvariantvalues.controller");
+Object.defineProperty(exports, "getAllVariantValuesController", { enumerable: true, get: function () { return getallvariantvalues_controller_1.getAllVariantValuesController; } });
+var createvariantvalue_controller_1 = require("./createvariantvalue.controller");
+Object.defineProperty(exports, "createVariantValueController", { enumerable: true, get: function () { return createvariantvalue_controller_1.createVariantValueController; } });
+var updatevariantvalue_controller_1 = require("./updatevariantvalue.controller");
+Object.defineProperty(exports, "updateVariantValueController", { enumerable: true, get: function () { return updatevariantvalue_controller_1.updateVariantValueController; } });
+var deletevariantvalue_controller_1 = require("./deletevariantvalue.controller");
+Object.defineProperty(exports, "deleteVariantValueController", { enumerable: true, get: function () { return deletevariantvalue_controller_1.deleteVariantValueController; } });

@@ -1,0 +1,22 @@
+type: object
+properties:
+  item_id:
+    type: string
+    format: uuid
+  item_name:
+    type: string
+  item_price:
+    type: number
+  category_id:
+    type: string
+    format: uuid
+  rating:
+    type: number
+  sku:
+    type: string
+  stock:
+    type: integer
+  description:
+    type: string
+required:
+  - item_id

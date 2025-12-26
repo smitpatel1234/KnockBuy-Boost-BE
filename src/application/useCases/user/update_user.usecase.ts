@@ -1,7 +1,7 @@
 import { EntityManager } from "typeorm";
 import { UserAndCredentialsRepoPort}  from "../../../application/port/User-repo.port";
 import { UserProfile } from "../../../domain/models/User.models";
-
+import { ApplicationError,ApplicationErrorType } from "../../../infrastructure/helper/middleware/GlobelErrorHandler";
 
 export const update_user = async (entitiesmanager: EntityManager, userRepo: UserAndCredentialsRepoPort, userProfile: UserProfile): Promise<boolean> => {
     const userCredentials = { 
@@ -22,7 +22,7 @@ export const update_user = async (entitiesmanager: EntityManager, userRepo: User
            error.push('Phone number already exists');
         }
         if (error.length > 0) {
-            throw new Error(error.join(', '));
+            throw new ApplicationError(ApplicationErrorType.BAD_REQUEST,error.join(', '));
         }
     return await userRepo.updateUser(entitiesmanager, userProfile);
 };

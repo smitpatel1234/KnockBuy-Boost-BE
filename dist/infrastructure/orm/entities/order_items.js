@@ -19,7 +19,7 @@ exports.OrderItems = OrderItems;
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
     __metadata("design:type", String)
-], OrderItems.prototype, "id", void 0);
+], OrderItems.prototype, "order_items_id", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => order_1.Order, o => o.order_items),
     (0, typeorm_1.JoinColumn)({ name: 'order_id' }),

@@ -1,0 +1,30 @@
+type: object
+properties:
+  item_name:
+    type: string
+    example: "Running Shoes"
+  item_price:
+    type: number
+    example: 99.99
+  category_id:
+    type: string
+    format: uuid
+    example: "123e4567-e89b-12d3-a456-426614174000"
+  rating:
+    type: number
+    example: 4.5
+  sku:
+    type: string
+    example: "RUN-SHOE-001"
+  stock:
+    type: integer
+    example: 100
+  description:
+    type: string
+    example: "High quality running shoes"
+required:
+  - item_name
+  - item_price
+  - category_id
+  - stock
+  - description

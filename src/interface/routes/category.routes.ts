@@ -1,0 +1,12 @@
+import express from "express";
+import { authVerification } from "../../infrastructure/helper/middleware/authvarification";
+import { validateDetails } from "../../infrastructure/helper/validator";
+import { AddCategorySchema, UpdateCategorySchema, DeleteCategorySchema } from "../../domain/schemas/category";
+import { CategoryRepo } from "../../infrastructure/repositories/category.repo";
+import { createCategoryController, deleteCategoryController, getALLCategoryController, updateCategoryController } from "../controllers/category";
+const router = express.Router();
+router.get('/getAll-categories', getALLCategoryController(CategoryRepo));
+router.post('/create-category', authVerification(), validateDetails(AddCategorySchema), createCategoryController(CategoryRepo));
+router.put('/update-category', authVerification(), validateDetails(UpdateCategorySchema), updateCategoryController(CategoryRepo));
+router.delete('/delete-category', authVerification(), validateDetails(DeleteCategorySchema), deleteCategoryController(CategoryRepo));
+export default router;

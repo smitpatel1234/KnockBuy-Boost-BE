@@ -1,0 +1,15 @@
+put:
+  summary: Update item
+  tags:
+    - Item
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../_schemas.yaml#/components/UpdateItemReq'
+  responses:
+    '200':
+      description: Item updated successfully
+    '500':
+      description: Server error

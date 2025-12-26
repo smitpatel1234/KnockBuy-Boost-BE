@@ -8,11 +8,11 @@ export class ItemCart {
 	@PrimaryGeneratedColumn('uuid')
 	cart_item_id!: string
 
-	@ManyToOne(() => Item)
-	@JoinColumn({ name: 'item_id' })
+	@ManyToOne(() => Item,{onDelete:"CASCADE",nullable:false})
+	@JoinColumn({ name: 'item_id' } )
 	item!: Item
-
-	@ManyToOne(() => User)
+	
+    @ManyToOne(() => User,{onDelete:"CASCADE",nullable:false})
 	@JoinColumn({ name: 'user_id' })
 	user!: User
 

@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getAddressController = exports.getALLAddressController = exports.deleteAddressController = exports.updateAddressController = exports.createAddressController = void 0;
+var createaddress_controller_1 = require("./createaddress.controller");
+Object.defineProperty(exports, "createAddressController", { enumerable: true, get: function () { return createaddress_controller_1.createAddressController; } });
+var updateaddress_controller_1 = require("./updateaddress.controller");
+Object.defineProperty(exports, "updateAddressController", { enumerable: true, get: function () { return updateaddress_controller_1.updateAddressController; } });
+var deleteaddress_controller_1 = require("./deleteaddress.controller");
+Object.defineProperty(exports, "deleteAddressController", { enumerable: true, get: function () { return deleteaddress_controller_1.deleteAddressController; } });
+var getalladdressByUserId_controller_1 = require("./getalladdressByUserId.controller");
+Object.defineProperty(exports, "getALLAddressController", { enumerable: true, get: function () { return getalladdressByUserId_controller_1.getALLAddressController; } });
+var getaddress_controller_1 = require("./getaddress.controller");
+Object.defineProperty(exports, "getAddressController", { enumerable: true, get: function () { return getaddress_controller_1.getAddressController; } });

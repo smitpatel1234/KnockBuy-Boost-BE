@@ -12,7 +12,38 @@ components:
    UpdateVariantPropertyReq:
       $ref: 'schemas/variant/update-variant-property.yaml'
    DeleteVariantPropertyReq:
-      $ref: 'schemas/variant/delete-variant-property.yaml'   
-
-      
-
+      $ref: 'schemas/variant/delete-variant-property.yaml'
+   CreateVariantValueReq:
+      $ref: 'schemas/variant/variant-value-req.yaml'
+   UpdateVariantValueReq:
+      $ref: 'schemas/variant/update-variant-value.yaml'
+   DeleteVariantValueReq:
+      $ref: 'schemas/variant/delete-variant-value.yaml'   
+   GetVariantValuesWithProperty:
+      $ref: 'schemas/variant/variant-value-with-property.yaml'
+   CreateItemVariantValueMappingReq:
+      $ref: 'schemas/variant/create-item-variant-value-mapping.yaml'
+   DeleteItemVariantValueMappingReq:
+      $ref: 'schemas/variant/delete-item-variant-value-mapping.yaml'
+   GetAllCategoryRes:
+      $ref: 'schemas/category/getAll-categories.yaml'
+   CreateCategoryReq:
+      $ref: 'schemas/category/create-category.yaml'
+   UpdateCategoryReq:
+      $ref: 'schemas/category/update-category.yaml'
+   DeleteCategoryReq:
+      $ref: 'schemas/category/delete-category.yaml'
+   AddItemReq:
+      $ref: 'schemas/item/create-item.yaml'
+   UpdateItemReq:
+      $ref: 'schemas/item/update-item.yaml'
+   ItemRes:
+      $ref: 'schemas/item/item-resp.yaml'
+   ItemIdReq:
+      $ref: 'schemas/item/item-id-req.yaml'
+   AddAddressReq:
+      $ref: 'schemas/address/address-req.yaml'
+   UpdateAddressReq:
+      $ref: 'schemas/address/update-address-req.yaml'
+   DeleteAddressReq:
+      $ref: 'schemas/address/delete-address-req.yaml'

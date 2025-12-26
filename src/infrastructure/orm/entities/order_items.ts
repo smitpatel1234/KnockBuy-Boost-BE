@@ -1,11 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn ,Unique} from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, Unique } from "typeorm";
 import { Order } from "./order";
 import { Item } from "./item";
-@Unique(['order','item'])
+@Unique(['order', 'item'])
 @Entity()
 export class OrderItems {
 	@PrimaryGeneratedColumn('uuid')
-	id!: string
+	order_items_id!: string
 
 	@ManyToOne(() => Order, o => o.order_items)
 	@JoinColumn({ name: 'order_id' })

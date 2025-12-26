@@ -20,12 +20,12 @@ __decorate([
     __metadata("design:type", String)
 ], VariantCollection.prototype, "variant_collection_id", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => item_1.Item),
+    (0, typeorm_1.ManyToOne)(() => item_1.Item, { nullable: false, onDelete: "CASCADE" }),
     (0, typeorm_1.JoinColumn)({ name: 'item_id' }),
     __metadata("design:type", item_1.Item)
 ], VariantCollection.prototype, "item_id", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => item_1.Item),
+    (0, typeorm_1.ManyToOne)(() => item_1.Item, { nullable: true, onDelete: "SET NULL" }),
     (0, typeorm_1.JoinColumn)({ name: 'variant_item_id' }),
     __metadata("design:type", item_1.Item)
 ], VariantCollection.prototype, "variant_item_id", void 0);

@@ -1,0 +1,19 @@
+get:
+  summary: Category get All
+  tags:
+    - Category
+  requestBody:
+    
+  responses:
+    '200':
+      description: fetch successful
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../_schemas.yaml#/components/GetAllCategoryRes' 
+    '401':
+      description: Invalid values
+
+ 

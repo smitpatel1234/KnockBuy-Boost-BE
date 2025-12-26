@@ -1,0 +1,16 @@
+type: object
+properties:
+  variantValue_id:
+    type: string
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  variant_value:
+    type: string
+    example: "Red"
+  variantProperty_id:
+    type: string
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174111
+required:
+  - variant_value
+  - variantProperty_id

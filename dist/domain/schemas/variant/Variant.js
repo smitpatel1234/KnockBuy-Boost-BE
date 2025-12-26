@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.VarientPropWithCollectionSchema = exports.VarientWithValuesSchema = exports.AddVarientPropWithCollectionSchema = exports.AddVarientWithValuesSchema = exports.VarientPropertysSchema = exports.AddVarientPropertysSchema = exports.PropertyNameField = void 0;
+exports.ItemVariantValueMappingSchema = exports.VarientPropWithCollectionSchema = exports.VarientWithValuesSchema = exports.AddVarientPropWithCollectionSchema = exports.ItemVariantValueMappingId = exports.VarientValuesID = exports.AddVarientWithValuesSchema = exports.VarientPropertysID = exports.VarientPropertysSchema = exports.AddVarientPropertysSchema = exports.PropertyNameField = void 0;
 const user_1 = require("../user");
 const zod_1 = require("zod");
 exports.PropertyNameField = zod_1.z.string().max(40).min(1);
@@ -11,10 +11,19 @@ exports.VarientPropertysSchema = zod_1.z.object({
     variantProperty_id: user_1.IdField,
     property_name: exports.PropertyNameField,
 });
+exports.VarientPropertysID = zod_1.z.object({
+    variantProperty_id: user_1.IdField
+});
 exports.AddVarientWithValuesSchema = zod_1.z.object({
     variant_value: zod_1.z.string().max(100).min(1),
-    variant_id: user_1.IdField,
+    variantProperty_id: user_1.IdField,
 });
+exports.VarientValuesID = zod_1.z.object({
+    variantValue_id: user_1.IdField
+});
+exports.ItemVariantValueMappingId = {
+    item_variantvalue_mapping_id: user_1.IdField,
+};
 exports.AddVarientPropWithCollectionSchema = zod_1.z.object({
     item_id: user_1.IdField,
     varient_item_Id: user_1.IdField,
@@ -29,3 +38,7 @@ exports.VarientPropWithCollectionSchema = zod_1.z.object({
     item_id: user_1.IdField,
     varient_item_Id: user_1.IdField,
 });
+exports.ItemVariantValueMappingSchema = {
+    item_id: user_1.IdField,
+    variantValue_id: user_1.IdField
+};

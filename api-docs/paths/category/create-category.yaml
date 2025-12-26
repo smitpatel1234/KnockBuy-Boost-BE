@@ -1,0 +1,15 @@
+post:
+  summary: Create Category
+  tags:
+    - Category
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../_schemas.yaml#/components/CreateCategoryReq'
+  responses:
+    '200':
+      description: Create Category successful
+    '401':
+      description: Invalid values

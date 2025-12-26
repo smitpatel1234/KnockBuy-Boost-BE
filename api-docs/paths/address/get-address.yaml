@@ -1,0 +1,21 @@
+get:
+  summary: Get Address
+  tags:
+    - Address
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../_schemas.yaml#/components/DeleteAddressReq'
+  responses:
+    '200':
+      description: Address details
+      content:
+        application/json:
+          schema:
+            $ref: '../../_schemas.yaml#/components/UpdateAddressReq'
+    '400':
+      description: Bad Request (Missing ID/Slug)
+    '404':
+      description: Not Found

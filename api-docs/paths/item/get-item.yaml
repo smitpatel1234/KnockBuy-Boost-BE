@@ -1,0 +1,27 @@
+get:
+  summary: Get item by ID or Slug
+  tags:
+    - Item
+  parameters:
+    - in: query
+      name: id
+      schema:
+        type: string
+        format: uuid
+      description: Item ID
+    - in: query
+      name: slug
+      schema:
+        type: string
+      description: Item Slug
+  responses:
+    '200':
+      description: Item details
+      content:
+        application/json:
+          schema:
+            $ref: '../../_schemas.yaml#/components/ItemRes'
+    '400':
+      description: Bad Request (Missing ID/Slug)
+    '404':
+      description: Not Found

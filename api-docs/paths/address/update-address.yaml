@@ -1,0 +1,15 @@
+put:
+  summary: Update Address
+  tags:
+    - Address
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../_schemas.yaml#/components/UpdateAddressReq'
+  responses:
+    '200':
+      description: Address updated successfully
+    '500':
+      description: Server error

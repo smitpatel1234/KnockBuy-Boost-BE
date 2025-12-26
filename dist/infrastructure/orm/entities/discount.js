@@ -11,7 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Discount = void 0;
 const typeorm_1 = require("typeorm");
-const item_1 = require("./item");
 let Discount = class Discount {
 };
 exports.Discount = Discount;
@@ -20,21 +19,33 @@ __decorate([
     __metadata("design:type", String)
 ], Discount.prototype, "discount_id", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => item_1.Item),
-    __metadata("design:type", item_1.Item)
-], Discount.prototype, "item", void 0);
+    (0, typeorm_1.Column)({ type: 'varchar', nullable: false, length: 255 }),
+    __metadata("design:type", String)
+], Discount.prototype, "discount_name", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', nullable: false, length: 255 }),
+    __metadata("design:type", String)
+], Discount.prototype, "discount_code", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'decimal', nullable: true, precision: 2, scale: 2 }),
+    __metadata("design:type", String)
+], Discount.prototype, "discount_type", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'decimal', nullable: true, precision: 2, scale: 2 }),
     __metadata("design:type", Number)
-], Discount.prototype, "discount_percentage", void 0);
+], Discount.prototype, "discount_amount", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', nullable: true, length: 255 }),
+    __metadata("design:type", String)
+], Discount.prototype, "duration", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', nullable: true, length: 255 }),
+    __metadata("design:type", String)
+], Discount.prototype, "description", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'timestamp', nullable: true }),
     __metadata("design:type", Date)
 ], Discount.prototype, "discount_start_date", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'timestamp', nullable: true }),
-    __metadata("design:type", Date)
-], Discount.prototype, "discount_end_date", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'boolean', nullable: true, default: false }),
     __metadata("design:type", Boolean)

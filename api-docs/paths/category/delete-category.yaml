@@ -1,0 +1,15 @@
+delete:
+  summary: Category Delete
+  tags:
+    - Category
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../_schemas.yaml#/components/DeleteCategoryReq'
+  responses:
+    '200':
+      description: delete successful
+    '401':
+      description: Invalid values

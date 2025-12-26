@@ -21,12 +21,12 @@ __decorate([
     __metadata("design:type", String)
 ], ItemCart.prototype, "cart_item_id", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => item_1.Item),
+    (0, typeorm_1.ManyToOne)(() => item_1.Item, { onDelete: "CASCADE", nullable: false }),
     (0, typeorm_1.JoinColumn)({ name: 'item_id' }),
     __metadata("design:type", item_1.Item)
 ], ItemCart.prototype, "item", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => user_1.User),
+    (0, typeorm_1.ManyToOne)(() => user_1.User, { onDelete: "CASCADE", nullable: false }),
     (0, typeorm_1.JoinColumn)({ name: 'user_id' }),
     __metadata("design:type", user_1.User)
 ], ItemCart.prototype, "user", void 0);

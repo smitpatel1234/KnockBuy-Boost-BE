@@ -12,6 +12,7 @@ export const Envvar={
     database: ENV.DB_NAME,
     PassWordSalt: ENV.PassWordSalt
 }
+console.log("Envvar >>>>",Envvar);
 export const AppDataSource = new DataSource({
      type: 'mysql' ,
     host: Envvar.dbhost,
@@ -20,8 +21,8 @@ export const AppDataSource = new DataSource({
     password: Envvar.dbpassword,
     database: Envvar.database,
     synchronize: true,
-    dropSchema:true,
-    logging:true,
+    // dropSchema:true,
+    // logging:true,
     timezone: 'Z',
     entities: [__dirname + '/../entities/*{.ts,.js}'],
 })

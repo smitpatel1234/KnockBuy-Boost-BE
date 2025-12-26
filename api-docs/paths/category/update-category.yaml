@@ -1,0 +1,15 @@
+put:
+  summary: update Category
+  tags:
+    - Category
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../_schemas.yaml#/components/UpdateCategoryReq'
+  responses:
+    '200':
+      description: update Category successful
+    '401':
+      description: Invalid values

@@ -48,7 +48,7 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "wishlist_name", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => address_1.Address, (address) => address.user),
+    (0, typeorm_1.OneToMany)(() => address_1.Address, (address) => address.user_id),
     __metadata("design:type", Array)
 ], User.prototype, "addresses", void 0);
 __decorate([
@@ -63,6 +63,10 @@ __decorate([
     (0, typeorm_1.Column)({ type: 'boolean', default: false }),
     __metadata("design:type", Boolean)
 ], User.prototype, "refresh_is_revoked", void 0);
+__decorate([
+    (0, typeorm_1.DeleteDateColumn)(),
+    __metadata("design:type", Date)
+], User.prototype, "deletedAt", void 0);
 exports.User = User = __decorate([
     (0, typeorm_1.Entity)()
 ], User);

@@ -1,0 +1,15 @@
+get:
+  summary: Get all items
+  tags:
+    - Item
+  responses:
+    '200':
+      description: List of items
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../_schemas.yaml#/components/ItemRes'
+    '500':
+      description: Server error

@@ -1,26 +1,21 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authVerification = void 0;
-const constants_1 = require("../../config/constants");
 const TokenGenerator_1 = require("../../../infrastructure/helper/TokenGenerator");
-const displaymessage_1 = require("../displaymessage");
+const GlobelErrorHandler_1 = require("./GlobelErrorHandler");
+const logger_1 = require("../logger");
 const authVerification = () => {
     return async (req, res, next) => {
         const token = req.cookies.accessToken;
         if (!token) {
-            return (0, displaymessage_1.displaymessage)(constants_1.constants.Code.UNAUTHORIZED, res, ["Access token missing"]);
+            throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.UNAUTHORIZED, "Invalid access token");
         }
-        (0, TokenGenerator_1.verifyToken)(token).then((payload) => {
-            if (payload) {
-                req.user = payload;
-                next();
-            }
-            else {
-                return (0, displaymessage_1.displaymessage)(constants_1.constants.Code.UNAUTHORIZED, res, ["Invalid access token"]);
-            }
-        }).catch(() => {
-            return (0, displaymessage_1.displaymessage)(constants_1.constants.Code.UNAUTHORIZED, res, ["Invalid access token"]);
-        });
+        const payload = await (0, TokenGenerator_1.verifyToken)(token);
+        if (payload) {
+            req.body = { ...req.body, user: payload };
+            logger_1.logger.info(req.cookies.accessToken, req.body);
+            next();
+        }
     };
 };
 exports.authVerification = authVerification;

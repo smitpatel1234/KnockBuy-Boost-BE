@@ -1,27 +1,99 @@
 import express from "express";
 import { authVerification } from "../../infrastructure/helper/middleware/authvarification";
-import { validateDetails } from "../../infrastructure/helper/validator ";
+import { validateDetails } from "../../infrastructure/helper/validator";
 import {
+  VarientPropertysID,
   AddVarientWithValuesSchema,
   AddVarientPropertysSchema,
+  ItemVariantValueMappingSchema,
+  ItemVariantValueMappingId,
   AddVarientPropWithCollectionSchema,
   VarientPropertysSchema,
   VarientWithValuesSchema,
+  VarientValuesID,
   VarientPropWithCollectionSchema,
-  
 } from "../../domain/schemas/variant/Variant";
 
-import {
-  createVariantPropController,
-  UpdateVariantPropController,
-  deleteVariantPropController,
-getAllVariantPropertiesController
-} from "../controllers/varient/variantprop.controller";
 import { VariantRepo } from "../../infrastructure/repositories/variant.repo";
 
-    const router = express.Router();
-    router.get('/get-all-variant-properties', authVerification() ,getAllVariantPropertiesController(VariantRepo) );
-    router.post('/create-variant-property', authVerification() ,validateDetails(AddVarientPropertysSchema) ,createVariantPropController(VariantRepo) );
-    router.put('/update-variant-property', authVerification() ,validateDetails(VarientPropertysSchema) ,UpdateVariantPropController(VariantRepo) );
-    router.delete('/delete-variant-property', authVerification(),validateDetails(VarientPropertysSchema) ,deleteVariantPropController(VariantRepo) );
+import { UpdateVariantPropController } from "../controllers/variantProperys/updatevariantprop.controller";
+import { deleteVariantPropController } from "../controllers/variantProperys/deletevariantprop.controller";
+import { getAllVariantPropertiesController } from "../controllers/variantProperys/getallvariantprop.controller";
+import { createVariantPropController } from "../controllers/variantProperys/createvariantprop.controller";
+
+import {
+  createVariantValueController,
+  updateVariantValueController,
+  deleteVariantValueController,
+  getAllVariantValuesController,
+} from "../controllers/variantValues/index";
+
+import { createItemVariantValueMapping_Controller, deleteItemVariantValueMapping_Controller } from "../controllers/itemvariantvaluemapping/index";
+const router = express.Router();
+
+router.get(
+  "/get-all-variant-properties",
+  authVerification(),
+  getAllVariantPropertiesController(VariantRepo)
+);
+router.post(
+  "/create-variant-property",
+  authVerification(),
+  validateDetails(AddVarientPropertysSchema),
+  createVariantPropController(VariantRepo)
+);
+router.put(
+  "/update-variant-property",
+  authVerification(),
+  validateDetails(VarientPropertysSchema),
+  UpdateVariantPropController(VariantRepo)
+);
+router.delete(
+  "/delete-variant-property",
+  authVerification(),
+  validateDetails(VarientPropertysID),
+  deleteVariantPropController(VariantRepo)
+);
+
+router.get(
+  "/get-all-variant-values",
+  authVerification(),
+  getAllVariantValuesController(VariantRepo)
+);
+router.post(
+  "/create-variant-value",
+  authVerification(),
+  validateDetails(AddVarientWithValuesSchema),
+  createVariantValueController(VariantRepo)
+);
+router.put(
+  "/update-variant-value",
+  authVerification(),
+  validateDetails(VarientWithValuesSchema),
+  updateVariantValueController(VariantRepo)
+);
+router.delete(
+  "/delete-variant-value",
+  authVerification(),
+  validateDetails(VarientValuesID),
+  deleteVariantValueController(VariantRepo)
+);
+
+
+router.post(
+  "/create-item-variant-value-mapping",
+  authVerification(),
+  validateDetails(ItemVariantValueMappingSchema),
+  createItemVariantValueMapping_Controller(VariantRepo)
+);
+router.delete(
+  "/delete-item-variant-value-mapping",
+  authVerification(),
+  validateDetails(ItemVariantValueMappingId),
+  deleteItemVariantValueMapping_Controller(VariantRepo)
+);
+
+
+
+
 export default router;

@@ -1,11 +1,10 @@
-import { UUID } from "crypto";
-import { Entity, Column, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn , OneToMany } from "typeorm";
+import { Entity, Column, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn, OneToMany ,DeleteDateColumn} from "typeorm";
 import { Address } from "./address";
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  user_id!: UUID;
+  user_id!: string;
 
   @Column({ type: "varchar", unique: true, nullable: false, length: 50 })
   username!: string;
@@ -28,10 +27,9 @@ export class User {
   @Column({ type: "varchar", length: 20, nullable: true })
   wishlist_name!: string;
 
-  @OneToMany(() => Address, (address) => address.user)
-  addresses!: Address[];
+  @OneToMany(() => Address, (address) => address.user_id)
+  addresses!: Address[] | string[];
 
-  // Refresh token fields merged into User model
   @Column({ type: 'text', nullable: true })
   refresh_token?: string | null;
 
@@ -40,4 +38,7 @@ export class User {
 
   @Column({ type: 'boolean', default: false })
   refresh_is_revoked?: boolean;
+  @DeleteDateColumn()
+  deletedAt?: Date; 
+  
 }

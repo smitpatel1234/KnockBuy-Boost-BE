@@ -1,0 +1,19 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const authvarification_1 = require("../../infrastructure/helper/middleware/authvarification");
+const validator_1 = require("../../infrastructure/helper/validator");
+const item_1 = require("../../domain/schemas/item");
+const item_repo_1 = require("../../infrastructure/repositories/item.repo");
+const variant_repo_1 = require("../../infrastructure/repositories/variant.repo");
+const item_2 = require("../controllers/item");
+const router = express_1.default.Router();
+router.post('/create-item', (0, authvarification_1.authVerification)(), (0, validator_1.validateDetails)(item_1.AddItemSchema), (0, item_2.createItemController)(item_repo_1.ItemRepo));
+router.put('/update-item', (0, authvarification_1.authVerification)(), (0, validator_1.validateDetails)(item_1.UpdateItemSchema), (0, item_2.updateItemController)(item_repo_1.ItemRepo));
+router.delete('/delete-item', (0, authvarification_1.authVerification)(), (0, validator_1.validateDetails)(item_1.ItemIdSchema), (0, item_2.deleteItemController)(item_repo_1.ItemRepo));
+router.get('/get-item', (0, item_2.getItemController)(item_repo_1.ItemRepo, variant_repo_1.VariantRepo));
+router.get('/get-all-items', (0, item_2.getAllItemsController)(item_repo_1.ItemRepo));
+exports.default = router;

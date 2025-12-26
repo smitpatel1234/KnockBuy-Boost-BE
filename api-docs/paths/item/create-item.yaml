@@ -1,0 +1,15 @@
+post:
+  summary: Create new item
+  tags:
+    - Item
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../_schemas.yaml#/components/AddItemReq'
+  responses:
+    '201':
+      description: Item created successfully
+    '500':
+      description: Server error

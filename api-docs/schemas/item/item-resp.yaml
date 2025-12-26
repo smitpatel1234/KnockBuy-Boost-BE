@@ -1,0 +1,24 @@
+type: object
+properties:
+  item_id:
+    type: string
+    format: uuid
+  slug:
+    type: string
+  item_name:
+    type: string
+  item_price:
+    type: number
+  category_id:
+    type: string
+    format: uuid
+  category_name:
+    type: string
+  rating:
+    type: number
+  sku:
+    type: string
+  stock:
+    type: integer
+  description:
+    type: string

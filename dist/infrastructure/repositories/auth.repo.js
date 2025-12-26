@@ -25,5 +25,11 @@ exports.AuthRepo = {
             .getRepository(user_1.User)
             .update({ user_id: id }, { refresh_token: null });
     },
+    findRefreshTokenHash: async (t, id) => {
+        const user = await t
+            .getRepository(user_1.User)
+            .findOne({ where: { user_id: id } });
+        return user?.refresh_token ? user.refresh_token : null;
+    },
     wrapTransaction: transaction_1.wrapTransaction,
 };

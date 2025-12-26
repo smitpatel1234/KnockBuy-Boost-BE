@@ -1,20 +1,22 @@
 import { Response } from "express";
+import { StatusCodes } from "../config/constants";
 export const displaymessage= (
-    message:any,
-    res:Response,
-    errors?:any,
-    data?:any
-    
+    StatusCodes:number,
+    res:Response,   
+    message?:string | string[],
+    data?:unknown
 )=>{
-        if(data){    
-            return res.status(message.code).json(data);
-        }
-     if(errors){
-        const messages=errors.map((error:any)=>{
-                return  error.message
-        })
-        return res.status(message.code).json(messages);
-     }
-              return res.status(message.code).json(message.message);
-
+    res.status(StatusCodes).json({message,data});
 }
+
+export const successmessage = (
+    res:Response,   
+    message?:string,
+    data?:unknown
+)=>{
+   if(message)
+    return displaymessage(StatusCodes.OK, res, message, data);
+   return displaymessage(StatusCodes.OK, res, "Request is successful", data);
+   
+}
+

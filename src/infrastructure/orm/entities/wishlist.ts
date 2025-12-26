@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn,Unique } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, Unique } from "typeorm";
 import { User } from "./user";
 import { Item } from "./item";
 @Unique(['user', 'item'])
@@ -7,11 +7,11 @@ export class Wishlist {
 	@PrimaryGeneratedColumn('uuid')
 	wish_list_id!: string
 
-	@ManyToOne(() => User)
+	@ManyToOne(() => User,{ nullable: false ,onDelete:"CASCADE"})
 	@JoinColumn({ name: 'user_id' })
 	user!: User
 
-	@ManyToOne(() => Item)
+	@ManyToOne(() => Item,{ nullable: false ,onDelete:"CASCADE"})
 	@JoinColumn({ name: 'item_id' })
 	item!: Item
 }

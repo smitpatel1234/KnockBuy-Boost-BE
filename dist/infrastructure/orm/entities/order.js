@@ -22,8 +22,7 @@ __decorate([
     __metadata("design:type", String)
 ], Order.prototype, "order_id", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => address_1.Address) //many address can map to one order
-    ,
+    (0, typeorm_1.ManyToOne)(() => address_1.Address),
     (0, typeorm_1.JoinColumn)({ name: 'address_id' }),
     __metadata("design:type", address_1.Address)
 ], Order.prototype, "address", void 0);
@@ -36,15 +35,10 @@ __decorate([
     __metadata("design:type", String)
 ], Order.prototype, "status", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => user_1.User) // many user can map to one order
-    ,
+    (0, typeorm_1.ManyToOne)(() => user_1.User),
     (0, typeorm_1.JoinColumn)({ name: 'user_id' }),
     __metadata("design:type", user_1.User)
 ], Order.prototype, "user", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'decimal', nullable: true, precision: 12, scale: 2 }),
-    __metadata("design:type", Number)
-], Order.prototype, "TotalAmount", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'timestamp', nullable: true }),
     __metadata("design:type", Date)

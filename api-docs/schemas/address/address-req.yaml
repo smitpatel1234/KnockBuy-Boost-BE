@@ -1,0 +1,31 @@
+type: object
+properties:
+
+  address_line1:
+    type: string  
+    example: "afkldlfa jlkfa sd fkak fakl"
+  address_line2:
+    type: string
+    example: "jjdflkaj fka fakld fka f "
+  city:
+    type: string
+    example: "Halol"
+  state:
+    type: string
+    example: "Gujarat"
+  country:
+    type: string
+    example: "India"
+  pincode:
+    type: number
+    example: 123456
+
+
+required:
+    - address_id
+    - address_line2
+    - address_line1
+    - city
+    - state
+    - country
+    - pincode

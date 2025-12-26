@@ -24,7 +24,7 @@ __decorate([
     __metadata("design:type", String)
 ], VariantValues.prototype, "variant_value", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => variantPropertys_1.VariantPropertys, vp => vp.variant_property_values),
+    (0, typeorm_1.ManyToOne)(() => variantPropertys_1.VariantPropertys, vp => vp.variant_property_values, { onDelete: "CASCADE", nullable: false }),
     (0, typeorm_1.JoinColumn)({ name: 'variant_property_id', referencedColumnName: 'variantProperty_id' }),
     __metadata("design:type", variantPropertys_1.VariantPropertys)
 ], VariantValues.prototype, "variantProperty", void 0);

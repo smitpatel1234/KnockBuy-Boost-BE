@@ -16,5 +16,47 @@
   $ref: './paths/variant/update-variant-property.yaml'
 /variant/delete-variant-property:
   $ref: './paths/variant/delete-variant-property.yaml'
-variant/get-all-variant-properties:
+/variant/get-all-variant-properties:
   $ref: './paths/variant/get-all-variant-properties.yaml'
+/variant/get-all-variant-values:
+  $ref: './paths/variant/get-all-variant-values.yaml'
+/variant/create-variant-value:
+  $ref: './paths/variant/create-variant-value.yaml'
+/variant/update-variant-value:
+  $ref: './paths/variant/update-variant-value.yaml'
+/variant/delete-variant-value:
+  $ref: './paths/variant/delete-variant-value.yaml'
+/variant/create-item-variant-value-mapping:
+  $ref: './paths/variant/create-item-variant-value-mapping.yaml'
+/variant/delete-item-variant-value-mapping:
+  $ref: './paths/variant/delete-item-variant-value-mapping.yaml'
+/upload:
+  $ref: './paths/upload/upload.yaml'
+/category/create-category:
+  $ref: './paths/category/create-category.yaml'
+/category/update-category:
+  $ref: './paths/category/update-category.yaml'
+/category/delete-category:
+  $ref: './paths/category/delete-category.yaml'
+/category/getAll-categories:
+  $ref: './paths/category/getAll-categories.yaml'
+/item/create-item:
+  $ref: './paths/item/create-item.yaml'
+/item/update-item:
+  $ref: './paths/item/update-item.yaml'
+/item/delete-item:
+  $ref: './paths/item/delete-item.yaml'
+/item/get-item:
+  $ref: './paths/item/get-item.yaml'
+/item/get-all-items:
+  $ref: './paths/item/get-all-items.yaml'
+/address/update-address:
+  $ref: './paths/address/update-address.yaml'
+/address/delete-address:
+  $ref: './paths/address/delete-address.yaml'
+/address/create-address:
+  $ref: './paths/address/create-address.yaml'
+/address/getall-address-for-user:
+  $ref: './paths/address/getall-address-for-user.yaml'
+/address/get-address:
+  $ref: './paths/address/get-address.yaml'

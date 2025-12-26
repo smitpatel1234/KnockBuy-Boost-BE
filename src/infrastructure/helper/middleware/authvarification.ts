@@ -1,23 +1,23 @@
 
-import     { Express , Request, Response,NextFunction } from "express";
-import { constants } from "../../config/constants";
-import { EntityManager } from "typeorm";
+import     {  Request, Response,NextFunction } from "express";
 import { verifyToken } from "../../../infrastructure/helper/TokenGenerator";
-import { displaymessage } from "../displaymessage";
+import { ApplicationError,ApplicationErrorType } from "./GlobelErrorHandler";
+import { logger } from "../logger";
 export const authVerification = ()=>
 { return async (req: Request, res: Response, next: NextFunction) => {
+
+    
     const token = req.cookies.accessToken;
     if (!token) {
-        return displaymessage(constants.Code.UNAUTHORIZED, res, ["Access token missing"]);
+        throw new ApplicationError(ApplicationErrorType.UNAUTHORIZED, "Invalid access token");  
     }
-    verifyToken(token).then((payload) => {
+    const payload = await verifyToken(token);
         if (payload) {
-            (req as any).user = payload;
+            req.body = {...req.body, user:payload} ;
+            logger.info(req.cookies.accessToken , req.body )
             next();
-        } else {
-            return displaymessage(constants.Code.UNAUTHORIZED, res, ["Invalid access token"]);
-        }
-    }).catch(() => {
-        return displaymessage(constants.Code.UNAUTHORIZED, res, ["Invalid access token"]);
-    });}
+        } 
+        
+    
+    }  
 };

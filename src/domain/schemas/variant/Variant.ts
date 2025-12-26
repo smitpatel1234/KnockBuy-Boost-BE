@@ -10,11 +10,22 @@ export const VarientPropertysSchema = z.object({
     variantProperty_id: IdField,
     property_name: PropertyNameField,
 });
-
+export const VarientPropertysID = z.object({
+    variantProperty_id: IdField
+})
 export const AddVarientWithValuesSchema = z.object({
     variant_value: z.string().max(100).min(1),
-    variant_id: IdField,
+    variantProperty_id: IdField,
 });
+
+export const VarientValuesID = z.object({
+    variantValue_id: IdField
+})
+export const  ItemVariantValueMappingId =  {
+  item_variantvalue_mapping_id: IdField,
+  
+}
+
 export const AddVarientPropWithCollectionSchema = z.object({
     item_id: IdField,
     varient_item_Id: IdField,
@@ -31,4 +42,10 @@ export const VarientPropWithCollectionSchema = z.object({
     item_id: IdField,
     varient_item_Id: IdField,
 });
+
+export const  ItemVariantValueMappingSchema =  {
+  
+  item_id: IdField,
+  variantValue_id: IdField
+}
 

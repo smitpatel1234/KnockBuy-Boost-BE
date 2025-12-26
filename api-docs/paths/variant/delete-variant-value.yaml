@@ -1,0 +1,23 @@
+delete:
+  summary: Delete Variant Value
+  tags:
+    - Variant Values
+  security:
+    - BearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../_schemas.yaml#/components/DeleteVariantValueReq'
+  responses:
+    '200':
+      description: Variant value deleted successfully
+    '400':
+      description: Bad request - Invalid input
+    '401':
+      description: Unauthorized - Missing or invalid authentication token
+    '404':
+      description: Variant value not found
+    '500':
+      description: Internal server error

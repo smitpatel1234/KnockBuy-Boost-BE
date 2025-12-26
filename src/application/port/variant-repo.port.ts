@@ -1,10 +1,11 @@
 import { EntityManager } from "typeorm";
-import { UUID } from "crypto";
 import {
   VariantPropertyModel,
   VariantValueModel,
   ItemVariantValueMappingModel,
   VariantCollectionModel,
+  VariantValueModelWithvariantProperty,
+  GetItemVariantValueMappingModel
 } from "../../domain/models/Variant.models";
 import { VariantPropertys } from "../../infrastructure/orm/entities/variantPropertys";
 import { VariantValues } from "../../infrastructure/orm/entities/variantValues";
@@ -20,49 +21,61 @@ export interface VariantRepoPort {
     data: VariantPropertyModel
   ) => Promise<VariantPropertys>;
 
-  updateProperty:(
+  updateProperty: (
     em: EntityManager,
     data: VariantPropertyModel
   ) => Promise<boolean | null>;
 
-  deleteProperty:(
+  deleteProperty: (
     em: EntityManager,
-    id: UUID
-  ) => Promise<void>;
+    id: string
+  ) => Promise<boolean>;
 
-  createValue:(
+  getall_variant_values: (
+    em: EntityManager,
+    data: VariantValueModel
+  ) => Promise<VariantValueModelWithvariantProperty[]>;
+  createValue: (
     em: EntityManager,
     data: VariantValueModel
   ) => Promise<VariantValues>;
 
-
-
-  deleteValue:(
+  updateValue: (
     em: EntityManager,
-    id: UUID
-  ) => Promise<void>;
+    data: VariantValueModel
+  ) => Promise<VariantValues | null>;
 
-  
-  mapItemToVariantValue:(
+  deleteValue: (
+    em: EntityManager,
+    id: string
+  ) => Promise<boolean>;
+
+
+  mapItemToVariantValue: (
     em: EntityManager,
     data: ItemVariantValueMappingModel
   ) => Promise<ItemVariantValueMapping>;
 
-  deleteItemVariantMapping:(
+  deleteItemVariantMapping: (
     em: EntityManager,
-    id: UUID
-  ) => Promise<void>;
+    id: string
+  ) => Promise<boolean>;
+  getItemVariantMappingForItem: (
+    em: EntityManager,
+    id: string
+  ) => Promise<GetItemVariantValueMappingModel[]>;
 
-  
-  createVariantCollection:(
+
+
+  createVariantCollection: (
     em: EntityManager,
     data: VariantCollectionModel
-  ) =>  Promise<VariantCollection>;
+  ) => Promise<VariantCollection>;
 
-  deleteVariantCollection:(
+  deleteVariantCollection: (
     em: EntityManager,
-    id: UUID
-  )  => Promise<void>;
+    id: string
+  ) => Promise<void>;
   wrapTransaction: <T>(fun: (t: EntityManager) => Promise<T>) => Promise<T>;
 
 }

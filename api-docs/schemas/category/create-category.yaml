@@ -1,0 +1,21 @@
+type: object
+properties:
+  parent_category_id:
+    type: string
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  category_name:
+    type: string  
+    example: "Shoes"
+  image_url:
+    type: string
+    example: "https://example.com/shoes.jpg"
+  description:
+    type: string
+    example: "Shoes for all seasons"
+
+
+required:
+    - category_name
+    - image_url
+    - description

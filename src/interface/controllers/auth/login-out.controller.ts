@@ -2,37 +2,42 @@ import Express from "express";
 import { EntityManager } from "typeorm";
 import { AuthRepoPort } from "../../../application/port/auth-repo.port";
 import { LoginCredentials } from "../../../domain/models/Auth.models";
-import { constants } from "../../../infrastructure/config/constants";
-import { displaymessage } from "../../../infrastructure/helper/displaymessage";  
 import { loginUser } from "../../../application/useCases/auth/login.usecase";
-import { logoutUser } from "../../../application/useCases/auth/logout.usecase"; 
+import { logoutUser } from "../../../application/useCases/auth/logout.usecase";
+import { ApplicationError,ApplicationErrorType } from "../../../infrastructure/helper/middleware/GlobelErrorHandler";
+import { success } from "zod";
+import { successmessage } from "../../../infrastructure/helper/displaymessage";
 export const LoginUserController = (AuthRepo: AuthRepoPort) => {
-  
-  return async (req: Express.Request, res: Express.Response) =>AuthRepo.wrapTransaction(async (t: EntityManager) => {
-    const credentials: LoginCredentials = req.body;
-    await loginUser(t,credentials, AuthRepo).then((token)=>{
-         res.cookie('accessToken', token, { httpOnly: true, secure: true, sameSite: 'lax' });
-        
-        displaymessage(constants.Code.OK, res);
-    }).catch((err)=>{
-        
-        displaymessage(constants.Code.INTERNAL_SERVER_ERROR, res,[err]);
+  return async (req: Express.Request, res: Express.Response) =>
+    AuthRepo.wrapTransaction(async (t: EntityManager) => {
+      const credentials: LoginCredentials = req.body;
+      const tokenvalues = await loginUser(t, credentials, AuthRepo);
+      res.cookie("accessToken", tokenvalues.accessToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "lax",
+      });
+      res.cookie("refreshToken", tokenvalues.refreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+      });
+      res.cookie("expIn", tokenvalues.expIN, {
+        httpOnly: false,
+        secure: false,
+        sameSite: "lax",
+      });
+      return successmessage(res, "User logged in successfully");
     });
-
-  });
-
+    
 };
 export const LogoutUserController = (AuthRepo: AuthRepoPort) => {
-  
-  return async (req: Express.Request, res: Express.Response) =>AuthRepo.wrapTransaction(async (t: EntityManager) => {
-    
-    await logoutUser(t,req.cookies.accessToken, AuthRepo).then((token)=>{
-        res.clearCookie('accessToken');
-        displaymessage(constants.Code.OK, res,["Logged out successfully"]);
-    }).catch((err)=>{
-        displaymessage(constants.Code.INTERNAL_SERVER_ERROR, res,[err]);
+  return async (req: Express.Request, res: Express.Response) =>
+    AuthRepo.wrapTransaction(async (t: EntityManager) => {
+      if(!req.cookies.accessToken) 
+      throw new ApplicationError(ApplicationErrorType.UNAUTHORIZED, "Invalid access token");
+      logoutUser(t, req.cookies.accessToken, AuthRepo);
+      res.clearCookie("accessToken");
+      return successmessage(res, "User logged Out successfully");
     });
-
-  });
-  
 };

@@ -28,6 +28,12 @@ components:
       $ref: './schemas/variant/update-variant-property.yaml'
     DeleteVariantPropertyReq:
       $ref: './schemas/variant/delete-variant-property.yaml'
+    CreateVariantValueReq:
+      $ref: './schemas/variant/variant-value-req.yaml'
+    UpdateVariantValueReq:
+      $ref: './schemas/variant/update-variant-value.yaml'
+    DeleteVariantValueReq:
+      $ref: './schemas/variant/delete-variant-value.yaml'
   securitySchemes:
     BearerAuth:
       type: http

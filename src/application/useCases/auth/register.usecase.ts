@@ -3,6 +3,8 @@ import { UserCredentials } from "../../../domain/models/User.models";
 import { UserAndCredentialsRepoPort } from "../../port/User-repo.port";
 import bcrypt from 'bcrypt'
 import {Envvar} from '../../../infrastructure/orm/config/ormconfig';
+import { ApplicationError ,ApplicationErrorType} from "../../../infrastructure/helper/middleware/GlobelErrorHandler";
+
 export const registerUser = async (
     entitiesmanager: EntityManager,
     userCredentials: UserCredentials,
@@ -22,7 +24,7 @@ export const registerUser = async (
            error.push('Phone number already exists');
         }
         if (error.length > 0) {
-            throw new Error(error.join(', '));
+            throw new ApplicationError(ApplicationErrorType.BAD_REQUEST,error.join(', '));
         }
         userCredentials.password = await bcrypt.hash(userCredentials.password,Envvar.PassWordSalt);
         await userRepo.saveUser(entitiesmanager, userCredentials);

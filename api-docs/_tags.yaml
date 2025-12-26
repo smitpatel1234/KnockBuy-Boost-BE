@@ -5,3 +5,5 @@ tags:
     description: User management endpoints
   - name: Variant
     description: Variant management endpoints
+  - name: Category
+    description: Category management endpoints

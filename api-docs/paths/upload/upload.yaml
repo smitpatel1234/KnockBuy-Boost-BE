@@ -1,0 +1,21 @@
+post:
+  summary: upload file and get url
+  tags:
+    -  File
+  requestBody:
+    required: true
+    content:
+      multipart/form-data:
+        schema:
+          type: object
+          properties:
+            files:
+              type: array
+              items:
+                type: string
+                format: binary
+  responses:
+    '200':
+      description: upload successful
+    '401':
+      description: Invalid values

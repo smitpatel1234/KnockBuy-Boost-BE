@@ -16,16 +16,16 @@ let Image = class Image {
 };
 exports.Image = Image;
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
+    (0, typeorm_1.PrimaryGeneratedColumn)("uuid"),
     __metadata("design:type", String)
 ], Image.prototype, "image_items_id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', nullable: false, length: 2048 }),
+    (0, typeorm_1.Column)({ type: "varchar", nullable: false, length: 2048 }),
     __metadata("design:type", String)
 ], Image.prototype, "image_URL", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => item_1.Item),
-    (0, typeorm_1.JoinColumn)({ name: 'items_id' }),
+    (0, typeorm_1.ManyToOne)(() => item_1.Item, { onDelete: "CASCADE", nullable: false }),
+    (0, typeorm_1.JoinColumn)({ name: "items_id" }),
     __metadata("design:type", item_1.Item)
 ], Image.prototype, "item", void 0);
 exports.Image = Image = __decorate([

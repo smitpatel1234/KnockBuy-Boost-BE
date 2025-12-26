@@ -1,0 +1,15 @@
+post:
+  summary: Create variant value mapping with items
+  tags:
+    - Variant Values Mapping 
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../_schemas.yaml#/components/CreateItemVariantValueMappingReq'
+  responses:
+    '200':
+      description: Create variant property successful
+    '401':
+      description: Invalid values

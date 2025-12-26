@@ -21,12 +21,12 @@ __decorate([
     __metadata("design:type", String)
 ], Wishlist.prototype, "wish_list_id", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => user_1.User),
+    (0, typeorm_1.ManyToOne)(() => user_1.User, { nullable: false, onDelete: "CASCADE" }),
     (0, typeorm_1.JoinColumn)({ name: 'user_id' }),
     __metadata("design:type", user_1.User)
 ], Wishlist.prototype, "user", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => item_1.Item),
+    (0, typeorm_1.ManyToOne)(() => item_1.Item, { nullable: false, onDelete: "CASCADE" }),
     (0, typeorm_1.JoinColumn)({ name: 'item_id' }),
     __metadata("design:type", item_1.Item)
 ], Wishlist.prototype, "item", void 0);

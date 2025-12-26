@@ -1,4 +1,4 @@
-import { UUID } from "crypto";
+import { JwtPayload } from "jsonwebtoken";
 
 export interface UserCredentials {
     username: string;
@@ -6,18 +6,22 @@ export interface UserCredentials {
     email: string;
     phone_number: number;
 }
-export interface jwtPayload {
-    id:UUID;
-    role:'ADMIN' | 'USER';
-    
-} 
+export interface jwtPayload  extends JwtPayload{
+    id: string;
+    role: 'ADMIN' | 'USER';
+
+}
+export interface ExpIN {
+    exp: number
+
+}
 export interface UserProfile {
-    user_id:UUID;
+    user_id: string;
     username: string;
-    password: string;
     email: string;
     phone_number: number;
     wishlist_name?: string;
+    addresseses?: string[] 
 }
 
 

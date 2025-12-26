@@ -8,7 +8,7 @@ export class VariantPropertys {
 
 	@Column({ type: 'varchar', nullable: false, length: 255 })
 	property_name!: string
- 
+
 	@OneToMany(() => VariantValues, vv => vv.variantProperty)
 	variant_property_values?: VariantValues[]
 }
