@@ -4,6 +4,7 @@ exports.UserAndCredentialsRepo = void 0;
 const user_1 = require("../orm/entities/user");
 const transaction_1 = require("../helper/transaction");
 const typeorm_1 = require("typeorm");
+const pagination_helper_1 = require("../helper/pagination.helper");
 exports.UserAndCredentialsRepo = {
     getallUser: async (entitiesManager) => {
         return await entitiesManager
@@ -19,27 +20,14 @@ exports.UserAndCredentialsRepo = {
         });
         if (userToUpdate) {
             Object.assign(userToUpdate, userProfile);
-            await entitiesManager
-                .save(userToUpdate)
-                .then((res) => {
-                return true;
-            })
-                .catch((err) => {
-                return false;
-            });
+            await entitiesManager.save(userToUpdate);
+            return true;
         }
         return false;
     },
     deleteUser: async (entitiesmanager, id) => {
-        await entitiesmanager
-            .softDelete(user_1.User, { user_id: id })
-            .then((res) => {
-            return true;
-        })
-            .catch((err) => {
-            return false;
-        });
-        return false;
+        const res = await entitiesmanager.softDelete(user_1.User, { user_id: id });
+        return (res.affected ?? 0) > 0;
     },
     saveUser: async (entitiesmanager, UserserCredentials) => {
         const user = entitiesmanager.create(user_1.User, {
@@ -55,7 +43,7 @@ exports.UserAndCredentialsRepo = {
             .getRepository(user_1.User)
             .findOne({
             where: { user_id: id },
-            select: ["user_id", "username", "email", "phone_number", "addresses"],
+            select: ["user_id", "username", "email", "phone_number", "addresses", "wishlist_name", "profile_image"],
             relations: ["addresses"],
         });
     },
@@ -83,6 +71,11 @@ exports.UserAndCredentialsRepo = {
                 phone_number: user.phone_number,
             };
         }
+    },
+    getallUserPage: async (entityManager, data) => {
+        const userQB = entityManager.getRepository(user_1.User).createQueryBuilder("user");
+        userQB.select(["user.user_id", "user.username", "user.email", "user.phone_number"]);
+        return (0, pagination_helper_1.applyPaginationAndFilters)(userQB, data, false);
     },
     wrapTransaction: transaction_1.wrapTransaction,
 };

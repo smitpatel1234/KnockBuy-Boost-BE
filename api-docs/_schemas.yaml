@@ -6,7 +6,29 @@ components:
    UpdateUserReq:
       $ref: 'schemas/user/update-user.yaml'
    DeleteUserReq:
-      $ref: 'schemas/user/delete-user.yaml'        
+      $ref: 'schemas/user/delete-user.yaml'
+   UserProfile:
+      type: object
+      properties:
+        user_id:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        phone_number:
+          type: number
+   PaginationMeta:
+      type: object
+      properties:
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+        totalPages:
+          type: integer
    CreateVariantPropertyReq:
       $ref: 'schemas/variant/variant-property.yaml'
    UpdateVariantPropertyReq:
@@ -47,3 +69,5 @@ components:
       $ref: 'schemas/address/update-address-req.yaml'
    DeleteAddressReq:
       $ref: 'schemas/address/delete-address-req.yaml'
+   PageReq:
+      $ref: 'schemas/pages.yaml'

@@ -29,5 +29,11 @@ export const uploadMultipleFilesController = async (
       "No files uploaded"
     );
   }
+  const { type } = req.query;
+
+  if (type === 'user' || type === 'category') {
+    return successmessage(res, "File uploaded successfully", fileUrls[0]);
+  }
+
   return successmessage(res, "Files uploaded successfully", fileUrls);
 };

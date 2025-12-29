@@ -11,6 +11,7 @@ import { VariantPropertys } from "../../infrastructure/orm/entities/variantPrope
 import { VariantValues } from "../../infrastructure/orm/entities/variantValues";
 import { ItemVariantValueMapping } from "../../infrastructure/orm/entities/item_variantVlaue_mapping";
 import { VariantCollection } from "../../infrastructure/orm/entities/variant_collection";
+import { pageParams, PaginationResponse } from "../../domain/globalTypes/commonFields";
 
 export interface VariantRepoPort {
   getAllVariantProperties: (
@@ -35,6 +36,12 @@ export interface VariantRepoPort {
     em: EntityManager,
     data: VariantValueModel
   ) => Promise<VariantValueModelWithvariantProperty[]>;
+
+  getall_variant_values_page: (
+    em: EntityManager,
+    data: pageParams
+  ) => Promise<PaginationResponse<VariantValueModelWithvariantProperty>>;
+
   createValue: (
     em: EntityManager,
     data: VariantValueModel

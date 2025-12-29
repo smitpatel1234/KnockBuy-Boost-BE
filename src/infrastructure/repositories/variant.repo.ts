@@ -6,6 +6,7 @@ import {
   ItemVariantValueMappingModel,
   VariantCollectionModel,
   GetItemVariantValueMappingModel,
+  VariantValueModelWithvariantProperty,
 } from "../../domain/models/Variant.models";
 import { VariantPropertys } from "../orm/entities/variantPropertys";
 import { VariantValues } from "../orm/entities/variantValues";
@@ -13,6 +14,8 @@ import { ItemVariantValueMapping } from "../orm/entities/item_variantVlaue_mappi
 import { VariantCollection } from "../orm/entities/variant_collection";
 import { Item } from "../orm/entities/item";
 import { wrapTransaction } from "../helper/transaction";
+import { pageParams, PaginationResponse } from "../../domain/globalTypes/commonFields";
+import { applyPaginationAndFilters } from "../helper/pagination.helper";
 import e from "express";
 
 export const VariantRepo: VariantRepoPort = {
@@ -112,6 +115,27 @@ export const VariantRepo: VariantRepoPort = {
         "vp.property_name AS property_name",
       ])
       .getRawMany();
+  },
+
+  getall_variant_values_page: async (
+    em: EntityManager,
+    data: pageParams
+  ): Promise<PaginationResponse<VariantValueModelWithvariantProperty>> => {
+    const qb = em
+      .getRepository(VariantValues)
+      .createQueryBuilder("vv")
+      .leftJoin("vv.variantProperty", "vp")
+      .select([
+        "vv.variantValue_id AS variantValue_id",
+        "vv.variant_value AS variant_value",
+        "vp.variantProperty_id AS variantProperty_id",
+        "vp.property_name AS property_name",
+      ]);
+
+    return applyPaginationAndFilters<VariantValueModelWithvariantProperty>(
+      qb,
+      data
+    );
   },
 
   mapItemToVariantValue: async (

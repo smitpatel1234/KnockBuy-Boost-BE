@@ -26,8 +26,9 @@ import {
   updateVariantValueController,
   deleteVariantValueController,
   getAllVariantValuesController,
+  getAllVariantValuePageController,
 } from "../controllers/variantValues/index";
-
+import { pageParamsSchema } from "../../domain/schemas/pagination";
 import { createItemVariantValueMapping_Controller, deleteItemVariantValueMapping_Controller } from "../controllers/itemvariantvaluemapping/index";
 const router = express.Router();
 
@@ -79,7 +80,6 @@ router.delete(
   deleteVariantValueController(VariantRepo)
 );
 
-
 router.post(
   "/create-item-variant-value-mapping",
   authVerification(),
@@ -91,6 +91,11 @@ router.delete(
   authVerification(),
   validateDetails(ItemVariantValueMappingId),
   deleteItemVariantValueMapping_Controller(VariantRepo)
+);
+router.get(
+  "/get-all-variant-values-page",
+  authVerification(),
+  getAllVariantValuePageController(VariantRepo)
 );
 
 

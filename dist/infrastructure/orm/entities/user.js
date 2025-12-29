@@ -48,6 +48,10 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "wishlist_name", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ type: "varchar", nullable: true }),
+    __metadata("design:type", String)
+], User.prototype, "profile_image", void 0);
+__decorate([
     (0, typeorm_1.OneToMany)(() => address_1.Address, (address) => address.user_id),
     __metadata("design:type", Array)
 ], User.prototype, "addresses", void 0);

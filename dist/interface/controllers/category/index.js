@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getALLCategoryController = exports.deleteCategoryController = exports.updateCategoryController = exports.createCategoryController = void 0;
+exports.getAllCategoryPageController = exports.getALLCategoryController = exports.deleteCategoryController = exports.updateCategoryController = exports.createCategoryController = void 0;
 var createcategory_controller_1 = require("./createcategory.controller");
 Object.defineProperty(exports, "createCategoryController", { enumerable: true, get: function () { return createcategory_controller_1.createCategoryController; } });
 var updatecategory_controller_1 = require("./updatecategory.controller");
@@ -9,3 +9,5 @@ var deletecategory_controller_1 = require("./deletecategory.controller");
 Object.defineProperty(exports, "deleteCategoryController", { enumerable: true, get: function () { return deletecategory_controller_1.deleteCategoryController; } });
 var getallcategory_controller_1 = require("./getallcategory.controller");
 Object.defineProperty(exports, "getALLCategoryController", { enumerable: true, get: function () { return getallcategory_controller_1.getALLCategoryController; } });
+var getallcategorypage_controller_1 = require("./getallcategorypage.controller");
+Object.defineProperty(exports, "getAllCategoryPageController", { enumerable: true, get: function () { return getallcategorypage_controller_1.getAllCategoryPageController; } });

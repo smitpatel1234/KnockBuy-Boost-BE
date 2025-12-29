@@ -4,6 +4,8 @@ import { UserAndCredentialsRepoPort } from "../../application/port/User-repo.por
 import { User } from "../orm/entities/user";
 import { wrapTransaction } from "../helper/transaction";
 import { Brackets } from "typeorm";
+import { pageParams, PaginationResponse } from "../../domain/globalTypes/commonFields";
+import { applyPaginationAndFilters } from "../helper/pagination.helper";
 
 export const UserAndCredentialsRepo: UserAndCredentialsRepoPort = {
   getallUser: async (
@@ -26,14 +28,8 @@ export const UserAndCredentialsRepo: UserAndCredentialsRepoPort = {
 
     if (userToUpdate) {
       Object.assign(userToUpdate, userProfile);
-      await entitiesManager
-        .save(userToUpdate)
-        .then((res) => {
-          return true;
-        })
-        .catch((err) => {
-          return false;
-        });
+      await entitiesManager.save(userToUpdate);
+      return true;
     }
 
     return false;
@@ -42,15 +38,8 @@ export const UserAndCredentialsRepo: UserAndCredentialsRepoPort = {
     entitiesmanager: EntityManager,
     id: string
   ): Promise<boolean> => {
-    await entitiesmanager
-      .softDelete(User, { user_id: id })
-      .then((res) => {
-        return true;
-      })
-      .catch((err) => {
-        return false;
-      });
-    return false;
+    const res = await entitiesmanager.softDelete(User, { user_id: id });
+    return (res.affected ?? 0) > 0;
   },
   saveUser: async (
     entitiesmanager: EntityManager,
@@ -71,7 +60,7 @@ export const UserAndCredentialsRepo: UserAndCredentialsRepoPort = {
       .getRepository(User)
       .findOne({
         where: { user_id: id },
-        select: ["user_id", "username", "email", "phone_number", "addresses"],
+        select: ["user_id", "username", "email", "phone_number", "addresses", "wishlist_name", "profile_image"],
         relations: ["addresses"],
       });
   },
@@ -104,6 +93,21 @@ export const UserAndCredentialsRepo: UserAndCredentialsRepoPort = {
         phone_number: user.phone_number,
       };
     }
+  },
+
+  getallUserPage: async (
+    entityManager: EntityManager,
+    data: pageParams
+  ): Promise<PaginationResponse<UserProfile>> => {
+    const userQB = entityManager.getRepository(User).createQueryBuilder("user");
+
+    userQB.select(["user.user_id", "user.username", "user.email", "user.phone_number"]);
+
+    return applyPaginationAndFilters<UserProfile>(
+      userQB,
+      data,
+      false
+    );
   },
 
   wrapTransaction: wrapTransaction,

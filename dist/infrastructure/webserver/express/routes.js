@@ -13,6 +13,7 @@ const category_routes_1 = __importDefault(require("../../../interface/routes/cat
 const item_routes_1 = __importDefault(require("../../../interface/routes/item.routes"));
 const address_routes_1 = __importDefault(require("../../../interface/routes/address.routes"));
 const path_1 = __importDefault(require("path"));
+const discount_routes_1 = __importDefault(require("../../../interface/routes/discount.routes"));
 const createRoutes = () => {
     const router = express_1.default.Router();
     router.use('/auth', auth_routes_1.default);
@@ -23,6 +24,7 @@ const createRoutes = () => {
     router.use("/uploads", express_1.default.static(path_1.default.join(__dirname, "../../../../uploads")));
     router.use('/item', item_routes_1.default);
     router.use('/address', address_routes_1.default);
+    router.use('/discount', discount_routes_1.default);
     return router;
 };
 exports.createRoutes = createRoutes;

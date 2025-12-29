@@ -43,7 +43,7 @@ export const GlobelErrorHandler = (err:  Error| HttpError | ZodError | Applicati
             }
         if(err instanceof TypeORMError)
          {
-              return displaymessage(StatusCodes.INTERNAL_SERVER_ERROR, res, "NOT_FOUND");
+              return displaymessage(StatusCodes.INTERNAL_SERVER_ERROR, res, err.message);
          }
         return displaymessage(StatusCodes.INTERNAL_SERVER_ERROR, res, err.message);
 }

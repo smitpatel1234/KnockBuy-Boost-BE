@@ -7,6 +7,7 @@ const item_variantVlaue_mapping_1 = require("../orm/entities/item_variantVlaue_m
 const variant_collection_1 = require("../orm/entities/variant_collection");
 const item_1 = require("../orm/entities/item");
 const transaction_1 = require("../helper/transaction");
+const pagination_helper_1 = require("../helper/pagination.helper");
 exports.VariantRepo = {
     getAllVariantProperties: async (em) => {
         const data = await em.find(variantPropertys_1.VariantPropertys);
@@ -86,6 +87,19 @@ exports.VariantRepo = {
             "vp.property_name AS property_name",
         ])
             .getRawMany();
+    },
+    getall_variant_values_page: async (em, data) => {
+        const qb = em
+            .getRepository(variantValues_1.VariantValues)
+            .createQueryBuilder("vv")
+            .leftJoin("vv.variantProperty", "vp")
+            .select([
+            "vv.variantValue_id AS variantValue_id",
+            "vv.variant_value AS variant_value",
+            "vp.variantProperty_id AS variantProperty_id",
+            "vp.property_name AS property_name",
+        ]);
+        return (0, pagination_helper_1.applyPaginationAndFilters)(qb, data);
     },
     mapItemToVariantValue: async (em, data) => {
         const item = await em.findOneOrFail(item_1.Item, {

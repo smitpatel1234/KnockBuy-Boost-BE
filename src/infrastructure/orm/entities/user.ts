@@ -1,4 +1,4 @@
-import { Entity, Column, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn, OneToMany ,DeleteDateColumn} from "typeorm";
+import { Entity, Column, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn, OneToMany, DeleteDateColumn } from "typeorm";
 import { Address } from "./address";
 
 @Entity()
@@ -27,6 +27,9 @@ export class User {
   @Column({ type: "varchar", length: 20, nullable: true })
   wishlist_name!: string;
 
+  @Column({ type: "varchar", nullable: true })
+  profile_image!: string;
+
   @OneToMany(() => Address, (address) => address.user_id)
   addresses!: Address[] | string[];
 
@@ -39,6 +42,6 @@ export class User {
   @Column({ type: 'boolean', default: false })
   refresh_is_revoked?: boolean;
   @DeleteDateColumn()
-  deletedAt?: Date; 
-  
+  deletedAt?: Date;
+
 }

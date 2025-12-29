@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CategoryRepo = void 0;
 const category_1 = require("../orm/entities/category");
 const transaction_1 = require("../helper/transaction");
+const pagination_helper_1 = require("../helper/pagination.helper");
 exports.CategoryRepo = {
     createCategory: async (em, input) => {
         const categoryRepo = em.getRepository(category_1.Category);
@@ -69,6 +70,21 @@ exports.CategoryRepo = {
         ])
             .getRawMany();
         return categories;
+    },
+    GetAllCategoryPage: async (em, data) => {
+        const qb = em
+            .getRepository(category_1.Category)
+            .createQueryBuilder("category")
+            .leftJoin("category.parentCategory", "parent")
+            .select([
+            "category.category_id AS category_id",
+            "category.category_name AS category_name",
+            "category.image_url AS image_url",
+            "category.description AS description",
+            "parent.category_id AS parent_category_id",
+            "parent.category_name AS parent_category_name",
+        ]);
+        return (0, pagination_helper_1.applyPaginationAndFilters)(qb, data);
     },
     wrapTransaction: transaction_1.wrapTransaction,
 };

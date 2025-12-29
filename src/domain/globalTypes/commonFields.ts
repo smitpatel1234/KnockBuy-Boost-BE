@@ -1,28 +1,28 @@
 
-export interface ListQueryOptions {
-  page: number
-  pageSize: number
-  filter?: Record<string, string | number | boolean>
-  sorting?: Record<string, 'ASC' | 'DESC'>
-}
+export type Pagination = {
+  page: number;
+  limit: number;
+};
+export type Filter = {
+  column: string;
+  value: string;
+};
+export type Sort = {
+  column: string;
+  order: "ASC" | "DESC" | undefined;
+};
+export type pageParams = {
+  pagination: Pagination;
+  filters: Filter[];
+  sort: Sort[];
+};
 
-export interface PaginatedResult<T> {
-  List: T[]
-  page: number
-  pageSize: number
-  totalRecords: number
-  totalPages: number
+export interface PaginationResponse<T> {
+  data: T[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
 }
-
-export const buildPaginatedResult = <T>(
- List: T[],
-  page: number,
-  pageSize: number,
-  totalRecords: number,
-): PaginatedResult<T> => ({
-  List,
-  page,
-  pageSize,
-  totalRecords,
-  totalPages: Math.ceil(totalRecords / pageSize),
-}) 

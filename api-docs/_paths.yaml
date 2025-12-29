@@ -10,6 +10,8 @@
   $ref: './paths/user/update-user.yaml'
 /user/delete-user:
   $ref: './paths/user/delete-user.yaml'
+/user/get-all-user-page:
+  $ref: './paths/user/get-all-user-page.yaml'
 /variant/create-variant-property:
   $ref: './paths/variant/create-variant-property.yaml'
 /variant/update-variant-property:
@@ -30,6 +32,8 @@
   $ref: './paths/variant/create-item-variant-value-mapping.yaml'
 /variant/delete-item-variant-value-mapping:
   $ref: './paths/variant/delete-item-variant-value-mapping.yaml'
+/variant/get-all-variant-values-page:
+  $ref: './paths/variant/get-all-variant-values-page.yaml'
 /upload:
   $ref: './paths/upload/upload.yaml'
 /category/create-category:
@@ -40,6 +44,10 @@
   $ref: './paths/category/delete-category.yaml'
 /category/getAll-categories:
   $ref: './paths/category/getAll-categories.yaml'
+/category/get-all-category-page:
+  $ref: './paths/category/get-all-category-page.yaml'
+/item/get-all-items-page:
+  $ref: './paths/item/get-item-by-page.yaml'
 /item/create-item:
   $ref: './paths/item/create-item.yaml'
 /item/update-item:

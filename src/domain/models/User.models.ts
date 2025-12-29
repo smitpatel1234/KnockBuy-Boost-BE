@@ -6,7 +6,7 @@ export interface UserCredentials {
     email: string;
     phone_number: number;
 }
-export interface jwtPayload  extends JwtPayload{
+export interface jwtPayload extends JwtPayload {
     id: string;
     role: 'ADMIN' | 'USER';
 
@@ -21,7 +21,8 @@ export interface UserProfile {
     email: string;
     phone_number: number;
     wishlist_name?: string;
-    addresseses?: string[] 
+    addresseses?: string[]
+    profile_image?: string;
 }
 
 

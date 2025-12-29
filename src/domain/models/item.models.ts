@@ -9,6 +9,7 @@ export interface AddItemModel {
     description: string,
     variant?: { variantProperty_id: string; variantValue_id: string }[]
     variant_collections?: string[]
+    images?: string[]
 }
 export interface ItemModel extends AddItemModel {
     item_id: string,
@@ -18,6 +19,8 @@ export interface ItemModel extends AddItemModel {
 }
 export interface GetItemModel extends AddItemModel {
     category_name: string,
-    variant_info?: { property: string; value: string }[]
+    variant_info?: { property: string; value: string }[],
+    image_url?: string
+    image_id?: string
 }
 

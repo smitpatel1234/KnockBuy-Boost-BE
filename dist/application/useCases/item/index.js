@@ -19,3 +19,4 @@ __exportStar(require("./updateitem.usecase"), exports);
 __exportStar(require("./deleteitem.usecase"), exports);
 __exportStar(require("./getItem.usecase"), exports);
 __exportStar(require("./getAllItems.usecase"), exports);
+__exportStar(require("./getallitempage.usecase"), exports);

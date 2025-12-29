@@ -5,21 +5,21 @@ export class Discount {
 	@PrimaryGeneratedColumn('uuid')
 	discount_id!: string
 
-    @Column({ type: 'varchar', nullable: false, length: 255 })
+	@Column({ type: 'varchar', nullable: false, length: 255 })
 	discount_name!: string
 	@Column({ type: 'varchar', nullable: false, length: 255 })
 	discount_code!: string
 
-	@Column({ type: 'decimal', nullable: true, precision: 2, scale: 2 })
-	discount_type?: "percentage"|"falt amount"
+	@Column({ type: 'varchar', nullable: true, length: 20 })
+	discount_type?: "percentage" | "flat"
 
-    @Column({ type: 'decimal', nullable: true, precision: 2, scale: 2 })
+	@Column({ type: 'float', nullable: true  })
 	discount_amount?: number
 
-	@Column({ type: 'varchar', nullable: true, length: 255 })
-	duration?: string
+	@Column({ type: 'int', nullable: true })
+	duration?: number
 
-    @Column({ type: 'varchar', nullable: true, length: 255 })
+	@Column({ type: 'varchar', nullable: true, length: 255 })
 	description?: string
 
 	@Column({ type: 'timestamp', nullable: true })

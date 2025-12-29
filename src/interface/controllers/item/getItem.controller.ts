@@ -11,6 +11,7 @@ import {
   ApplicationError,
   ApplicationErrorType,
 } from "../../../infrastructure/helper/middleware/GlobelErrorHandler";
+import { logger } from "../../../infrastructure/helper/logger";
 
 export const getItemController = (
   itemRepo: ItemRepoPort,
@@ -18,8 +19,8 @@ export const getItemController = (
 ) => {
   return async (req: Express.Request, res: Express.Response) =>
     itemRepo.wrapTransaction(async (t: EntityManager) => {
-      const { slug, id } = req.query;
-
+      const { slug, id } = req.params;
+      console.log(id)
       if (slug) {
         const data = await get_item_by_slug(
           t,

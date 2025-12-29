@@ -11,15 +11,15 @@ const LoginUserController = (AuthRepo) => {
         const tokenvalues = await (0, login_usecase_1.loginUser)(t, credentials, AuthRepo);
         res.cookie("accessToken", tokenvalues.accessToken, {
             httpOnly: true,
-            secure: true,
+            secure: false,
             sameSite: "lax",
         });
         res.cookie("refreshToken", tokenvalues.refreshToken, {
             httpOnly: true,
-            secure: true,
+            secure: false,
             sameSite: "strict",
         });
-        res.cookie("expIn", tokenvalues.expIN, {
+        res.cookie("expIn", (tokenvalues.expIN || "").toString(), {
             httpOnly: false,
             secure: false,
             sameSite: "lax",

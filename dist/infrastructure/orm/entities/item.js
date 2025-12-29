@@ -29,12 +29,16 @@ __decorate([
     __metadata("design:type", String)
 ], Item.prototype, "item_name", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'decimal', nullable: false, precision: 10, scale: 2 }),
+    (0, typeorm_1.Column)({ type: 'int' }),
     __metadata("design:type", Number)
 ], Item.prototype, "item_price", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => category_1.Category, (category) => { category.items; }, { nullable: true, onDelete: "CASCADE" }),
+    (0, typeorm_1.ManyToOne)(() => category_1.Category, (category) => category.items, { nullable: true, onDelete: "CASCADE" }),
     (0, typeorm_1.JoinColumn)({ name: 'category_id' }),
+    __metadata("design:type", category_1.Category)
+], Item.prototype, "category", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
 ], Item.prototype, "category_id", void 0);
 __decorate([

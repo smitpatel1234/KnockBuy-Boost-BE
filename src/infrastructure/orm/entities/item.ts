@@ -14,12 +14,15 @@ export class Item extends BaseSlugEntity {
 	@Column({ type: 'varchar', nullable: false, length: 255 })
 	item_name!: string
 
-	@Column({ type: 'decimal', nullable: false, precision: 10, scale: 2 })
+	@Column({ type: 'int'})
 	item_price!: number
 
 
-	@ManyToOne(() => Category,(category)=>{category.items},{nullable: true,onDelete:"CASCADE"})
-	@JoinColumn({ name: 'category_id' } )
+	@ManyToOne(() => Category, (category) => category.items, { nullable: true, onDelete: "CASCADE" })
+	@JoinColumn({ name: 'category_id' })
+	category!: Category;
+
+	@Column({ nullable: true })
 	category_id!: string;
 
 	@Column({ type: 'decimal', nullable: true, precision: 3, scale: 2 })

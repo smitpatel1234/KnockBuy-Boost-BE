@@ -3,6 +3,8 @@ import { AddCategory, CategoryType, CategoryAllType } from "../../domain/models/
 import { Category } from "../orm/entities/category";
 import { CategoryRepoPort } from "../../application/port/category-repo.port";
 import { wrapTransaction } from "../helper/transaction";
+import { pageParams, PaginationResponse } from "../../domain/globalTypes/commonFields";
+import { applyPaginationAndFilters } from "../helper/pagination.helper";
 export const CategoryRepo: CategoryRepoPort = {
   createCategory: async (em: EntityManager, input: AddCategory) => {
     const categoryRepo = em.getRepository(Category);
@@ -86,6 +88,25 @@ export const CategoryRepo: CategoryRepoPort = {
       ])
       .getRawMany<CategoryAllType>();
     return categories;
+  },
+  GetAllCategoryPage: async (
+    em: EntityManager,
+    data: pageParams
+  ): Promise<PaginationResponse<CategoryAllType>> => {
+    const qb = em
+      .getRepository(Category)
+      .createQueryBuilder("category")
+      .leftJoin("category.parentCategory", "parent")
+      .select([
+        "category.category_id AS category_id",
+        "category.category_name AS category_name",
+        "category.image_url AS image_url",
+        "category.description AS description",
+        "parent.category_id AS parent_category_id",
+        "parent.category_name AS parent_category_name",
+      ]);
+
+    return applyPaginationAndFilters<CategoryAllType>(qb, data);
   },
   wrapTransaction: wrapTransaction,
 };

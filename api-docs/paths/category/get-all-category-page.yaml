@@ -1,0 +1,50 @@
+get:
+  summary: Get paginated categories
+  tags:
+    - Category
+  security:
+    - BearerAuth: []
+  parameters:
+    - in: query
+      name: page
+      schema:
+        type: integer
+      example: 1
+    - in: query
+      name: limit
+      schema:
+        type: integer
+      example: 10
+    - in: query
+      name: filters
+      schema:
+        type: string
+    - in: query
+      name: sort
+      schema:
+        type: string
+  responses:
+    '200':
+      description: Paginated categories fetched successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+              success:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '../../_schemas.yaml#/components/GetAllCategoryRes'
+                  meta:
+                    $ref: '../../_schemas.yaml#/components/PaginationMeta'
+    '500':
+      description: Server error

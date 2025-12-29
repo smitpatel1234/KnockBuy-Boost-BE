@@ -27,16 +27,16 @@ __decorate([
     __metadata("design:type", String)
 ], Discount.prototype, "discount_code", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'decimal', nullable: true, precision: 2, scale: 2 }),
+    (0, typeorm_1.Column)({ type: 'varchar', nullable: true, length: 20 }),
     __metadata("design:type", String)
 ], Discount.prototype, "discount_type", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'decimal', nullable: true, precision: 2, scale: 2 }),
+    (0, typeorm_1.Column)({ type: 'float', nullable: true }),
     __metadata("design:type", Number)
 ], Discount.prototype, "discount_amount", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', nullable: true, length: 255 }),
-    __metadata("design:type", String)
+    (0, typeorm_1.Column)({ type: 'int', nullable: true }),
+    __metadata("design:type", Number)
 ], Discount.prototype, "duration", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'varchar', nullable: true, length: 255 }),

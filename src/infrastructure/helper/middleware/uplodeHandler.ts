@@ -10,6 +10,6 @@ const storage = multer.diskStorage(
         cd(null,uniqueName);
     }
     },
-
+  
 )
 export const uploads = multer({storage})

@@ -19,3 +19,4 @@ __exportStar(require("./updateItem.controller"), exports);
 __exportStar(require("./deleteItem.controller"), exports);
 __exportStar(require("./getItem.controller"), exports);
 __exportStar(require("./getAllItems.controller"), exports);
+__exportStar(require("./getAllitempage.controller"), exports);

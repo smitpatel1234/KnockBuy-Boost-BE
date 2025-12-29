@@ -1,6 +1,7 @@
 import { EntityManager } from "typeorm";
 import { Item } from "../orm/entities/item";
 import { Category } from "../orm/entities/category";
+import { Image } from "../orm/entities/image";
 import { ItemRepoPort } from "../../application/port/item-repo.port";
 import {
   AddItemModel,
@@ -8,8 +9,41 @@ import {
   GetItemModel,
 } from "../../domain/models/item.models";
 import { wrapTransaction } from "../helper/transaction";
-
+import { pageParams, PaginationResponse } from "../../domain/globalTypes/commonFields";
+import { applyPaginationAndFilters } from "../helper/pagination.helper";
 export const ItemRepo: ItemRepoPort = {
+  GetAllItemsPage: async (
+    em: EntityManager,
+    data: pageParams
+  ): Promise<PaginationResponse<GetItemModel>> => {
+    const ItemBuilders = em
+      .getRepository(Item)
+      .createQueryBuilder("item")
+      .leftJoin("item.category", "category")
+      .select([
+        "item.item_id AS item_id",
+        "item.item_name AS item_name",
+        "item.item_price AS item_price",
+        "category.category_id AS category_id",
+        "category.category_name AS category_name",
+        "item.rating AS rating",
+        "item.sku AS sku",
+        "item.stock AS stock",
+        "item.description AS description",
+        "item.slug AS slug",
+      ]).addSelect((subQuery) => {
+        return subQuery
+          .select("image.image_URL")
+          .from("image", "image") // Assuming table name is 'image' based on entity default
+          .where("image.items_id = item.item_id") // 'items_id' is the JoinColumn name in Image entity
+          .limit(1);
+      }, "image_url");
+
+    return applyPaginationAndFilters<GetItemModel>(
+      ItemBuilders,
+      data
+    );
+  },
   getItemBySlug: async (
     em: EntityManager,
     slug: string
@@ -28,7 +62,7 @@ export const ItemRepo: ItemRepoPort = {
     const item = await em
       .getRepository(Item)
       .createQueryBuilder("item")
-      .leftJoin("item.category_id", "category")
+      .leftJoin("item.category", "category")
       .select([
         "item.item_id AS item_id",
         "item.item_name AS item_name",
@@ -74,6 +108,18 @@ export const ItemRepo: ItemRepoPort = {
       await mappingRepo.save(mappings);
     }
 
+    if (data.images && data.images.length > 0) {
+      const imageRepo = em.getRepository("Image"); // Using string name to avoid import if lazy, but better to import
+      // Checked Image entity name is "Image".
+      // I'll assume I can use string or I'll add import if I can.
+      // Actually I will add import in separate step to ensure it works.
+      const images = data.images.map(url => imageRepo.create({
+        image_URL: url,
+        item: savedItem
+      }));
+      await imageRepo.save(images);
+    }
+
     return true;
   },
 
@@ -106,6 +152,20 @@ export const ItemRepo: ItemRepoPort = {
       await mappingRepo.save(mappings);
     }
 
+    if (data.images) {
+      const imageRepo = em.getRepository(Image);
+      // Delete existing images for this item
+      await imageRepo.delete({ item: { item_id: data.item_id } });
+
+      if (data.images.length > 0) {
+        const images = data.images.map(url => imageRepo.create({
+          image_URL: url,
+          item: { item_id: data.item_id } as Item // Use partial item object for relation reference
+        }));
+        await imageRepo.save(images);
+      }
+    }
+
     return true;
   },
 
@@ -118,7 +178,7 @@ export const ItemRepo: ItemRepoPort = {
     const items = await em
       .getRepository(Item)
       .createQueryBuilder("item")
-      .leftJoin("item.category_id", "category")
+      .leftJoin("item.category", "category")
       .select([
         "item.item_id AS item_id",
         "item.slug AS slug",
@@ -132,7 +192,7 @@ export const ItemRepo: ItemRepoPort = {
         "item.description AS description",
       ])
       .getRawMany();
-    return items
+    return items;
   },
   wrapTransaction: wrapTransaction,
 };

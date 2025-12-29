@@ -9,7 +9,8 @@ import {
     updateItemController,
     deleteItemController,
     getItemController,
-    getAllItemsController
+    getAllItemsController,
+    getAllItemsPageController
 } from "../controllers/item";
 
 const router = express.Router();
@@ -17,7 +18,11 @@ const router = express.Router();
 router.post('/create-item', authVerification(), validateDetails(AddItemSchema), createItemController(ItemRepo));
 router.put('/update-item', authVerification(), validateDetails(UpdateItemSchema), updateItemController(ItemRepo));
 router.delete('/delete-item', authVerification(), validateDetails(ItemIdSchema), deleteItemController(ItemRepo));
-router.get('/get-item', getItemController(ItemRepo,VariantRepo));
+router.get('/get-item/:id', getItemController(ItemRepo, VariantRepo));
+router.get('/get-item/slug/:slug', getItemController(ItemRepo, VariantRepo));
 router.get('/get-all-items', getAllItemsController(ItemRepo));
+router.get('/get-all-items-page', getAllItemsPageController(ItemRepo)); // Made public as per plan
+router.get('/public/get-all-items-page', getAllItemsPageController(ItemRepo)); // Explicit public route
+
 
 export default router;

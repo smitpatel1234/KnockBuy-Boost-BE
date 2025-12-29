@@ -743,6 +743,101 @@
         }
       }
     },
+    "/item/get-all-items-page": {
+      "post": {
+        "summary": "Create new item Page",
+        "tags": [
+          "Page"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pageParams": {
+                    "type": "object",
+                    "properties": {
+                      "pagination": {
+                        "type": "object",
+                        "properties": {
+                          "page": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "limit": {
+                            "type": "integer",
+                            "example": 10
+                          }
+                        },
+                        "required": [
+                          "page",
+                          "limit"
+                        ]
+                      },
+                      "filters": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "column": {
+                              "type": "string",
+                              "example": "status"
+                            },
+                            "value": {
+                              "type": "string",
+                              "example": "active"
+                            }
+                          },
+                          "required": [
+                            "column",
+                            "value"
+                          ]
+                        }
+                      },
+                      "sort": {
+                        "type": "object",
+                        "properties": {
+                          "column": {
+                            "type": "string",
+                            "example": "created_at"
+                          },
+                          "order": {
+                            "type": "string",
+                            "enum": [
+                              "ASC",
+                              "DESC"
+                            ],
+                            "example": "ASC"
+                          }
+                        },
+                        "required": [
+                          "column"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "pagination",
+                    "filters",
+                    "sort"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": null
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
     "/item/create-item": {
       "post": {
         "summary": "Create new item",

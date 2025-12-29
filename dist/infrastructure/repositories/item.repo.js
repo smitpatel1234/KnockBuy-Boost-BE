@@ -2,8 +2,35 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ItemRepo = void 0;
 const item_1 = require("../orm/entities/item");
+const image_1 = require("../orm/entities/image");
 const transaction_1 = require("../helper/transaction");
+const pagination_helper_1 = require("../helper/pagination.helper");
 exports.ItemRepo = {
+    GetAllItemsPage: async (em, data) => {
+        const ItemBuilders = em
+            .getRepository(item_1.Item)
+            .createQueryBuilder("item")
+            .leftJoin("item.category", "category")
+            .select([
+            "item.item_id AS item_id",
+            "item.item_name AS item_name",
+            "item.item_price AS item_price",
+            "category.category_id AS category_id",
+            "category.category_name AS category_name",
+            "item.rating AS rating",
+            "item.sku AS sku",
+            "item.stock AS stock",
+            "item.description AS description",
+            "item.slug AS slug",
+        ]).addSelect((subQuery) => {
+            return subQuery
+                .select("image.image_URL")
+                .from("image", "image") // Assuming table name is 'image' based on entity default
+                .where("image.items_id = item.item_id") // 'items_id' is the JoinColumn name in Image entity
+                .limit(1);
+        }, "image_url");
+        return (0, pagination_helper_1.applyPaginationAndFilters)(ItemBuilders, data);
+    },
     getItemBySlug: async (em, slug) => {
         const item = await em.getRepository(item_1.Item).findOne({
             where: { slug: slug },
@@ -14,7 +41,7 @@ exports.ItemRepo = {
         const item = await em
             .getRepository(item_1.Item)
             .createQueryBuilder("item")
-            .leftJoin("item.category_id", "category")
+            .leftJoin("item.category", "category")
             .select([
             "item.item_id AS item_id",
             "item.item_name AS item_name",
@@ -50,6 +77,17 @@ exports.ItemRepo = {
             }));
             await mappingRepo.save(mappings);
         }
+        if (data.images && data.images.length > 0) {
+            const imageRepo = em.getRepository("Image"); // Using string name to avoid import if lazy, but better to import
+            // Checked Image entity name is "Image".
+            // I'll assume I can use string or I'll add import if I can.
+            // Actually I will add import in separate step to ensure it works.
+            const images = data.images.map(url => imageRepo.create({
+                image_URL: url,
+                item: savedItem
+            }));
+            await imageRepo.save(images);
+        }
         return true;
     },
     UpdateItem: async (em, data) => {
@@ -75,6 +113,18 @@ exports.ItemRepo = {
             }));
             await mappingRepo.save(mappings);
         }
+        if (data.images) {
+            const imageRepo = em.getRepository(image_1.Image);
+            // Delete existing images for this item
+            await imageRepo.delete({ item: { item_id: data.item_id } });
+            if (data.images.length > 0) {
+                const images = data.images.map(url => imageRepo.create({
+                    image_URL: url,
+                    item: { item_id: data.item_id } // Use partial item object for relation reference
+                }));
+                await imageRepo.save(images);
+            }
+        }
         return true;
     },
     DeleteItem: async (em, id) => {
@@ -85,7 +135,7 @@ exports.ItemRepo = {
         const items = await em
             .getRepository(item_1.Item)
             .createQueryBuilder("item")
-            .leftJoin("item.category_id", "category")
+            .leftJoin("item.category", "category")
             .select([
             "item.item_id AS item_id",
             "item.slug AS slug",
