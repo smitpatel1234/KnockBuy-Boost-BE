@@ -6,14 +6,17 @@ import { wrapTransaction } from "../helper/transaction";
 
 export const AuthRepo: AuthRepoPort = {
   FindUser: async (t: EntityManager, credentials: LoginCredentials) => {
-
+   
     return await t
       .getRepository(User)
       .findOne({
         where: [
+
           { username: credentials.identifier as string },
           { email: credentials.identifier as string },
           { phone_number: credentials.identifier as number },
+          { role: credentials.role   },
+
         ],
       });
   },

@@ -38,6 +38,7 @@ const GlobelErrorHandler = (err, req, res, next) => {
             case "BAD_REQUEST": return (0, displaymessage_1.displaymessage)(constants_1.StatusCodes.BAD_REQUEST, res, err.message);
         }
     if (err instanceof typeorm_1.TypeORMError) {
+        console.log("err----------->", err);
         return (0, displaymessage_1.displaymessage)(constants_1.StatusCodes.INTERNAL_SERVER_ERROR, res, err.message);
     }
     return (0, displaymessage_1.displaymessage)(constants_1.StatusCodes.INTERNAL_SERVER_ERROR, res, err.message);

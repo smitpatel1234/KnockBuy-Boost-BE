@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Discount = void 0;
 const typeorm_1 = require("typeorm");
+const numbertoboolean_1 = require("../Transformer/numbertoboolean");
 let Discount = class Discount {
 };
 exports.Discount = Discount;
@@ -47,8 +48,8 @@ __decorate([
     __metadata("design:type", Date)
 ], Discount.prototype, "discount_start_date", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'boolean', nullable: true, default: false }),
-    __metadata("design:type", Boolean)
+    (0, typeorm_1.Column)({ type: 'tinyint', nullable: true, default: false, transformer: new numbertoboolean_1.BooleanTransformer() }),
+    __metadata("design:type", Number)
 ], Discount.prototype, "active_flag", void 0);
 exports.Discount = Discount = __decorate([
     (0, typeorm_1.Entity)()

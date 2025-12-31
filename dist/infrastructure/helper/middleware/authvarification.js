@@ -6,6 +6,7 @@ const GlobelErrorHandler_1 = require("./GlobelErrorHandler");
 const logger_1 = require("../logger");
 const authVerification = () => {
     return async (req, res, next) => {
+        console.log(req.body);
         const token = req.cookies.accessToken;
         if (!token) {
             throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.UNAUTHORIZED, "Invalid access token");

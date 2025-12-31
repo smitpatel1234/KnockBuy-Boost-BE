@@ -6,7 +6,7 @@ export interface AddDiscountModel {
     duration?: number;
     description?: string;
     discount_start_date?: Date;
-    active_flag?: boolean;
+    active_flag?: 1|0;
 }
 
 export interface DiscountModel extends AddDiscountModel {

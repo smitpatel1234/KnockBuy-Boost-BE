@@ -1,9 +1,16 @@
-import { Entity, Column, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn, OneToMany, DeleteDateColumn } from "typeorm";
+import {
+  Entity,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  DeleteDateColumn,
+} from "typeorm";
 import { Address } from "./address";
-
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   user_id!: string;
 
   @Column({ type: "varchar", unique: true, nullable: false, length: 50 })
@@ -17,6 +24,9 @@ export class User {
 
   @Column({ type: "int", nullable: false, unique: true })
   phone_number!: number;
+
+  @Column({type: "enum", enum: ["ADMIN", "USER"], default: "USER"})
+  role!: "ADMIN" | "USER";
 
   @CreateDateColumn({ type: "timestamp" })
   created_at!: Date;
@@ -33,15 +43,14 @@ export class User {
   @OneToMany(() => Address, (address) => address.user_id)
   addresses!: Address[] | string[];
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: "text", nullable: true })
   refresh_token?: string | null;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: "timestamp", nullable: true })
   refresh_expires_at?: Date;
 
-  @Column({ type: 'boolean', default: false })
+  @Column({ type: "boolean", default: false })
   refresh_is_revoked?: boolean;
   @DeleteDateColumn()
   deletedAt?: Date;
-
 }

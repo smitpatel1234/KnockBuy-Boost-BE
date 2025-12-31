@@ -21,9 +21,9 @@ exports.AppDataSource = new typeorm_1.DataSource({
     username: exports.Envvar.dbusername,
     password: exports.Envvar.dbpassword,
     database: exports.Envvar.database,
-    synchronize: true,
+    synchronize: false,
     // dropSchema:true,
-    // logging:true,
+    logging: true,
     timezone: 'Z',
     entities: [__dirname + '/../entities/*{.ts,.js}'],
 });

@@ -4,6 +4,7 @@ import { ApplicationError, ApplicationErrorType } from "./GlobelErrorHandler";
 import { logger } from "../logger";
 export const authVerification = () => {
   return async (req: Request, res: Response, next: NextFunction) => {
+    console.log(req.body)
     const token = req.cookies.accessToken;
     if (!token) {
       throw new ApplicationError(

@@ -14,7 +14,7 @@ export const loginUser = async (
     if (user) {
         const isMatch = await bcrypt.compare(credentials.password, user.password);
         if (isMatch) {
-            const token = await genrateToken({ id: user.user_id,role:"ADMIN" });
+            const token = await genrateToken({ id: user.user_id,role:credentials.role });
            const refreshTokenHash = await bcrypt.hash(token.refreshToken,Envvar.PassWordSalt);
             await authRepo.saveRefreshToken(entitiesmanager, { id: user.user_id, refreshToken: refreshTokenHash });
             return token;

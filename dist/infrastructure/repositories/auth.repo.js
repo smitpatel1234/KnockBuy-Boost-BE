@@ -12,6 +12,7 @@ exports.AuthRepo = {
                 { username: credentials.identifier },
                 { email: credentials.identifier },
                 { phone_number: credentials.identifier },
+                { role: credentials.role },
             ],
         });
     },

@@ -34,8 +34,8 @@ export const ItemRepo: ItemRepoPort = {
       ]).addSelect((subQuery) => {
         return subQuery
           .select("image.image_URL")
-          .from("image", "image") // Assuming table name is 'image' based on entity default
-          .where("image.items_id = item.item_id") // 'items_id' is the JoinColumn name in Image entity
+          .from("image", "image") 
+          .where("image.items_id = item.item_id") 
           .limit(1);
       }, "image_url");
 
@@ -77,7 +77,21 @@ export const ItemRepo: ItemRepoPort = {
       .where("item.item_id = :id", { id })
       .getRawOne();
 
-    return item as unknown as ItemModel;
+    if (!item) return null;
+
+    const related = await em
+      .getRepository("VariantCollection")
+      .createQueryBuilder("vc")
+      .leftJoinAndSelect("vc.variant_item_id", "variant_item")
+      .where("vc.item_id = :itemId", { itemId: id })
+      .getMany();
+
+    const result = {
+      ...item,
+      related_item_ids: related.map((r: any) => r.variant_item_id?.item_id)
+    };
+
+    return result as unknown as ItemModel;
   },
 
   CreateItem: async (

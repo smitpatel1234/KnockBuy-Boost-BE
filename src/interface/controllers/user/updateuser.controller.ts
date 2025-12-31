@@ -11,6 +11,7 @@ export const updateUserController = (
     UserAndCredentialsRepo.wrapTransaction(async (t: EntityManager) => {
 
         const User = req.body;
+        console.log(User);  
         const IsUpdated =await update_user(t, UserAndCredentialsRepo, User);
         if(!IsUpdated) throw new ApplicationError(ApplicationErrorType.NOT_FOUND,"User Not Found");
         return successmessage(res, "User updated successfully");

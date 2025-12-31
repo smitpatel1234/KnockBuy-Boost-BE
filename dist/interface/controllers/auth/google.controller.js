@@ -1,12 +1,12 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.LoginUserInGoogleController = void 0;
-const google_login_usecase_1 = require("../../../application/useCases/auth/google-login.usecase");
-const LoginUserInGoogleController = (AuthRepo) => {
-    return async (req, res) => {
-        AuthRepo.wrapTransaction(async (t) => {
-            await (0, google_login_usecase_1.loginUserInGoogle)(t, AuthRepo, req.user);
-        });
-    };
-};
-exports.LoginUserInGoogleController = LoginUserInGoogleController;
+// import { Request,Response } from 'express';
+// import { EntityManager } from 'typeorm';
+// import { AuthRepoPort } from '../../../application/port/auth-repo.port';
+// import { displaymessage } from '../../../infrastructure/helper/displaymessage';
+// import { loginUserInGoogle } from '../../../application/useCases/auth/google-login.usecase';
+// export const  LoginUserInGoogleController =  (AuthRepo: AuthRepoPort)=>{
+//     return async (req:Request,res:Response)=>{
+//       AuthRepo.wrapTransaction(async(t:EntityManager)=>{
+//          await loginUserInGoogle(t,AuthRepo,req.user);
+//       })}
+// }

@@ -2,19 +2,19 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, Jo
 import { Item } from "./item";
 import { User } from "./user";
 
-@Unique(['item', 'user'])
+// @Unique(['item', 'user'])
 @Entity()
 export class ItemCart {
 	@PrimaryGeneratedColumn('uuid')
 	cart_item_id!: string
 
-	@ManyToOne(() => Item,{onDelete:"CASCADE",nullable:false})
+	@ManyToOne(() => Item,{nullable:true})
 	@JoinColumn({ name: 'item_id' } )
-	item!: Item
+	item_id! : Item
 	
-    @ManyToOne(() => User,{onDelete:"CASCADE",nullable:false})
+    @ManyToOne(() => User,{nullable:true})
 	@JoinColumn({ name: 'user_id' })
-	user!: User
+	user_id!: User 
 
 	@Column({ type: 'int', nullable: false })
 	quantity!: number

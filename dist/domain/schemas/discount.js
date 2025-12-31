@@ -7,10 +7,10 @@ exports.AddDiscountSchema = zod_1.z.object({
     discount_code: zod_1.z.string().min(1, "Discount code is required"),
     discount_type: zod_1.z.enum(["percentage", "flat"]),
     discount_amount: zod_1.z.number().min(1, "Discount amount must be positive"),
-    duration: zod_1.z.string().optional(),
+    duration: zod_1.z.number().optional(),
     description: zod_1.z.string().optional(),
     discount_start_date: zod_1.z.string().or(zod_1.z.date()).transform((val) => new Date(val)).optional(),
-    active_flag: zod_1.z.boolean().optional().default(false),
+    active_flag: zod_1.z.union([zod_1.z.literal(1), zod_1.z.literal(0)]).optional()
 });
 exports.UpdateDiscountSchema = exports.AddDiscountSchema.extend({
     discount_id: zod_1.z.string().uuid(),

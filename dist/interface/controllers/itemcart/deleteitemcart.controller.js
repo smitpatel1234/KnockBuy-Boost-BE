@@ -1,0 +1,19 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.deleteItemCartController = void 0;
+const index_1 = require("../../../application/useCases/itemcart/index");
+const displaymessage_1 = require("../../../infrastructure/helper/displaymessage");
+const GlobelErrorHandler_1 = require("../../../infrastructure/helper/middleware/GlobelErrorHandler");
+const deleteItemCartController = (ItemCartRepo) => {
+    return async (req, res) => ItemCartRepo.wrapTransaction(async (t) => {
+        {
+            const itemcart_id = req.body.address_id;
+            const IsDeleted = await (0, index_1.delete_itemcart)(t, ItemCartRepo, itemcart_id);
+            if (!IsDeleted)
+                throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.NOT_FOUND, "addess Not Found");
+            ``;
+            return (0, displaymessage_1.successmessage)(res, "addess deleted successfully");
+        }
+    });
+};
+exports.deleteItemCartController = deleteItemCartController;

@@ -6,7 +6,6 @@ import { wrapTransaction } from "../helper/transaction";
 import { Brackets } from "typeorm";
 import { pageParams, PaginationResponse } from "../../domain/globalTypes/commonFields";
 import { applyPaginationAndFilters } from "../helper/pagination.helper";
-
 export const UserAndCredentialsRepo: UserAndCredentialsRepoPort = {
   getallUser: async (
     entitiesManager: EntityManager
@@ -25,7 +24,6 @@ export const UserAndCredentialsRepo: UserAndCredentialsRepoPort = {
     const userToUpdate = await entitiesManager.findOne(User, {
       where: { user_id: userProfile.user_id },
     });
-
     if (userToUpdate) {
       Object.assign(userToUpdate, userProfile);
       await entitiesManager.save(userToUpdate);
@@ -50,6 +48,7 @@ export const UserAndCredentialsRepo: UserAndCredentialsRepoPort = {
       password: UserserCredentials.password,
       email: UserserCredentials.email,
       phone_number: UserserCredentials.phone_number,
+      role: "USER",
     });
 
     return await entitiesmanager.save(user);

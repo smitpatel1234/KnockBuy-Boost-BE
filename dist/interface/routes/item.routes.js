@@ -17,6 +17,6 @@ router.delete('/delete-item', (0, authvarification_1.authVerification)(), (0, va
 router.get('/get-item/:id', (0, item_2.getItemController)(item_repo_1.ItemRepo, variant_repo_1.VariantRepo));
 router.get('/get-item/slug/:slug', (0, item_2.getItemController)(item_repo_1.ItemRepo, variant_repo_1.VariantRepo));
 router.get('/get-all-items', (0, item_2.getAllItemsController)(item_repo_1.ItemRepo));
-router.get('/get-all-items-page', (0, item_2.getAllItemsPageController)(item_repo_1.ItemRepo)); // Made public as per plan
-router.get('/public/get-all-items-page', (0, item_2.getAllItemsPageController)(item_repo_1.ItemRepo)); // Explicit public route
+router.get('/get-all-items-page', (0, item_2.getAllItemsPageController)(item_repo_1.ItemRepo));
+router.get('/public/get-all-items-page', (0, item_2.getAllItemsPageController)(item_repo_1.ItemRepo));
 exports.default = router;

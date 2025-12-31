@@ -16,7 +16,7 @@ let User = class User {
 };
 exports.User = User;
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
+    (0, typeorm_1.PrimaryGeneratedColumn)("uuid"),
     __metadata("design:type", String)
 ], User.prototype, "user_id", void 0);
 __decorate([
@@ -35,6 +35,10 @@ __decorate([
     (0, typeorm_1.Column)({ type: "int", nullable: false, unique: true }),
     __metadata("design:type", Number)
 ], User.prototype, "phone_number", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: "enum", enum: ["ADMIN", "USER"], default: "USER" }),
+    __metadata("design:type", String)
+], User.prototype, "role", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({ type: "timestamp" }),
     __metadata("design:type", Date)
@@ -56,15 +60,15 @@ __decorate([
     __metadata("design:type", Array)
 ], User.prototype, "addresses", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
+    (0, typeorm_1.Column)({ type: "text", nullable: true }),
     __metadata("design:type", Object)
 ], User.prototype, "refresh_token", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'timestamp', nullable: true }),
+    (0, typeorm_1.Column)({ type: "timestamp", nullable: true }),
     __metadata("design:type", Date)
 ], User.prototype, "refresh_expires_at", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'boolean', default: false }),
+    (0, typeorm_1.Column)({ type: "boolean", default: false }),
     __metadata("design:type", Boolean)
 ], User.prototype, "refresh_is_revoked", void 0);
 __decorate([

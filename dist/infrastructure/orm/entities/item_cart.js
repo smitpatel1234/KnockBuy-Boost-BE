@@ -13,6 +13,7 @@ exports.ItemCart = void 0;
 const typeorm_1 = require("typeorm");
 const item_1 = require("./item");
 const user_1 = require("./user");
+// @Unique(['item', 'user'])
 let ItemCart = class ItemCart {
 };
 exports.ItemCart = ItemCart;
@@ -21,15 +22,15 @@ __decorate([
     __metadata("design:type", String)
 ], ItemCart.prototype, "cart_item_id", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => item_1.Item, { onDelete: "CASCADE", nullable: false }),
+    (0, typeorm_1.ManyToOne)(() => item_1.Item, { nullable: true }),
     (0, typeorm_1.JoinColumn)({ name: 'item_id' }),
     __metadata("design:type", item_1.Item)
-], ItemCart.prototype, "item", void 0);
+], ItemCart.prototype, "item_id", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => user_1.User, { onDelete: "CASCADE", nullable: false }),
+    (0, typeorm_1.ManyToOne)(() => user_1.User, { nullable: true }),
     (0, typeorm_1.JoinColumn)({ name: 'user_id' }),
     __metadata("design:type", user_1.User)
-], ItemCart.prototype, "user", void 0);
+], ItemCart.prototype, "user_id", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'int', nullable: false }),
     __metadata("design:type", Number)
@@ -39,6 +40,5 @@ __decorate([
     __metadata("design:type", Date)
 ], ItemCart.prototype, "added_at", void 0);
 exports.ItemCart = ItemCart = __decorate([
-    (0, typeorm_1.Unique)(['item', 'user']),
     (0, typeorm_1.Entity)()
 ], ItemCart);

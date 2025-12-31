@@ -14,6 +14,7 @@ const item_routes_1 = __importDefault(require("../../../interface/routes/item.ro
 const address_routes_1 = __importDefault(require("../../../interface/routes/address.routes"));
 const path_1 = __importDefault(require("path"));
 const discount_routes_1 = __importDefault(require("../../../interface/routes/discount.routes"));
+const itemcart_routes_1 = __importDefault(require("../../../interface/routes/itemcart.routes"));
 const createRoutes = () => {
     const router = express_1.default.Router();
     router.use('/auth', auth_routes_1.default);
@@ -25,6 +26,7 @@ const createRoutes = () => {
     router.use('/item', item_routes_1.default);
     router.use('/address', address_routes_1.default);
     router.use('/discount', discount_routes_1.default);
+    router.use('/itemcart', itemcart_routes_1.default);
     return router;
 };
 exports.createRoutes = createRoutes;

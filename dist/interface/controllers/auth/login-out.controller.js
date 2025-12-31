@@ -7,6 +7,7 @@ const GlobelErrorHandler_1 = require("../../../infrastructure/helper/middleware/
 const displaymessage_1 = require("../../../infrastructure/helper/displaymessage");
 const LoginUserController = (AuthRepo) => {
     return async (req, res) => AuthRepo.wrapTransaction(async (t) => {
+        console.log(req.body, "????????????????????????");
         const credentials = req.body;
         const tokenvalues = await (0, login_usecase_1.loginUser)(t, credentials, AuthRepo);
         res.cookie("accessToken", tokenvalues.accessToken, {

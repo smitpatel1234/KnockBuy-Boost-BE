@@ -20,9 +20,9 @@ export const AppDataSource = new DataSource({
     username: Envvar.dbusername,
     password: Envvar.dbpassword,
     database: Envvar.database,
-    synchronize: true,
+    synchronize: false,
     // dropSchema:true,
-    // logging:true,
+    logging:true,
     timezone: 'Z',
     entities: [__dirname + '/../entities/*{.ts,.js}'],
 })

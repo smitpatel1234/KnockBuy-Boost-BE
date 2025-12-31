@@ -43,6 +43,8 @@ export const GlobelErrorHandler = (err:  Error| HttpError | ZodError | Applicati
             }
         if(err instanceof TypeORMError)
          {
+          console.log("err----------->",err);
+          
               return displaymessage(StatusCodes.INTERNAL_SERVER_ERROR, res, err.message);
          }
         return displaymessage(StatusCodes.INTERNAL_SERVER_ERROR, res, err.message);

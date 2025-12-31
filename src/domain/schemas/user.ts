@@ -28,10 +28,10 @@ export const phoneNumberAsIdentifier = z.object({ phone_number: PhoneField });
 export const userProfile  = z.object({
     user_id:IdField,
     username: UsernameField,
-    password: PasswordField,
     email: EmailField,
     phone_number: PhoneField,
     wishlist_name: z.string().max(100).optional(),
+    profile_image: z.string().optional()
 });
 export const user_id_schema = z.object({
     user_id:IdField

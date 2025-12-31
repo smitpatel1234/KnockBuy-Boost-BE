@@ -14,7 +14,7 @@ export class Item extends BaseSlugEntity {
 	@Column({ type: 'varchar', nullable: false, length: 255 })
 	item_name!: string
 
-	@Column({ type: 'int'})
+	@Column({ type: 'int' })
 	item_price!: number
 
 

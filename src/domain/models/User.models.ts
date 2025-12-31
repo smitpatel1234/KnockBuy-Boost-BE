@@ -8,7 +8,7 @@ export interface UserCredentials {
 }
 export interface jwtPayload extends JwtPayload {
     id: string;
-    role: 'ADMIN' | 'USER';
+    role: "ADMIN" | "USER";
 
 }
 export interface ExpIN {
@@ -24,5 +24,6 @@ export interface UserProfile {
     addresseses?: string[]
     profile_image?: string;
 }
+
 
 

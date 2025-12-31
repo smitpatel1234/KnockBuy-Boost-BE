@@ -10,6 +10,7 @@ import { successmessage } from "../../../infrastructure/helper/displaymessage";
 export const LoginUserController = (AuthRepo: AuthRepoPort) => {
   return async (req: Express.Request, res: Express.Response) =>
     AuthRepo.wrapTransaction(async (t: EntityManager) => {
+      console.log(req.body,"????????????????????????");
 
       const credentials: LoginCredentials = req.body;
 

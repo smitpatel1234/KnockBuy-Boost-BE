@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.parsePaginationParams = parsePaginationParams;
 function parsePaginationParams(req) {
-    const { page, limit, filters, sort } = req.query;
+    const { page, limit, filters, sort, } = req.query;
     const parsedPage = parseInt(page) || 1;
     const parsedLimit = parseInt(limit) || 10;
     let parsedFilters = [];

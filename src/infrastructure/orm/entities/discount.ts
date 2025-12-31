@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
-
+import { BooleanTransformer } from "../Transformer/numbertoboolean";
 @Entity()
 export class Discount {
 	@PrimaryGeneratedColumn('uuid')
@@ -24,8 +24,8 @@ export class Discount {
 
 	@Column({ type: 'timestamp', nullable: true })
 	discount_start_date?: Date
-
-	@Column({ type: 'boolean', nullable: true, default: false })
-	active_flag?: boolean
+    
+	@Column({ type: 'tinyint', nullable: true, default: false , transformer:new BooleanTransformer() })
+	active_flag?: 1|0
 }
 

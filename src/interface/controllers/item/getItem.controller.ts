@@ -20,7 +20,6 @@ export const getItemController = (
   return async (req: Express.Request, res: Express.Response) =>
     itemRepo.wrapTransaction(async (t: EntityManager) => {
       const { slug, id } = req.params;
-      console.log(id)
       if (slug) {
         const data = await get_item_by_slug(
           t,

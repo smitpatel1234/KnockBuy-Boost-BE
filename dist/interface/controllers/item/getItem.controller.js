@@ -7,7 +7,6 @@ const GlobelErrorHandler_1 = require("../../../infrastructure/helper/middleware/
 const getItemController = (itemRepo, variantRepo) => {
     return async (req, res) => itemRepo.wrapTransaction(async (t) => {
         const { slug, id } = req.params;
-        console.log(id);
         if (slug) {
             const data = await (0, item_1.get_item_by_slug)(t, String(slug), itemRepo, variantRepo);
             if (!data)

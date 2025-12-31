@@ -8,7 +8,7 @@ import itemsRouter from '../../../interface/routes/item.routes'
 import addressRouter from '../../../interface/routes/address.routes'
 import path from 'path';
 import discountRouter from '../../../interface/routes/discount.routes';
-
+import itemcartRoute from '../../../interface/routes/itemcart.routes';
 export const createRoutes = (): express.Router => {
   const router = express.Router();
   router.use('/auth', authRouter)
@@ -23,5 +23,6 @@ export const createRoutes = (): express.Router => {
   router.use('/item', itemsRouter)
   router.use('/address', addressRouter)
   router.use('/discount', discountRouter)
+  router.use('/itemcart', itemcartRoute)
   return router;
 }

@@ -35,6 +35,7 @@ exports.UserAndCredentialsRepo = {
             password: UserserCredentials.password,
             email: UserserCredentials.email,
             phone_number: UserserCredentials.phone_number,
+            role: "USER",
         });
         return await entitiesmanager.save(user);
     },

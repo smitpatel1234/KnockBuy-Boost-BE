@@ -25,6 +25,7 @@ exports.CategoryRepo = {
         await categoryRepo.save(newCategory);
     },
     updateCategory: async (em, input) => {
+        console.log(input);
         const categoryRepo = em.getRepository(category_1.Category);
         const existing = await categoryRepo.findOne({
             where: { category_id: input.category_id },

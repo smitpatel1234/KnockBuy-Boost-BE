@@ -32,6 +32,7 @@ export const CategoryRepo: CategoryRepoPort = {
   },
 
   updateCategory: async (em: EntityManager, input: CategoryType) => {
+    console.log(input)
     const categoryRepo = em.getRepository(Category);
 
     const existing = await categoryRepo.findOne({

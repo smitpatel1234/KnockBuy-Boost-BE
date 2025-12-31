@@ -25,10 +25,10 @@ exports.phoneNumberAsIdentifier = zod_1.z.object({ phone_number: exports.PhoneFi
 exports.userProfile = zod_1.z.object({
     user_id: exports.IdField,
     username: exports.UsernameField,
-    password: exports.PasswordField,
     email: exports.EmailField,
     phone_number: exports.PhoneField,
     wishlist_name: zod_1.z.string().max(100).optional(),
+    profile_image: zod_1.z.string().optional()
 });
 exports.user_id_schema = zod_1.z.object({
     user_id: exports.IdField
