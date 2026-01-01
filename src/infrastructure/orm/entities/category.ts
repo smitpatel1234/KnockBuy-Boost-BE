@@ -21,7 +21,7 @@ export class Category {
   })
   @JoinColumn({ name: "parent_category_id" })
   parentCategory!: Category | string | null;
-  @OneToMany(() => Item, (Item) => Item.category_id)
+  @OneToMany(() => Item, (Item) => Item.category)
   items!: Item[] | string[];
 
   @OneToMany(() => Category, (category) => category.parentCategory)

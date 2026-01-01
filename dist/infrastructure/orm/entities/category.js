@@ -32,7 +32,7 @@ __decorate([
     __metadata("design:type", Object)
 ], Category.prototype, "parentCategory", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => item_1.Item, (Item) => Item.category_id),
+    (0, typeorm_1.OneToMany)(() => item_1.Item, (Item) => Item.category),
     __metadata("design:type", Array)
 ], Category.prototype, "items", void 0);
 __decorate([

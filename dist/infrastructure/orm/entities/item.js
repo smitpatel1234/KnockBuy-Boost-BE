@@ -16,7 +16,7 @@ const base_slug_entity_1 = require("../commanEntity/base-slug.entity");
 const category_1 = require("./category");
 let Item = class Item extends base_slug_entity_1.BaseSlugEntity {
     getSlugSource() {
-        return `${this.item_name}-${this.item_price}-${this.category_id || 'default'}-${this.item_id?.substring(0, 8) || ''}`;
+        return `${this.item_name}-${this.item_price}-${this.category || 'default'}-${this.item_id?.substring(0, 8) || ''}`;
     }
 };
 exports.Item = Item;
@@ -35,12 +35,8 @@ __decorate([
 __decorate([
     (0, typeorm_1.ManyToOne)(() => category_1.Category, (category) => category.items, { nullable: true, onDelete: "CASCADE" }),
     (0, typeorm_1.JoinColumn)({ name: 'category_id' }),
-    __metadata("design:type", category_1.Category)
+    __metadata("design:type", Object)
 ], Item.prototype, "category", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
-    __metadata("design:type", String)
-], Item.prototype, "category_id", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'decimal', nullable: true, precision: 3, scale: 2 }),
     __metadata("design:type", Number)

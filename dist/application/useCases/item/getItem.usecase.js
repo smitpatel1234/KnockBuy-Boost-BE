@@ -6,6 +6,7 @@ const get_item_by_id = async (em, id, itemRepo, variantRepo) => {
     if (!item)
         return null;
     const variant = await variantRepo.getItemVariantMappingForItem(em, id);
+    const images = await itemRepo.getImagesByItemId(em, id);
     const data = {
         item_id: item.item_id,
         item_name: item.item_name,
@@ -17,8 +18,9 @@ const get_item_by_id = async (em, id, itemRepo, variantRepo) => {
         stock: item.stock,
         description: item.description,
         slug: item.slug,
-        variant_collections: [],
+        variant_collections: item.variant_collections ?? [],
         variant: variant,
+        images: images
     };
     return data;
 };
@@ -28,6 +30,7 @@ const get_item_by_slug = async (em, slug, itemRepo, variantRepo) => {
     if (!item)
         return null;
     const variant = await variantRepo.getItemVariantMappingForItem(em, item.item_id);
+    const images = await itemRepo.getImagesByItemId(em, item.item_id);
     const data = {
         item_id: item.item_id,
         item_name: item.item_name,
@@ -39,8 +42,9 @@ const get_item_by_slug = async (em, slug, itemRepo, variantRepo) => {
         stock: item.stock,
         description: item.description,
         slug: item.slug,
-        variant_collections: [],
+        variant_collections: item.variant_collections ?? [],
         variant: variant,
+        images: images
     };
     return data;
 };

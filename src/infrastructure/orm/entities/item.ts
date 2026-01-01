@@ -2,13 +2,14 @@ import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, JoinColum
 import { VariantCollection } from "./variant_collection";
 import { BaseSlugEntity } from "../commanEntity/base-slug.entity";
 import { Category } from "./category";
+import { Relation } from "typeorm";
 @Entity()
 export class Item extends BaseSlugEntity {
 	@PrimaryGeneratedColumn('uuid')
 	item_id!: string
 
 	getSlugSource(): string {
-		return `${this.item_name}-${this.item_price}-${this.category_id || 'default'}-${this.item_id?.substring(0, 8) || ''}`;
+		return `${this.item_name}-${this.item_price}-${this.category || 'default'}-${this.item_id?.substring(0, 8) || ''}`;
 	}
 
 	@Column({ type: 'varchar', nullable: false, length: 255 })
@@ -20,10 +21,8 @@ export class Item extends BaseSlugEntity {
 
 	@ManyToOne(() => Category, (category) => category.items, { nullable: true, onDelete: "CASCADE" })
 	@JoinColumn({ name: 'category_id' })
-	category!: Category;
+	category!: Relation<Category>;
 
-	@Column({ nullable: true })
-	category_id!: string;
 
 	@Column({ type: 'decimal', nullable: true, precision: 3, scale: 2 })
 	rating?: number

@@ -10,5 +10,6 @@ export interface ItemRepoPort {
     DeleteItem: (em: EntityManager, id: string) => Promise<boolean>;
     GetAllItems: (em: EntityManager) => Promise<GetItemModel[]>;
     GetAllItemsPage: (em: EntityManager, data: pageParams) => Promise<PaginationResponse<GetItemModel>>;
+    getImagesByItemId: (em: EntityManager, id: string) => Promise<string[]>;
     wrapTransaction: <T>(fun: (t: EntityManager) => Promise<T>) => Promise<T>;
 }

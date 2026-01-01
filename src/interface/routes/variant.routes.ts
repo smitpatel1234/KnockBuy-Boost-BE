@@ -12,6 +12,7 @@ import {
   VarientWithValuesSchema,
   VarientValuesID,
   VarientPropWithCollectionSchema,
+  VariantCollectionIdSchema,
 } from "../../domain/schemas/variant/Variant";
 
 import { VariantRepo } from "../../infrastructure/repositories/variant.repo";
@@ -30,6 +31,7 @@ import {
 } from "../controllers/variantValues/index";
 import { pageParamsSchema } from "../../domain/schemas/pagination";
 import { createItemVariantValueMapping_Controller, deleteItemVariantValueMapping_Controller } from "../controllers/itemvariantvaluemapping/index";
+import { deleteVariantCollectionController } from "../controllers/variant-collection/deleteVariantCollection.controller";
 const router = express.Router();
 
 router.get(
@@ -98,7 +100,11 @@ router.get(
   getAllVariantValuePageController(VariantRepo)
 );
 
-
-
+router.delete(
+  "/delete-variant-collection",
+  authVerification(),
+  validateDetails(VariantCollectionIdSchema),
+  deleteVariantCollectionController(VariantRepo)
+);
 
 export default router;

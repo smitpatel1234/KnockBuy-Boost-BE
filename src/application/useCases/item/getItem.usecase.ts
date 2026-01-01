@@ -12,6 +12,8 @@ export const get_item_by_id = async (
 
   if (!item) return null;
   const variant = await variantRepo.getItemVariantMappingForItem(em, id);
+  const images = await itemRepo.getImagesByItemId(em, id);
+
   const data = {
     item_id: item.item_id,
     item_name: item.item_name,
@@ -23,8 +25,9 @@ export const get_item_by_id = async (
     stock: item.stock,
     description: item.description,
     slug: item.slug,
-    variant_collections: [],
+    variant_collections: item.variant_collections ?? [],
     variant: variant,
+    images: images
   };
   return data;
 };
@@ -42,6 +45,7 @@ export const get_item_by_slug = async (
     em,
     item.item_id
   );
+  const images = await itemRepo.getImagesByItemId(em, item.item_id);
 
 
   const data = {
@@ -55,8 +59,9 @@ export const get_item_by_slug = async (
     stock: item.stock,
     description: item.description,
     slug: item.slug,
-    variant_collections: [],
+    variant_collections: item.variant_collections ?? [],
     variant: variant,
+    images: images
   };
   return data;
 };

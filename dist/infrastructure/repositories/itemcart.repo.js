@@ -8,11 +8,13 @@ exports.ItemCartRepo = {
         const q = em.getRepository(item_cart_1.ItemCart).createQueryBuilder("itemcart");
         q.where("itemcart.user = :user_id", { user_id });
         q.leftJoin("itemcart.item", "item").select([
-            "itemcart.cart_item_id",
-            "itemcart.quantity",
-            "item.item_name",
-            "item.item_price",
-            "item.stock",
+            "itemcart.cart_item_id as cart_item_id",
+            "itemcart.user as user",
+            "itemcart.item as item_id",
+            "itemcart.quantity as quantity",
+            "item.item_name as item_name",
+            "item.item_price as item_price",
+            "item.stock as stock",
         ]);
         return q.getRawMany();
     },
@@ -30,13 +32,25 @@ exports.ItemCartRepo = {
         return false;
     },
     deleteItemCartEntry: async (em, data) => {
-        const result = await em.getRepository(item_cart_1.ItemCart).delete(data.cart_item_id);
+        const result = await em.getRepository(item_cart_1.ItemCart).delete({ cart_item_id: data.cart_item_id });
         return (result.affected ?? 0) > 0;
     },
     crateItemCartEntry: async (em, data) => {
+        const exist = await em.getRepository(item_cart_1.ItemCart).findOne({
+            where: {
+                user: { user_id: data.user },
+                item: { item_id: data.item },
+            },
+        });
+        if (exist) {
+            const result = await em
+                .getRepository(item_cart_1.ItemCart)
+                .update(exist.cart_item_id, { quantity: exist.quantity + data.quantity });
+            return (result.affected ?? 0) > 0;
+        }
         const cart_item = em.create(item_cart_1.ItemCart, {
-            item: data.item,
-            user: data.user,
+            item: { item_id: data.item },
+            user: { user_id: data.user },
             quantity: data.quantity,
         });
         const result = await em.getRepository(item_cart_1.ItemCart).save(cart_item);

@@ -10,6 +10,7 @@ exports.AddItemSchema = zod_1.z.object({
     sku: zod_1.z.string().optional(),
     stock: zod_1.z.number().int().min(0),
     description: zod_1.z.string(),
+    images: zod_1.z.array(zod_1.z.string()).optional(),
     variant: zod_1.z.array(zod_1.z.object({
         variantProperty_id: zod_1.z.string().uuid(),
         variantValue_id: zod_1.z.string().uuid()

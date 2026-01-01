@@ -11,8 +11,8 @@ export type ItemCartDeleteType = Pick<ItemCartType , 'cart_item_id'>
 export type AddItemCartType = Omit<ItemCartType , 'cart_item_id'> 
 export type GetAllItemCartType ={
     cart_item_id: string,
-    item: Pick<Item , 'item_id' | 'item_name' | 'item_price' | 'stock'  > ,
+   
     user: string,
     quantity: number,
     added_at: Date
-}
+} &  Pick<Item , 'item_id' | 'item_name' | 'item_price' | 'stock'  > 

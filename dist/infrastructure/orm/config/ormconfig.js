@@ -13,7 +13,6 @@ exports.Envvar = {
     database: index_1.ENV.DB_NAME,
     PassWordSalt: index_1.ENV.PassWordSalt
 };
-console.log("Envvar >>>>", exports.Envvar);
 exports.AppDataSource = new typeorm_1.DataSource({
     type: 'mysql',
     host: exports.Envvar.dbhost,
@@ -21,9 +20,9 @@ exports.AppDataSource = new typeorm_1.DataSource({
     username: exports.Envvar.dbusername,
     password: exports.Envvar.dbpassword,
     database: exports.Envvar.database,
-    synchronize: false,
+    synchronize: true,
     // dropSchema:true,
-    logging: true,
+    //logging: true,
     timezone: 'Z',
     entities: [__dirname + '/../entities/*{.ts,.js}'],
 });

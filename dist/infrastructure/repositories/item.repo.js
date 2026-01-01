@@ -65,9 +65,17 @@ exports.ItemRepo = {
             .getMany();
         const result = {
             ...item,
-            related_item_ids: related.map((r) => r.variant_item_id?.item_id)
+            variant_collections: related.map((r) => r.variant_item_id?.item_id),
         };
         return result;
+    },
+    getImagesByItemId: async (em, id) => {
+        const images = await em
+            .getRepository(image_1.Image)
+            .createQueryBuilder("image")
+            .where("image.item = :itemId", { itemId: id })
+            .getMany();
+        return images.map(img => img.image_URL);
     },
     CreateItem: async (em, data) => {
         const itemRepo = em.getRepository(item_1.Item);
@@ -78,7 +86,7 @@ exports.ItemRepo = {
             rating: data.rating,
             sku: data.sku,
             stock: data.stock,
-            category_id: data.category_id,
+            category: { category_id: data.category_id },
         });
         const savedItem = await itemRepo.save(newItem);
         if (data.variant && data.variant.length > 0) {
@@ -89,11 +97,18 @@ exports.ItemRepo = {
             }));
             await mappingRepo.save(mappings);
         }
+        if (data.variant_collections && data.variant_collections.length > 0) {
+            const vcRepo = em.getRepository("VariantCollection");
+            const uniqueIds = Array.from(new Set(data.variant_collections)).filter(id => id !== savedItem.item_id);
+            const vcs = uniqueIds.map((vid) => vcRepo.create({
+                item_id: savedItem,
+                variant_item_id: { item_id: vid }
+            }));
+            if (vcs.length > 0)
+                await vcRepo.save(vcs);
+        }
         if (data.images && data.images.length > 0) {
-            const imageRepo = em.getRepository("Image"); // Using string name to avoid import if lazy, but better to import
-            // Checked Image entity name is "Image".
-            // I'll assume I can use string or I'll add import if I can.
-            // Actually I will add import in separate step to ensure it works.
+            const imageRepo = em.getRepository("Image");
             const images = data.images.map(url => imageRepo.create({
                 image_URL: url,
                 item: savedItem
@@ -114,7 +129,7 @@ exports.ItemRepo = {
         existing.rating = data.rating;
         existing.sku = data.sku;
         existing.stock = data.stock;
-        existing.category_id = data.category_id;
+        existing.category = { ...existing.category, category_id: data.category_id };
         await itemRepo.save(existing);
         if (data.variant) {
             const mappingRepo = em.getRepository("ItemVariantValueMapping");
@@ -125,14 +140,24 @@ exports.ItemRepo = {
             }));
             await mappingRepo.save(mappings);
         }
+        if (data.variant_collections) {
+            const vcRepo = em.getRepository("VariantCollection");
+            await vcRepo.delete({ item_id: { item_id: data.item_id } });
+            const uniqueIds = Array.from(new Set(data.variant_collections)).filter(id => id !== data.item_id);
+            const vcs = uniqueIds.map((vid) => vcRepo.create({
+                item_id: { item_id: data.item_id },
+                variant_item_id: { item_id: vid },
+            }));
+            if (vcs.length > 0)
+                await vcRepo.save(vcs);
+        }
         if (data.images) {
             const imageRepo = em.getRepository(image_1.Image);
-            // Delete existing images for this item
             await imageRepo.delete({ item: { item_id: data.item_id } });
             if (data.images.length > 0) {
                 const images = data.images.map(url => imageRepo.create({
                     image_URL: url,
-                    item: { item_id: data.item_id } // Use partial item object for relation reference
+                    item: { item_id: data.item_id }
                 }));
                 await imageRepo.save(images);
             }
@@ -153,7 +178,7 @@ exports.ItemRepo = {
             "item.slug AS slug",
             "item.item_name AS item_name",
             "item.item_price AS item_price",
-            "item.category_id AS category_id",
+            "category.category_id AS category_id",
             "category.category_name AS category_name",
             "item.rating AS rating",
             "item.sku AS sku",

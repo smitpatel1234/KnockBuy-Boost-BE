@@ -1,21 +1,21 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, JoinColumn ,Unique} from "typeorm";
 import { Item } from "./item";
 import { User } from "./user";
-
-// @Unique(['item', 'user'])
+import { Relation } from "typeorm";
+@Unique(['item', 'user'])
 @Entity()
 export class ItemCart {
 	@PrimaryGeneratedColumn('uuid')
 	cart_item_id!: string
 
-	@ManyToOne(() => Item,{nullable:true})
+	@ManyToOne(() => Item)
 	@JoinColumn({ name: 'item_id' } )
-	item_id! : Item
+	item! : Relation<Item>
 	
-    @ManyToOne(() => User,{nullable:true})
+    @ManyToOne(() => User)
 	@JoinColumn({ name: 'user_id' })
-	user_id!: User 
-
+	user!: Relation<User>
+   
 	@Column({ type: 'int', nullable: false })
 	quantity!: number
 

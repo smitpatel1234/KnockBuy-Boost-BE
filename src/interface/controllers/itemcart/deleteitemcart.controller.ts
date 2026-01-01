@@ -10,8 +10,8 @@ export const deleteItemCartController = (ItemCartRepo: ItemCartRepoPort) => {
   return async (req: Express.Request, res: Express.Response) =>
     ItemCartRepo.wrapTransaction(async (t: EntityManager) => {
       {
-          const itemcart_id = req.body.address_id;
-         const IsDeleted =  await delete_itemcart(t, ItemCartRepo, itemcart_id );    
+          const cart_item_id = req.body.cart_item_id;
+         const IsDeleted =  await delete_itemcart(t, ItemCartRepo, {cart_item_id:cart_item_id} );    
          if(!IsDeleted) throw new ApplicationError(ApplicationErrorType.NOT_FOUND,"addess Not Found");``
           return successmessage(res, "addess deleted successfully");   
       }

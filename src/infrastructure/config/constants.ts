@@ -1,5 +1,4 @@
  
-// Generated file. Do not edit
 export enum StatusCodes {
   /**
    * Official Documentation @ https://tools.ietf.org/html/rfc7231#section-6.3.3

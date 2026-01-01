@@ -14,6 +14,7 @@ const getallvariantprop_controller_1 = require("../controllers/variantProperys/g
 const createvariantprop_controller_1 = require("../controllers/variantProperys/createvariantprop.controller");
 const index_1 = require("../controllers/variantValues/index");
 const index_2 = require("../controllers/itemvariantvaluemapping/index");
+const deleteVariantCollection_controller_1 = require("../controllers/variant-collection/deleteVariantCollection.controller");
 const router = express_1.default.Router();
 router.get("/get-all-variant-properties", (0, authvarification_1.authVerification)(), (0, getallvariantprop_controller_1.getAllVariantPropertiesController)(variant_repo_1.VariantRepo));
 router.post("/create-variant-property", (0, authvarification_1.authVerification)(), (0, validator_1.validateDetails)(Variant_1.AddVarientPropertysSchema), (0, createvariantprop_controller_1.createVariantPropController)(variant_repo_1.VariantRepo));
@@ -26,4 +27,5 @@ router.delete("/delete-variant-value", (0, authvarification_1.authVerification)(
 router.post("/create-item-variant-value-mapping", (0, authvarification_1.authVerification)(), (0, validator_1.validateDetails)(Variant_1.ItemVariantValueMappingSchema), (0, index_2.createItemVariantValueMapping_Controller)(variant_repo_1.VariantRepo));
 router.delete("/delete-item-variant-value-mapping", (0, authvarification_1.authVerification)(), (0, validator_1.validateDetails)(Variant_1.ItemVariantValueMappingId), (0, index_2.deleteItemVariantValueMapping_Controller)(variant_repo_1.VariantRepo));
 router.get("/get-all-variant-values-page", (0, authvarification_1.authVerification)(), (0, index_1.getAllVariantValuePageController)(variant_repo_1.VariantRepo));
+router.delete("/delete-variant-collection", (0, authvarification_1.authVerification)(), (0, validator_1.validateDetails)(Variant_1.VariantCollectionIdSchema), (0, deleteVariantCollection_controller_1.deleteVariantCollectionController)(variant_repo_1.VariantRepo));
 exports.default = router;

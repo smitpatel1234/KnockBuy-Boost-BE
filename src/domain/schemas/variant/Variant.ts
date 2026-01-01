@@ -49,3 +49,7 @@ export const  ItemVariantValueMappingSchema =  {
   variantValue_id: IdField
 }
 
+export const VariantCollectionIdSchema = z.object({
+  variant_collection_id: IdField
+});
+

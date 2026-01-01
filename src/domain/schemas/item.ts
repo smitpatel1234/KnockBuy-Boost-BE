@@ -8,6 +8,7 @@ export const AddItemSchema = z.object({
     sku: z.string().optional(),
     stock: z.number().int().min(0),
     description: z.string(),
+    images: z.array(z.string()).optional(),
     variant: z.array(z.object({
         variantProperty_id: z.string().uuid(),
         variantValue_id: z.string().uuid()
