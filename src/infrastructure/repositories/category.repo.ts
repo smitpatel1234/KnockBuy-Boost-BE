@@ -1,10 +1,11 @@
 import { EntityManager } from "typeorm";
-import { AddCategory, CategoryType, CategoryAllType } from "../../domain/models/category.models";
-import { Category } from "../orm/entities/category";
+
 import { CategoryRepoPort } from "../../application/port/category-repo.port";
-import { wrapTransaction } from "../helper/transaction";
 import { pageParams, PaginationResponse } from "../../domain/globalTypes/commonFields";
+import { AddCategory, CategoryAllType, CategoryType } from "../../domain/models/category.models";
 import { applyPaginationAndFilters } from "../helper/pagination.helper";
+import { wrapTransaction } from "../helper/transaction";
+import { Category } from "../orm/entities/category";
 export const CategoryRepo: CategoryRepoPort = {
   createCategory: async (em: EntityManager, input: AddCategory) => {
     const categoryRepo = em.getRepository(Category);
@@ -17,8 +18,8 @@ export const CategoryRepo: CategoryRepoPort = {
 
     if (input.parent_category_id) {
       const parent = await categoryRepo.findOne({
-        where: { category_id: input.parent_category_id },
         select: ["category_id"],
+        where: { category_id: input.parent_category_id },
       });
 
       if (!parent) {
@@ -29,43 +30,6 @@ export const CategoryRepo: CategoryRepoPort = {
     }
 
     await categoryRepo.save(newCategory);
-  },
-
-  updateCategory: async (em: EntityManager, input: CategoryType) => {
-    console.log(input)
-    const categoryRepo = em.getRepository(Category);
-
-    const existing = await categoryRepo.findOne({
-      where: { category_id: input.category_id },
-    });
-
-    if (!existing) {
-      throw new Error("Category not found");
-    }
-
-    if (input.parent_category_id) {
-      if (input.parent_category_id === input.category_id) {
-        throw new Error("Category cannot be its own parent");
-      }
-
-      const parent = await categoryRepo.findOne({
-        where: { category_id: input.parent_category_id },
-        select: ["category_id"],
-      });
-
-      if (!parent) {
-        throw new Error("Parent category does not exist");
-      }
-
-      existing.parentCategory = parent;
-    }
-
-    existing.category_name = input.category_name;
-    existing.description = input.description;
-    existing.image_url = input.image_url;
-
-    await categoryRepo.save(existing);
-    return true;
   },
 
   deleteCategory: async (em: EntityManager, category_id: string) => {
@@ -90,6 +54,7 @@ export const CategoryRepo: CategoryRepoPort = {
       .getRawMany<CategoryAllType>();
     return categories;
   },
+
   GetAllCategoryPage: async (
     em: EntityManager,
     data: pageParams
@@ -108,6 +73,42 @@ export const CategoryRepo: CategoryRepoPort = {
       ]);
 
     return applyPaginationAndFilters<CategoryAllType>(qb, data);
+  },
+  updateCategory: async (em: EntityManager, input: CategoryType) => {
+    console.log(input)
+    const categoryRepo = em.getRepository(Category);
+
+    const existing = await categoryRepo.findOne({
+      where: { category_id: input.category_id },
+    });
+
+    if (!existing) {
+      throw new Error("Category not found");
+    }
+
+    if (input.parent_category_id) {
+      if (input.parent_category_id === input.category_id) {
+        throw new Error("Category cannot be its own parent");
+      }
+
+      const parent = await categoryRepo.findOne({
+        select: ["category_id"],
+        where: { category_id: input.parent_category_id },
+      });
+
+      if (!parent) {
+        throw new Error("Parent category does not exist");
+      }
+
+      existing.parentCategory = parent;
+    }
+
+    existing.category_name = input.category_name;
+    existing.description = input.description;
+    existing.image_url = input.image_url;
+
+    await categoryRepo.save(existing);
+    return true;
   },
   wrapTransaction: wrapTransaction,
 };

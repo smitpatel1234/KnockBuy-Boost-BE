@@ -14,6 +14,7 @@ const typeorm_1 = require("typeorm");
 const variant_collection_1 = require("./variant_collection");
 const base_slug_entity_1 = require("../commanEntity/base-slug.entity");
 const category_1 = require("./category");
+const image_1 = require("./image");
 let Item = class Item extends base_slug_entity_1.BaseSlugEntity {
     getSlugSource() {
         return `${this.item_name}-${this.item_price}-${this.category || 'default'}-${this.item_id?.substring(0, 8) || ''}`;
@@ -54,9 +55,17 @@ __decorate([
     __metadata("design:type", String)
 ], Item.prototype, "description", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => variant_collection_1.VariantCollection, vc => vc.item_id),
+    (0, typeorm_1.OneToMany)(() => variant_collection_1.VariantCollection, vc => vc.variant_collection_id),
     __metadata("design:type", Array)
 ], Item.prototype, "variant_collections", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => image_1.Image, (image) => image.item),
+    __metadata("design:type", Array)
+], Item.prototype, "images", void 0);
+__decorate([
+    (0, typeorm_1.DeleteDateColumn)(),
+    __metadata("design:type", Date)
+], Item.prototype, "deleted_at", void 0);
 exports.Item = Item = __decorate([
     (0, typeorm_1.Entity)()
 ], Item);

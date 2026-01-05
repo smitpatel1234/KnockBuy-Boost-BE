@@ -60,12 +60,16 @@ exports.ItemRepo = {
         const related = await em
             .getRepository("VariantCollection")
             .createQueryBuilder("vc")
-            .leftJoinAndSelect("vc.variant_item_id", "variant_item")
-            .where("vc.item_id = :itemId", { itemId: id })
-            .getMany();
+            .leftJoin("vc.variant_item", "variant_item")
+            .select([
+            "variant_item.item_id AS item_id",
+            "variant_item.item_name AS item_name",
+        ])
+            .where("vc.main_item = :itemId", { itemId: id })
+            .getRawMany();
         const result = {
             ...item,
-            variant_collections: related.map((r) => r.variant_item_id?.item_id),
+            variant_collections: related,
         };
         return result;
     },
@@ -99,10 +103,9 @@ exports.ItemRepo = {
         }
         if (data.variant_collections && data.variant_collections.length > 0) {
             const vcRepo = em.getRepository("VariantCollection");
-            const uniqueIds = Array.from(new Set(data.variant_collections)).filter(id => id !== savedItem.item_id);
-            const vcs = uniqueIds.map((vid) => vcRepo.create({
-                item_id: savedItem,
-                variant_item_id: { item_id: vid }
+            const vcs = data.variant_collections.map((vid) => vcRepo.create({
+                main_item: { item_id: savedItem.item_id },
+                variant_item: { item_id: vid.item_id },
             }));
             if (vcs.length > 0)
                 await vcRepo.save(vcs);
@@ -118,7 +121,6 @@ exports.ItemRepo = {
         return true;
     },
     UpdateItem: async (em, data) => {
-        console.log("UpdateItem", data);
         const itemRepo = em.getRepository(item_1.Item);
         const existing = await itemRepo.findOneBy({ item_id: data.item_id });
         if (!existing)
@@ -142,11 +144,10 @@ exports.ItemRepo = {
         }
         if (data.variant_collections) {
             const vcRepo = em.getRepository("VariantCollection");
-            await vcRepo.delete({ item_id: { item_id: data.item_id } });
-            const uniqueIds = Array.from(new Set(data.variant_collections)).filter(id => id !== data.item_id);
-            const vcs = uniqueIds.map((vid) => vcRepo.create({
-                item_id: { item_id: data.item_id },
-                variant_item_id: { item_id: vid },
+            await vcRepo.delete({ main_item: { item_id: data.item_id } });
+            const vcs = data.variant_collections.map((vid) => vcRepo.create({
+                main_item: { item_id: data.item_id },
+                variant_item: { item_id: vid.item_id },
             }));
             if (vcs.length > 0)
                 await vcRepo.save(vcs);
@@ -165,7 +166,7 @@ exports.ItemRepo = {
         return true;
     },
     DeleteItem: async (em, id) => {
-        const result = await em.getRepository(item_1.Item).delete(id);
+        const result = await em.getRepository(item_1.Item).softDelete(id);
         return (result.affected ?? 0) > 0;
     },
     GetAllItems: async (em) => {

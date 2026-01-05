@@ -54,12 +54,16 @@ const decodedToken = async (token) => {
 exports.decodedToken = decodedToken;
 const regenerateToken = async (refresh_token) => {
     try {
-        const decoded = await jsonwebtoken_1.default.verify(refresh_token, exports.Envvar.JWT_SECRET);
-        const newToken = await accessTokengenrator(decoded);
-        const decoded1 = await (0, exports.decodedToken)(newToken);
+        const decoded = (await jsonwebtoken_1.default.verify(refresh_token, exports.Envvar.JWT_SECRET));
+        const { iat, exp, ...newPayload } = decoded;
+        const newToken = await accessTokengenrator(newPayload);
+        const decoded1 = (await (0, exports.decodedToken)(newToken));
         if (!decoded1)
             throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.UNAUTHORIZED, "Unauthorized User");
-        return { accesstoken: newToken, expIN: decoded1.exp };
+        return {
+            accesstoken: newToken,
+            expIN: decoded1.exp
+        };
     }
     catch (error) {
         throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.UNAUTHORIZED, "Unauthorized User");

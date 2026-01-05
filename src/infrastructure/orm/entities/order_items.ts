@@ -1,24 +1,25 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, Unique } from "typeorm";
-import { Order } from "./order";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
+
 import { Item } from "./item";
-@Unique(['order', 'item'])
+import { Order } from "./order";
 @Entity()
+@Unique(['order', 'item'])
 export class OrderItems {
-	@PrimaryGeneratedColumn('uuid')
-	order_items_id!: string
-
-	@ManyToOne(() => Order, o => o.order_items)
-	@JoinColumn({ name: 'order_id' })
-	order!: Order
-
-	@ManyToOne(() => Item)
 	@JoinColumn({ name: 'item_id' })
+	@ManyToOne(() => Item)
 	item!: Item
 
-	@Column({ type: 'int', nullable: false })
+	@Column({ nullable: true, precision: 12, scale: 2, type: 'decimal' })
+	item_purchase_price?: number
+
+	@Column({ nullable: false, type: 'int' })
 	item_quantity!: number
 
-	@Column({ type: 'decimal', nullable: true, precision: 12, scale: 2 })
-	item_purchase_price?: number
+	@JoinColumn({ name: 'order_id' })
+	@ManyToOne(() => Order, o => o.order_items)
+	order!: Order
+
+	@PrimaryGeneratedColumn('uuid')
+	order_items_id!: string
 }
 

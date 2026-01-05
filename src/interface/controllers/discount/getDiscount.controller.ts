@@ -1,5 +1,6 @@
-import { EntityManager } from "typeorm";
 import Express from "express";
+import { EntityManager } from "typeorm";
+
 import { DiscountRepoPort } from "../../../application/port/discount-repo.port";
 import { get_discount } from "../../../application/useCases/discount";
 import { successmessage } from "../../../infrastructure/helper/displaymessage";
@@ -14,6 +15,6 @@ export const getDiscountController = (discountRepo: DiscountRepoPort) => {
             const discount = await get_discount(t, id as string, discountRepo);
             if (!discount) throw new ApplicationError(ApplicationErrorType.NOT_FOUND, "Discount Not Found");
 
-            return successmessage(res, "Get discount successfully", discount);
+            successmessage(res, "Get discount successfully", discount);
         });
 };

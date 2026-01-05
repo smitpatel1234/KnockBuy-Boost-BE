@@ -60,7 +60,6 @@ exports.DiscountRepo = {
             discount_start_date: data.discount_start_date,
             active_flag: data.active_flag,
         });
-        console.log(newDiscount);
         try {
             await discountRepo.save(newDiscount);
         }

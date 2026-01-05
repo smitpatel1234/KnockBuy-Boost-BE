@@ -1,5 +1,6 @@
-import { EntityManager } from "typeorm";
 import Express from "express";
+import { EntityManager } from "typeorm";
+
 import { CategoryRepoPort } from "../../../application/port/category-repo.port";
 import { delete_category } from "../../../application/useCases/category/index";
 import {successmessage} from '../../../infrastructure/helper/displaymessage'
@@ -13,7 +14,7 @@ export const deleteCategoryController = (CategoryRepo: CategoryRepoPort) => {
           const category_id = req.body.category_id;
          const IsDeleted =  await delete_category(t, CategoryRepo, category_id);    
          if(!IsDeleted) throw new ApplicationError(ApplicationErrorType.NOT_FOUND,"Category Not Found");``
-          return successmessage(res, "Category deleted successfully");   
+          successmessage(res, "Category deleted successfully"); return;   
       }
     });
 };

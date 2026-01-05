@@ -1,31 +1,32 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+
 import { BooleanTransformer } from "../Transformer/numbertoboolean";
 @Entity()
 export class Discount {
+	@Column({ default: false, nullable: true, transformer:new BooleanTransformer() , type: 'tinyint' })
+	active_flag?: 0|1
+
+	@Column({ length: 255, nullable: true, type: 'varchar' })
+	description?: string
+	@Column({ nullable: true, type: 'float'  })
+	discount_amount?: number
+
+	@Column({ length: 255, nullable: false, type: 'varchar' })
+	discount_code!: string
+
 	@PrimaryGeneratedColumn('uuid')
 	discount_id!: string
 
-	@Column({ type: 'varchar', nullable: false, length: 255 })
+	@Column({ length: 255, nullable: false, type: 'varchar' })
 	discount_name!: string
-	@Column({ type: 'varchar', nullable: false, length: 255 })
-	discount_code!: string
 
-	@Column({ type: 'varchar', nullable: true, length: 20 })
-	discount_type?: "percentage" | "flat"
-
-	@Column({ type: 'float', nullable: true  })
-	discount_amount?: number
-
-	@Column({ type: 'int', nullable: true })
-	duration?: number
-
-	@Column({ type: 'varchar', nullable: true, length: 255 })
-	description?: string
-
-	@Column({ type: 'timestamp', nullable: true })
+	@Column({ nullable: true, type: 'timestamp' })
 	discount_start_date?: Date
+
+	@Column({ length: 20, nullable: true, type: 'varchar' })
+	discount_type?: "flat" | "percentage"
     
-	@Column({ type: 'tinyint', nullable: true, default: false , transformer:new BooleanTransformer() })
-	active_flag?: 1|0
+	@Column({ nullable: true, type: 'int' })
+	duration?: number
 }
 

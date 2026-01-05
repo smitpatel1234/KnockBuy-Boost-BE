@@ -1,6 +1,7 @@
 import { EntityManager } from "typeorm";
-import { CategoryRepoPort } from "../../port/category-repo.port";
+
 import { CategoryType } from "../../../domain/models/category.models";
+import { CategoryRepoPort } from "../../port/category-repo.port";
 
 export const update_category= async (
         EntityManager: EntityManager,

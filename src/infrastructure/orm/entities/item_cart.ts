@@ -1,25 +1,26 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, JoinColumn ,Unique} from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn ,Unique} from "typeorm";
+import { Relation } from "typeorm";
+
 import { Item } from "./item";
 import { User } from "./user";
-import { Relation } from "typeorm";
-@Unique(['item', 'user'])
 @Entity()
+@Unique(['item', 'user'])
 export class ItemCart {
+	@CreateDateColumn({ type: 'timestamp' })
+	added_at!: Date
+
 	@PrimaryGeneratedColumn('uuid')
 	cart_item_id!: string
 
-	@ManyToOne(() => Item)
-	@JoinColumn({ name: 'item_id' } )
+    @JoinColumn({ name: 'item_id' })
+	@ManyToOne(() => Item, { nullable: false, onDelete: "CASCADE" })
 	item! : Relation<Item>
-	
-    @ManyToOne(() => User)
-	@JoinColumn({ name: 'user_id' })
-	user!: Relation<User>
    
-	@Column({ type: 'int', nullable: false })
+	@Column({ nullable: false, type: 'int' })
 	quantity!: number
 
-	@CreateDateColumn({ type: 'timestamp' })
-	added_at!: Date
+	@JoinColumn({ name: 'user_id' })
+	@ManyToOne(() => User, { nullable: false, onDelete: "CASCADE" })
+	user!: Relation<User>
 }
 

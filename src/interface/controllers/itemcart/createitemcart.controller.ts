@@ -1,5 +1,6 @@
-import { EntityManager } from "typeorm";
 import Express from "express";
+import { EntityManager } from "typeorm";
+
 import { ItemCartRepoPort } from "../../../application/port/itemcart-repo.port";
 import { create_itemcart } from "../../../application/useCases/itemcart/index";
 import { successmessage } from "../../../infrastructure/helper/displaymessage";
@@ -11,14 +12,13 @@ export const createItemCartController = (ItemCartRepo: ItemCartRepoPort) => {
         const user_id = req.body.user.id as string;
         const itemcart = req.body;
         const data = {
-          item: itemcart.item,
-          user: user_id,
-          quantity: itemcart.quantity,
           added_at: new Date(),
+          item: itemcart.item,
+          quantity: itemcart.quantity,
+          user: user_id,
         };
-        console.log(data);
         await create_itemcart(t, ItemCartRepo, data);
-        return successmessage(res, "add to cart successfully");
+        successmessage(res, "add to cart successfully"); return;
       }
     });
 };

@@ -1,10 +1,11 @@
-import { EntityManager } from "typeorm";
 import Express from "express";
+import { EntityManager } from "typeorm";
+
 import { VariantRepoPort } from "../../../application/port/variant-repo.port";
 import { successmessage } from "../../../infrastructure/helper/displaymessage";
 import {
-  ApplicationErrorType,
   ApplicationError,
+  ApplicationErrorType,
 } from "../../../infrastructure/helper/middleware/GlobelErrorHandler";
 
 export const deleteVariantCollectionController = (
@@ -15,7 +16,7 @@ export const deleteVariantCollectionController = (
       const { variant_collection_id } = req.body;
       try {
         await variantRepo.deleteVariantCollection(t, variant_collection_id);
-        return successmessage(res, "Variant collection mapping deleted successfully");
+        successmessage(res, "Variant collection mapping deleted successfully"); return;
       } catch (err) {
         throw new ApplicationError(
           ApplicationErrorType.BAD_REQUEST,

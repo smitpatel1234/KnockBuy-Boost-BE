@@ -14,7 +14,6 @@ const createItemCartController = (ItemCartRepo) => {
                 quantity: itemcart.quantity,
                 added_at: new Date(),
             };
-            console.log(data);
             await (0, index_1.create_itemcart)(t, ItemCartRepo, data);
             return (0, displaymessage_1.successmessage)(res, "add to cart successfully");
         }

@@ -145,8 +145,8 @@ exports.VariantRepo = {
             where: { item_id: data.variant_item_id },
         });
         const entity = em.create(variant_collection_1.VariantCollection, {
-            item_id: item,
-            variant_item_id: variantItem,
+            main_item: item,
+            variant_item: variantItem,
         });
         return em.save(entity);
     },

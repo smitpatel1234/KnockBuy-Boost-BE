@@ -20,3 +20,4 @@ __exportStar(require("./deleteDiscount.controller"), exports);
 __exportStar(require("./getDiscount.controller"), exports);
 __exportStar(require("./getAllDiscounts.controller"), exports);
 __exportStar(require("./getAllDiscountsPage.controller"), exports);
+__exportStar(require("./validatePromo.controller"), exports);

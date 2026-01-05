@@ -1,16 +1,8 @@
 import { ValueTransformer } from 'typeorm';
 
 export class BooleanTransformer implements ValueTransformer {
-  // To database: boolean | null to 1 | 0 | null
-  to(value: boolean | null): number | null {
-    if (value === null) {
-      return null;
-    }
-    return value ? 1 : 0;
-  }
-
   // From database: 1 | 0 | Buffer | null to boolean | null
-  from(value: number | Buffer | null): boolean | null {
+  from(value: Buffer | null | number): boolean | null {
     if (value === null) {
       return null;
     }
@@ -20,5 +12,13 @@ export class BooleanTransformer implements ValueTransformer {
     }
     // Handle number for tinyint(1) or other numeric types
     return value === 1;
+  }
+
+  // To database: boolean | null to 1 | 0 | null
+  to(value: boolean | null): null | number {
+    if (value === null) {
+      return null;
+    }
+    return value ? 1 : 0;
   }
 }

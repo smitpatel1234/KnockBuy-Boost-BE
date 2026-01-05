@@ -5,7 +5,7 @@ export const delete_User = async (
   t: EntityManager,
   userId: string,
   userRepo: UserAndCredentialsRepoPort
-): Promise<boolean | void > => {
+): Promise<void> => {
     const user = await userRepo.getUser(t, userId);
     if (!user) {
         throw new ApplicationError(ApplicationErrorType.NOT_FOUND,'User not found');

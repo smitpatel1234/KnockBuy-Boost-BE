@@ -1,6 +1,5 @@
 import { EntityManager } from "typeorm";
 import { ItemRepoPort } from "../../port/item-repo.port";
-import { ItemVariantValueMapping } from "../../../infrastructure/orm/entities/item_variantVlaue_mapping";
 import { VariantRepoPort } from "../../port/variant-repo.port";
 export const get_item_by_id = async (
   em: EntityManager,
@@ -15,19 +14,19 @@ export const get_item_by_id = async (
   const images = await itemRepo.getImagesByItemId(em, id);
 
   const data = {
+    category_id: item.category_id,
+    category_name: item.category_name,
+    description: item.description,
+    images: images,
     item_id: item.item_id,
     item_name: item.item_name,
     item_price: item.item_price,
-    category_id: item.category_id,
-    category_name: item.category_name,
     rating: item.rating,
     sku: item.sku,
-    stock: item.stock,
-    description: item.description,
     slug: item.slug,
-    variant_collections: item.variant_collections ?? [],
+    stock: item.stock,
     variant: variant,
-    images: images
+    variant_collections: item.variant_collections ?? []
   };
   return data;
 };
@@ -49,19 +48,19 @@ export const get_item_by_slug = async (
 
 
   const data = {
+    category_id: item.category_id,
+    category_name: item.category_name,
+    description: item.description,
+    images: images,
     item_id: item.item_id,
     item_name: item.item_name,
     item_price: item.item_price,
-    category_id: item.category_id,
-    category_name: item.category_name,
     rating: item.rating,
     sku: item.sku,
-    stock: item.stock,
-    description: item.description,
     slug: item.slug,
-    variant_collections: item.variant_collections ?? [],
+    stock: item.stock,
     variant: variant,
-    images: images
+    variant_collections: item.variant_collections ?? []
   };
   return data;
 };

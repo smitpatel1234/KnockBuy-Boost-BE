@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DiscountIdSchema = exports.UpdateDiscountSchema = exports.AddDiscountSchema = void 0;
+exports.ValidatePromoSchema = exports.DiscountIdSchema = exports.UpdateDiscountSchema = exports.AddDiscountSchema = void 0;
 const zod_1 = require("zod");
 exports.AddDiscountSchema = zod_1.z.object({
     discount_name: zod_1.z.string().min(1, "Discount name is required"),
@@ -17,4 +17,7 @@ exports.UpdateDiscountSchema = exports.AddDiscountSchema.extend({
 }).partial().required({ discount_id: true });
 exports.DiscountIdSchema = zod_1.z.object({
     discount_id: zod_1.z.string().uuid()
+});
+exports.ValidatePromoSchema = zod_1.z.object({
+    code: zod_1.z.string().min(1, "Promo code is required")
 });

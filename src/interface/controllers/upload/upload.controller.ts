@@ -1,9 +1,10 @@
 import Express from "express";
+
+import { successmessage } from "../../../infrastructure/helper/displaymessage";
 import {
   ApplicationError,
   ApplicationErrorType,
 } from "../../../infrastructure/helper/middleware/GlobelErrorHandler";
-import { successmessage } from "../../../infrastructure/helper/displaymessage";
 
 export const uploadMultipleFilesController = async (
   req: Express.Request,
@@ -29,11 +30,5 @@ export const uploadMultipleFilesController = async (
       "No files uploaded"
     );
   }
-  const { type } = req.query;
-
-  if (type === 'user' || type === 'category') {
-    return successmessage(res, "File uploaded successfully", fileUrls[0]);
-  }
-
-  return successmessage(res, "Files uploaded successfully", fileUrls);
+  successmessage(res, "Files uploaded successfully", fileUrls);
 };

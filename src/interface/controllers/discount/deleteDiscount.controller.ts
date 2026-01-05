@@ -1,5 +1,6 @@
-import { EntityManager } from "typeorm";
 import Express from "express";
+import { EntityManager } from "typeorm";
+
 import { DiscountRepoPort } from "../../../application/port/discount-repo.port";
 import { delete_discount } from "../../../application/useCases/discount";
 import { successmessage } from "../../../infrastructure/helper/displaymessage";
@@ -11,6 +12,6 @@ export const deleteDiscountController = (discountRepo: DiscountRepoPort) => {
             const { discount_id } = req.body;
             const IsDeleted = await delete_discount(t, discount_id, discountRepo);
             if (!IsDeleted) throw new ApplicationError(ApplicationErrorType.NOT_FOUND, "Discount Not Found");
-            return successmessage(res, "Discount deleted successfully");
+            successmessage(res, "Discount deleted successfully");
         });
 };

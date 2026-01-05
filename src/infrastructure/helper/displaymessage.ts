@@ -1,4 +1,5 @@
 import { Response } from "express";
+
 import { StatusCodes } from "../config/constants";
 export const displaymessage= (
     StatusCodes:number,
@@ -6,7 +7,7 @@ export const displaymessage= (
     message?:string | string[],
     data?:unknown
 )=>{
-    res.status(StatusCodes).json({message,data});
+    res.status(StatusCodes).json({data,message});
 }
 
 export const successmessage = (
@@ -15,8 +16,8 @@ export const successmessage = (
     data?:unknown
 )=>{
    if(message)
-    return displaymessage(StatusCodes.OK, res, message, data);
-   return displaymessage(StatusCodes.OK, res, "Request is successful", data);
+    { displaymessage(StatusCodes.OK, res, message, data); return; }
+   displaymessage(StatusCodes.OK, res, "Request is successful", data);
    
 }
 

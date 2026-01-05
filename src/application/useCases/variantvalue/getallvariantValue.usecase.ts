@@ -1,6 +1,7 @@
 import { EntityManager } from "typeorm";
-import { VariantRepoPort } from '../../port/variant-repo.port';
+
 import { VariantValueModel } from "../../../domain/models/Variant.models";
+import { VariantRepoPort } from '../../port/variant-repo.port';
 
 export const getall_variant_values = async (
   entityManager: EntityManager,

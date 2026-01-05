@@ -1,5 +1,6 @@
-import { EntityManager } from "typeorm";
 import Express from "express";
+import { EntityManager } from "typeorm";
+
 import { ItemRepoPort } from "../../../application/port/item-repo.port";
 import { create_item } from "../../../application/useCases/item";
 import { successmessage } from "../../../infrastructure/helper/displaymessage";
@@ -10,6 +11,6 @@ export const createItemController = (itemRepo: ItemRepoPort) => {
         const data = req.body;
         const IsCreated = await create_item(t, data, itemRepo);
         if(!IsCreated) throw new ApplicationError(ApplicationErrorType.NOT_FOUND,"Item Not Found");
-       return successmessage(res, "Item created successfully");
+       successmessage(res, "Item created successfully");
     });
 };

@@ -1,36 +1,53 @@
 import { EntityManager } from "typeorm";
+
+import { pageParams, PaginationResponse } from "../../domain/globalTypes/commonFields";
 import {
-  VariantPropertyModel,
-  VariantValueModel,
+  GetItemVariantValueMappingModel,
   ItemVariantValueMappingModel,
   VariantCollectionModel,
-  VariantValueModelWithvariantProperty,
-  GetItemVariantValueMappingModel
+  VariantPropertyModel,
+  VariantValueModel,
+  VariantValueModelWithvariantProperty
 } from "../../domain/models/Variant.models";
-import { VariantPropertys } from "../../infrastructure/orm/entities/variantPropertys";
-import { VariantValues } from "../../infrastructure/orm/entities/variantValues";
 import { ItemVariantValueMapping } from "../../infrastructure/orm/entities/item_variantVlaue_mapping";
 import { VariantCollection } from "../../infrastructure/orm/entities/variant_collection";
-import { pageParams, PaginationResponse } from "../../domain/globalTypes/commonFields";
+import { VariantPropertys } from "../../infrastructure/orm/entities/variantPropertys";
+import { VariantValues } from "../../infrastructure/orm/entities/variantValues";
 
 export interface VariantRepoPort {
-  getAllVariantProperties: (
-    em: EntityManager
-  ) => Promise<VariantPropertys[]>;
   createProperty: (
     em: EntityManager,
     data: VariantPropertyModel
   ) => Promise<VariantPropertys>;
-
-  updateProperty: (
+  createValue: (
     em: EntityManager,
-    data: VariantPropertyModel
-  ) => Promise<boolean | null>;
+    data: VariantValueModel
+  ) => Promise<VariantValues>;
+
+  createVariantCollection: (
+    em: EntityManager,
+    data: VariantCollectionModel
+  ) => Promise<VariantCollection>;
+
+  deleteItemVariantMapping: (
+    em: EntityManager,
+    id: string
+  ) => Promise<boolean>;
 
   deleteProperty: (
     em: EntityManager,
     id: string
   ) => Promise<boolean>;
+
+  deleteValue: (
+    em: EntityManager,
+    id: string
+  ) => Promise<boolean>;
+
+  deleteVariantCollection: (
+    em: EntityManager,
+    id: string
+  ) => Promise<void>;
 
   getall_variant_values: (
     em: EntityManager,
@@ -42,47 +59,31 @@ export interface VariantRepoPort {
     data: pageParams
   ) => Promise<PaginationResponse<VariantValueModelWithvariantProperty>>;
 
-  createValue: (
-    em: EntityManager,
-    data: VariantValueModel
-  ) => Promise<VariantValues>;
 
-  updateValue: (
-    em: EntityManager,
-    data: VariantValueModel
-  ) => Promise<VariantValues | null>;
+  getAllVariantProperties: (
+    em: EntityManager
+  ) => Promise<VariantPropertys[]>;
 
-  deleteValue: (
+  getItemVariantMappingForItem: (
     em: EntityManager,
     id: string
-  ) => Promise<boolean>;
-
-
+  ) => Promise<GetItemVariantValueMappingModel[]>;
   mapItemToVariantValue: (
     em: EntityManager,
     data: ItemVariantValueMappingModel
   ) => Promise<ItemVariantValueMapping>;
 
-  deleteItemVariantMapping: (
-    em: EntityManager,
-    id: string
-  ) => Promise<boolean>;
-  getItemVariantMappingForItem: (
-    em: EntityManager,
-    id: string
-  ) => Promise<GetItemVariantValueMappingModel[]>;
 
 
-
-  createVariantCollection: (
+  updateProperty: (
     em: EntityManager,
-    data: VariantCollectionModel
-  ) => Promise<VariantCollection>;
+    data: VariantPropertyModel
+  ) => Promise<boolean | null>;
 
-  deleteVariantCollection: (
+  updateValue: (
     em: EntityManager,
-    id: string
-  ) => Promise<void>;
+    data: VariantValueModel
+  ) => Promise<null | VariantValues>;
   wrapTransaction: <T>(fun: (t: EntityManager) => Promise<T>) => Promise<T>;
 
 }

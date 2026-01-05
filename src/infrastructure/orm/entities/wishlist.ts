@@ -1,18 +1,19 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, Unique } from "typeorm";
-import { User } from "./user";
-import { Item } from "./item";
-@Unique(['user', 'item'])
-@Entity()
-export class Wishlist {
-	@PrimaryGeneratedColumn('uuid')
-	wish_list_id!: string
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
 
-	@ManyToOne(() => User,{ nullable: false ,onDelete:"CASCADE"})
+import { Item } from "./item";
+import { User } from "./user";
+@Entity()
+@Unique(['user', 'item'])
+export class Wishlist {
+	@JoinColumn({ name: 'item_id' })
+	@ManyToOne(() => Item,{ nullable: false ,onDelete:"CASCADE"})
+	item!: Item
+
 	@JoinColumn({ name: 'user_id' })
+	@ManyToOne(() => User,{ nullable: false ,onDelete:"CASCADE"})
 	user!: User
 
-	@ManyToOne(() => Item,{ nullable: false ,onDelete:"CASCADE"})
-	@JoinColumn({ name: 'item_id' })
-	item!: Item
+	@PrimaryGeneratedColumn('uuid')
+	wish_list_id!: string
 }
 

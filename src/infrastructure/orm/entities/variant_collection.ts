@@ -1,16 +1,17 @@
-import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
+import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Relation } from "typeorm";
+
 import { Item } from "./item";
 
 @Entity()
 export class VariantCollection {
+	@JoinColumn({ name: 'item_id' })
+	@ManyToOne(() => Item, { nullable: false, onDelete: "CASCADE" })
+	main_item!: Relation<Item>
+
 	@PrimaryGeneratedColumn('uuid')
 	variant_collection_id!: string
-
-	@ManyToOne(() => Item,{ nullable: false ,onDelete:"CASCADE"})
-	@JoinColumn({ name: 'item_id' })
-	item_id!: Item
-	@ManyToOne(() => Item,{ nullable: true ,onDelete:"SET NULL"})
 	@JoinColumn({ name: 'variant_item_id' })
-	variant_item_id?: Item
+	@ManyToOne(() => Item, { nullable: true, onDelete: "SET NULL" })
+	variant_item?: Relation<Item>
 }
 

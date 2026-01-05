@@ -1,18 +1,19 @@
 import 'reflect-metadata';
-import express,{Express} from 'express';
-import cors from 'cors';
-import swaggerUi from 'swagger-ui-express'
 import cookieParser from "cookie-parser";
-import passport from '../../helper/passportStrategy';
-import {createRoutes} from './routes';
-import {AppDataSource ,Envvar} from '../../orm/config/ormconfig';
-import {logger} from '../../helper/logger'
+import cors from 'cors';
+import express,{Express} from 'express';
+import swaggerUi from 'swagger-ui-express'
+
 // import { swaggerUi, swaggerSpec } from "../../../swagger/swagger";
 import swaggerDocument from '../../../../api-docs/_openapi.json' ;
-import { GlobelErrorHandler } from '../../helper/middleware/GlobelErrorHandler';
-import { createLoggerInstance } from '../../helper/logger';
-import { HttpError } from '../../helper/httpError';
 import { StatusCodes } from '../../config/constants';
+import { HttpError } from '../../helper/httpError';
+import {logger} from '../../helper/logger'
+import { createLoggerInstance } from '../../helper/logger';
+import { GlobelErrorHandler } from '../../helper/middleware/GlobelErrorHandler';
+import passport from '../../helper/passportStrategy';
+import {AppDataSource ,Envvar} from '../../orm/config/ormconfig';
+import {createRoutes} from './routes';
 export const app = express();
 
 createLoggerInstance();
@@ -23,9 +24,9 @@ AppDataSource.initialize().then(() => {
     console.error('Error during Data Source initialization', err);
 });
 app.use(cors({
-    origin: 'http://localhost:3000',
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']  
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    origin: 'http://localhost:3000'  
 }));
 app.use(cookieParser());
 app.use(passport.initialize());
@@ -40,10 +41,10 @@ const setupSwagger = (app: Express) => {
 setupSwagger(app);
 app.use((req,res,next)=>{
   const notFoundError= new HttpError({
-    statusCode:StatusCodes.NOT_FOUND,
     message:{
       tag : "Endpoint not found",
-    }
+    },
+    statusCode:StatusCodes.NOT_FOUND
   })
   GlobelErrorHandler(notFoundError,req,res,next)
 })

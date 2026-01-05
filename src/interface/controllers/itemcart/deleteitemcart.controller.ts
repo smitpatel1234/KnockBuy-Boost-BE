@@ -1,5 +1,6 @@
-import { EntityManager } from "typeorm";
 import Express from "express";
+import { EntityManager } from "typeorm";
+
 import { ItemCartRepoPort } from "../../../application/port/itemcart-repo.port";
 import { delete_itemcart  } from "../../../application/useCases/itemcart/index";
 import {successmessage} from '../../../infrastructure/helper/displaymessage'
@@ -13,7 +14,7 @@ export const deleteItemCartController = (ItemCartRepo: ItemCartRepoPort) => {
           const cart_item_id = req.body.cart_item_id;
          const IsDeleted =  await delete_itemcart(t, ItemCartRepo, {cart_item_id:cart_item_id} );    
          if(!IsDeleted) throw new ApplicationError(ApplicationErrorType.NOT_FOUND,"addess Not Found");``
-          return successmessage(res, "addess deleted successfully");   
+          successmessage(res, "addess deleted successfully"); return;   
       }
     });
 };

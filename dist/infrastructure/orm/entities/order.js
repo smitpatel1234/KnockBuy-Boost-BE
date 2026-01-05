@@ -14,6 +14,7 @@ const typeorm_1 = require("typeorm");
 const address_1 = require("./address");
 const user_1 = require("./user");
 const order_items_1 = require("./order_items");
+const discount_1 = require("./discount");
 let Order = class Order {
 };
 exports.Order = Order;
@@ -22,9 +23,9 @@ __decorate([
     __metadata("design:type", String)
 ], Order.prototype, "order_id", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => address_1.Address),
+    (0, typeorm_1.ManyToOne)(() => address_1.Address, { nullable: true }),
     (0, typeorm_1.JoinColumn)({ name: 'address_id' }),
-    __metadata("design:type", address_1.Address)
+    __metadata("design:type", Object)
 ], Order.prototype, "address", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({ type: 'timestamp' }),
@@ -35,9 +36,13 @@ __decorate([
     __metadata("design:type", String)
 ], Order.prototype, "status", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', nullable: true, length: 50, default: 'pending' }),
+    __metadata("design:type", String)
+], Order.prototype, "delivery_status", void 0);
+__decorate([
     (0, typeorm_1.ManyToOne)(() => user_1.User),
     (0, typeorm_1.JoinColumn)({ name: 'user_id' }),
-    __metadata("design:type", user_1.User)
+    __metadata("design:type", Object)
 ], Order.prototype, "user", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'timestamp', nullable: true }),
@@ -67,6 +72,11 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => order_items_1.OrderItems, oi => oi.order),
     __metadata("design:type", Array)
 ], Order.prototype, "order_items", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => discount_1.Discount),
+    (0, typeorm_1.JoinColumn)({ name: 'discount_id' }),
+    __metadata("design:type", Object)
+], Order.prototype, "discount", void 0);
 exports.Order = Order = __decorate([
     (0, typeorm_1.Entity)()
 ], Order);

@@ -1,5 +1,6 @@
-import { EntityManager } from "typeorm";
 import Express from "express";
+import { EntityManager } from "typeorm";
+
 import { ItemRepoPort } from "../../../application/port/item-repo.port";
 import { delete_item } from "../../../application/useCases/item";
 import { successmessage } from "../../../infrastructure/helper/displaymessage";
@@ -11,6 +12,6 @@ export const deleteItemController = (itemRepo: ItemRepoPort) => {
       const { item_id } = req.body;
       const IsDeleted = await delete_item(t, item_id, itemRepo);
       if (!IsDeleted) throw new ApplicationError(ApplicationErrorType.NOT_FOUND, ("Item Not Found"));
-      return successmessage(res, "Item deleted successfully");
+      successmessage(res, "Item deleted successfully");
     });
 };

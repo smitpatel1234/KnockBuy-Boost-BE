@@ -1,14 +1,16 @@
-export interface LoginCredentials {
-   identifier: string | number; 
-  password: string;
-  role: "ADMIN" | "USER";
+import { UserRole } from "./User.models";
+
+export interface emailAsIdentifier {
+    email: string;
 }
-export interface UsernameAsIdentifier {
-    username: string;
+export interface LoginCredentials {
+    identifier: number | string;
+    password: string;
+    role: UserRole;
 }
 export interface phoneNumberAsIdentifier {
     phone_number: number;
 }
-export interface emailAsIdentifier {
-    email: string;
+export interface UsernameAsIdentifier {
+    username: string;
 }

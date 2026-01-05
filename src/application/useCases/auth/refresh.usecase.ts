@@ -1,13 +1,10 @@
+import bcrypt from "bcrypt";
 import { EntityManager } from "typeorm";
+import { ApplicationError, ApplicationErrorType } from "../../../infrastructure/helper/middleware/GlobelErrorHandler";
 import {
-  genrateToken,
   regenerateToken,
 } from "../../../infrastructure/helper/TokenGenerator";
 import { AuthRepoPort } from "../../port/auth-repo.port";
-import { LoginCredentials } from "../../../domain/models/Auth.models";
-import { Envvar } from "../../../infrastructure/orm/config/ormconfig";
-import bcrypt from "bcrypt";
-import e from "express";
 
 export const refreshToken = async (
   entitiesmanager: EntityManager,
@@ -21,13 +18,15 @@ export const refreshToken = async (
     user_id
   );
   if (tokenhash) {
-    const isMatch =  bcrypt.compareSync(refrehToken, tokenhash);
+    const isMatch = bcrypt.compareSync(refrehToken, tokenhash);
     if (isMatch) {
-      const token = await regenerateToken(refrehToken);
-        return {accessToken: token.accesstoken , refreshToken:refrehToken,expIN:token.expIN  };
+      const tokens = await regenerateToken(refrehToken);
+      return {
+        accessToken: tokens.accesstoken,
+        expIN: tokens.expIN
+      };
     } else {
-      throw new Error("Invalid tokent");
+      throw new ApplicationError(ApplicationErrorType.BAD_REQUEST,"Invalid token");
     }
   }
-
 };

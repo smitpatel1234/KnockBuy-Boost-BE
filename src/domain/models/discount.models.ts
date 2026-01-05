@@ -1,12 +1,12 @@
 export interface AddDiscountModel {
-    discount_name: string;
-    discount_code: string;
-    discount_type: "percentage" | "flat";
-    discount_amount: number;
-    duration?: number;
+    active_flag?: 0|1;
     description?: string;
+    discount_amount: number;
+    discount_code: string;
+    discount_name: string;
     discount_start_date?: Date;
-    active_flag?: 1|0;
+    discount_type: "flat" | "percentage";
+    duration?: number;
 }
 
 export interface DiscountModel extends AddDiscountModel {

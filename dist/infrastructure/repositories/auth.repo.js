@@ -1,20 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthRepo = void 0;
+const typeorm_1 = require("typeorm");
 const user_1 = require("../orm/entities/user");
 const transaction_1 = require("../helper/transaction");
 exports.AuthRepo = {
     FindUser: async (t, credentials) => {
         return await t
             .getRepository(user_1.User)
-            .findOne({
-            where: [
-                { username: credentials.identifier },
-                { email: credentials.identifier },
-                { phone_number: credentials.identifier },
-                { role: credentials.role },
-            ],
-        });
+            .createQueryBuilder("user")
+            .where("user.role = :role", { role: credentials.role })
+            .andWhere(new typeorm_1.Brackets((qb) => {
+            qb.where("user.username = :identifier")
+                .orWhere("user.email = :identifier")
+                .orWhere("user.phone_number = :identifier");
+        }))
+            .setParameter("identifier", credentials.identifier)
+            .getOne();
     },
     saveRefreshToken: async (t, { id, refreshToken }) => {
         await t

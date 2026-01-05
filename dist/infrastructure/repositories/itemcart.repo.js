@@ -5,9 +5,17 @@ const item_cart_1 = require("../orm/entities/item_cart");
 const transaction_1 = require("../helper/transaction");
 exports.ItemCartRepo = {
     getAllItemCartEntry: async (em, user_id) => {
-        const q = em.getRepository(item_cart_1.ItemCart).createQueryBuilder("itemcart");
+        const q = em.getRepository(item_cart_1.ItemCart).createQueryBuilder("itemcart").withDeleted();
         q.where("itemcart.user = :user_id", { user_id });
-        q.leftJoin("itemcart.item", "item").select([
+        q.leftJoin("itemcart.item", "item")
+            .addSelect((subQuery) => {
+            return subQuery
+                .select("img.image_URL")
+                .from("image", "img") // Assuming table name is lowercase 'image'
+                .where("img.items_id = item.item_id")
+                .limit(1);
+        }, "image_url")
+            .select([
             "itemcart.cart_item_id as cart_item_id",
             "itemcart.user as user",
             "itemcart.item as item_id",
@@ -15,8 +23,16 @@ exports.ItemCartRepo = {
             "item.item_name as item_name",
             "item.item_price as item_price",
             "item.stock as stock",
-        ]);
-        return q.getRawMany();
+            "item.deleted_at as deleted_at",
+        ])
+            .addSelect(subQuery => {
+            return subQuery
+                .select("img.image_URL", "image_url")
+                .from("image", "img")
+                .where("img.items_id = item.item_id")
+                .limit(1);
+        }, "image_url");
+        return await q.getRawMany();
     },
     updateItemCartEntry: async (em, data) => {
         if (data.quantity == 0) {
@@ -33,6 +49,10 @@ exports.ItemCartRepo = {
     },
     deleteItemCartEntry: async (em, data) => {
         const result = await em.getRepository(item_cart_1.ItemCart).delete({ cart_item_id: data.cart_item_id });
+        return (result.affected ?? 0) > 0;
+    },
+    clearCartEntry: async (em, user_id) => {
+        const result = await em.getRepository(item_cart_1.ItemCart).delete({ user: { user_id } });
         return (result.affected ?? 0) > 0;
     },
     crateItemCartEntry: async (em, data) => {

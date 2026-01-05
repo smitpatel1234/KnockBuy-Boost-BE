@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StatusCodes = void 0;
-// Generated file. Do not edit
 var StatusCodes;
 (function (StatusCodes) {
     /**

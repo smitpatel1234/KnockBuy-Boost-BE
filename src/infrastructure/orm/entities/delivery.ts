@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, JoinColumn, OneToOne } from "typeorm";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+
 import { Order } from "./order";
 
 @Entity()
@@ -6,11 +7,11 @@ export class Delivery {
 	@PrimaryGeneratedColumn('uuid')
 	delivery_id!: string
 
-	@Column({ type: 'varchar', length: 100 })
+	@Column({ length: 100, type: 'varchar' })
 	delivery_state?: string
 
-	@OneToOne(() => Order)
 	@JoinColumn({ name: 'order_id' })
+	@OneToOne(() => Order)
 	order?: Order
 }
 

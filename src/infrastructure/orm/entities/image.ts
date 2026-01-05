@@ -1,10 +1,11 @@
 import {
-  Entity,
   Column,
-  PrimaryGeneratedColumn,
-  ManyToOne,
+  Entity,
   JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
 } from "typeorm";
+
 import { Item } from "./item";
 
 @Entity()
@@ -12,10 +13,10 @@ export class Image {
   @PrimaryGeneratedColumn("uuid")
   image_items_id!: string;
 
-  @Column({ type: "varchar", nullable: false, length: 2048 })
+  @Column({ length: 2048, nullable: false, type: "varchar" })
   image_URL!: string;
 
-  @ManyToOne(() => Item,{onDelete:"CASCADE",nullable:false})
   @JoinColumn({ name: "items_id" })
+  @ManyToOne(() => Item,{nullable:false,onDelete:"CASCADE"})
   item?: Item;
 }

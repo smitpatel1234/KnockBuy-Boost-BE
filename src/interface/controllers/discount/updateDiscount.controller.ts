@@ -1,5 +1,6 @@
-import { EntityManager } from "typeorm";
 import Express from "express";
+import { EntityManager } from "typeorm";
+
 import { DiscountRepoPort } from "../../../application/port/discount-repo.port";
 import { update_discount } from "../../../application/useCases/discount";
 import { successmessage } from "../../../infrastructure/helper/displaymessage";
@@ -11,6 +12,6 @@ export const updateDiscountController = (discountRepo: DiscountRepoPort) => {
             const data = req.body;
             const IsUpdated = await update_discount(t, data, discountRepo);
             if (!IsUpdated) throw new ApplicationError(ApplicationErrorType.NOT_FOUND, "Discount Not Found");
-            return successmessage(res, "Discount updated successfully");
+            successmessage(res, "Discount updated successfully");
         });
 };

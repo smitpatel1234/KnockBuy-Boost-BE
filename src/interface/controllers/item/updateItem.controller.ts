@@ -1,11 +1,12 @@
-import { EntityManager } from "typeorm";
 import Express from "express";
+import { EntityManager } from "typeorm";
+
 import { ItemRepoPort } from "../../../application/port/item-repo.port";
 import { update_item } from "../../../application/useCases/item";
 import { successmessage } from "../../../infrastructure/helper/displaymessage";
 import {
-  ApplicationErrorType,
   ApplicationError,
+  ApplicationErrorType,
 } from "../../../infrastructure/helper/middleware/GlobelErrorHandler";
 export const updateItemController = (itemRepo: ItemRepoPort) => {
   return async (req: Express.Request, res: Express.Response) =>
@@ -17,6 +18,6 @@ export const updateItemController = (itemRepo: ItemRepoPort) => {
           ApplicationErrorType.NOT_FOUND,
           "Item Not Found"
         );
-      return successmessage(res, "Item updated successfully");
+      successmessage(res, "Item updated successfully");
     });
 };

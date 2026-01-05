@@ -1,27 +1,28 @@
 import { DataSource } from 'typeorm';
+
 import { ENV } from '../../helper/env/index';
-import { User } from '../../orm/entities/user';
 import { Address } from '../../orm/entities/address';
+import { User } from '../../orm/entities/user';
 export const Envvar = {
-    server_port: ENV.SERVER_PORT,
-    dbtype: ENV.DB_TYPE,
-    dbhost: ENV.DB_HOST,
-    dbport: ENV.DB_PORT,
-    dbusername: ENV.DB_USER,
-    dbpassword: ENV.DB_PASSWORD,
     database: ENV.DB_NAME,
-    PassWordSalt: ENV.PassWordSalt
+    dbhost: ENV.DB_HOST,
+    dbpassword: ENV.DB_PASSWORD,
+    dbport: ENV.DB_PORT,
+    dbtype: ENV.DB_TYPE,
+    dbusername: ENV.DB_USER,
+    PassWordSalt: ENV.PassWordSalt,
+    server_port: ENV.SERVER_PORT
 }
 export const AppDataSource = new DataSource({
-    type: 'mysql',
-    host: Envvar.dbhost,
-    port: Envvar.dbport,
-    username: Envvar.dbusername,
-    password: Envvar.dbpassword,
     database: Envvar.database,
+    entities: [__dirname + '/../entities/*{.ts,.js}'],
+    host: Envvar.dbhost,
+    password: Envvar.dbpassword,
+    port: Envvar.dbport,
     synchronize: true,
     // dropSchema:true,
     //logging: true,
     timezone: 'Z',
-    entities: [__dirname + '/../entities/*{.ts,.js}'],
+    type: 'mysql',
+    username: Envvar.dbusername,
 })

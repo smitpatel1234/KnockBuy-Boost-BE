@@ -1,9 +1,10 @@
-import { EntityManager } from "typeorm";
-import { UserCredentials } from "../../../domain/models/User.models";
-import { UserAndCredentialsRepoPort } from "../../port/User-repo.port";
 import bcrypt from 'bcrypt'
-import {Envvar} from '../../../infrastructure/orm/config/ormconfig';
+import { EntityManager } from "typeorm";
+
+import { UserCredentials } from "../../../domain/models/User.models";
 import { ApplicationError ,ApplicationErrorType} from "../../../infrastructure/helper/middleware/GlobelErrorHandler";
+import {Envvar} from '../../../infrastructure/orm/config/ormconfig';
+import { UserAndCredentialsRepoPort } from "../../port/User-repo.port";
 
 export const registerUser = async (
     entitiesmanager: EntityManager,
@@ -12,7 +13,7 @@ export const registerUser = async (
 ) => {
 
         const user = await userRepo.checkUserExists(entitiesmanager, userCredentials);
-        let error = [];
+        const error = [];
 
         if (user.username === userCredentials.username) {
            error.push('Username already exists')

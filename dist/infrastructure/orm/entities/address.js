@@ -16,7 +16,7 @@ let Address = class Address {
 };
 exports.Address = Address;
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
+    (0, typeorm_1.PrimaryGeneratedColumn)("uuid"),
     __metadata("design:type", String)
 ], Address.prototype, "address_id", void 0);
 __decorate([
@@ -40,7 +40,7 @@ __decorate([
     __metadata("design:type", String)
 ], Address.prototype, "country", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'int', nullable: false }),
+    (0, typeorm_1.Column)({ type: "int", nullable: false }),
     __metadata("design:type", Number)
 ], Address.prototype, "pincode", void 0);
 __decorate([

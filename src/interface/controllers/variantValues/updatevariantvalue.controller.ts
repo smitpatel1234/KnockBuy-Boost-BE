@@ -1,7 +1,8 @@
-import { EntityManager } from "typeorm";
 import Express from "express";
-import { update_variant_value } from "../../../application/useCases/variantvalue/index";
+import { EntityManager } from "typeorm";
+
 import { VariantRepoPort } from "../../../application/port/variant-repo.port";
+import { update_variant_value } from "../../../application/useCases/variantvalue/index";
 import { successmessage } from "../../../infrastructure/helper/displaymessage";
 import {
   ApplicationError,
@@ -17,6 +18,6 @@ export const updateVariantValueController = (variantRepo: VariantRepoPort) => {
           ApplicationErrorType.NOT_FOUND,
           "Variant Value Not Found"
         );
-      return successmessage(res, "Variant value updated successfully");
+      successmessage(res, "Variant value updated successfully");
     });
 };

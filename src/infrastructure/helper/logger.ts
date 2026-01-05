@@ -1,17 +1,16 @@
-import httpContext from "express-http-context";
 import Winston,{format} from 'winston'
 export let logger = undefined as unknown as Winston.Logger;
 export const createLoggerInstance = ()=>{
     logger = Winston.createLogger({
-        level: 'info',
+        defaultMeta: { service: 'user-service' },
         format: format.combine(
             format.colorize(),
             format.timestamp(),
             format.errors({ stack: true }),
             format.json()
         ),
+        level: 'info',
         silent: false,
-        defaultMeta: { service: 'user-service' },
         transports: [
           new Winston.transports.Console(),
         ],

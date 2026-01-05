@@ -1,8 +1,9 @@
-import { EntityManager } from "typeorm";
-import Express from "express";
-import { delete_variant_value } from "../../../application/useCases/variantvalue/index";
-import { VariantRepoPort } from "../../../application/port/variant-repo.port";
 import { UUID } from "crypto";
+import Express from "express";
+import { EntityManager } from "typeorm";
+
+import { VariantRepoPort } from "../../../application/port/variant-repo.port";
+import { delete_variant_value } from "../../../application/useCases/variantvalue/index";
 import { successmessage } from "../../../infrastructure/helper/displaymessage";
 import { ApplicationError,ApplicationErrorType } from "../../../infrastructure/helper/middleware/GlobelErrorHandler";
 export const deleteVariantValueController = (variantRepo: VariantRepoPort) => {
@@ -11,6 +12,6 @@ export const deleteVariantValueController = (variantRepo: VariantRepoPort) => {
         const id = req.body.variantValue_id as UUID;
          const IsDeleted = await delete_variant_value(t, variantRepo, id);
          if(!IsDeleted) throw new ApplicationError(ApplicationErrorType.NOT_FOUND,("Variant Value Not Found"));
-         return successmessage(res, "Variant value deleted successfully");
+         successmessage(res, "Variant value deleted successfully");
     });
 };

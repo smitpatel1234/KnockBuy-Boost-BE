@@ -31,17 +31,17 @@ exports.AddVarientPropWithCollectionSchema = zod_1.z.object({
 exports.VarientWithValuesSchema = zod_1.z.object({
     varientValue_id: user_1.IdField,
     varient_value: zod_1.z.string().max(100).min(1),
-    varient_id: user_1.IdField,
+    variantProperty_id: user_1.IdField,
 });
 exports.VarientPropWithCollectionSchema = zod_1.z.object({
     varient_collection_id: user_1.IdField,
     item_id: user_1.IdField,
-    varient_item_Id: user_1.IdField,
+    variantProperty_id: user_1.IdField,
 });
-exports.ItemVariantValueMappingSchema = {
+exports.ItemVariantValueMappingSchema = zod_1.z.object({
     item_id: user_1.IdField,
     variantValue_id: user_1.IdField
-};
+});
 exports.VariantCollectionIdSchema = zod_1.z.object({
     variant_collection_id: user_1.IdField
 });

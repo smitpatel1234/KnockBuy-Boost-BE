@@ -15,7 +15,10 @@ exports.AddItemSchema = zod_1.z.object({
         variantProperty_id: zod_1.z.string().uuid(),
         variantValue_id: zod_1.z.string().uuid()
     })).optional(),
-    variant_collections: zod_1.z.array(zod_1.z.string()).optional(),
+    variant_collections: zod_1.z.array(zod_1.z.object({
+        item_name: zod_1.z.string(),
+        item_id: zod_1.z.string().uuid()
+    })).optional(),
 });
 exports.UpdateItemSchema = exports.AddItemSchema.extend({
     item_id: zod_1.z.string().uuid(),

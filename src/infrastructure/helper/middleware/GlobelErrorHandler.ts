@@ -1,21 +1,21 @@
-import { Request, Response, NextFunction } from "express";
-import { HttpError } from "../httpError";
-import { displaymessage } from "../displaymessage";
-import { StatusCodes } from "../../config/constants";
-import { ZodError } from "zod";
+import { NextFunction, Request, Response } from "express";
 import { TypeORMError } from "typeorm";
+import { ZodError } from "zod";
+import { StatusCodes } from "../../config/constants";
+import { displaymessage } from "../displaymessage";
+import { HttpError } from "../httpError";
 
 
 export const enum ApplicationErrorType {
+     BAD_REQUEST = "BAD_REQUEST",
+     CONFLICT = "CONFLICT",
+     FORBIDDEN = "FORBIDDEN",
      NOT_FOUND = "NOT_FOUND",
      UNAUTHORIZED = "UNAUTHORIZED",
-     FORBIDDEN = "FORBIDDEN",
-     CONFLICT = "CONFLICT",
-     BAD_REQUEST = "BAD_REQUEST",
 }
 export class ApplicationError extends Error {
-     title!:ApplicationErrorType
      message!:string
+     title!:ApplicationErrorType
      constructor( title:ApplicationErrorType, message: string) {
           super(message)
           this.title = title
@@ -24,28 +24,28 @@ export class ApplicationError extends Error {
 
 }
 
-export const GlobelErrorHandler = (err:  Error| HttpError | ZodError | ApplicationError | TypeORMError, req: Request, res: Response, next: NextFunction) => {
+export const GlobelErrorHandler = (err:  ApplicationError| Error | HttpError | TypeORMError | ZodError, req: Request, res: Response, next: NextFunction) => {
         if(err instanceof HttpError) 
-             return displaymessage(err.statusCode, res, err.message, err.field);
+             { displaymessage(err.statusCode, res, err.message, err.field); return; }
         if(err instanceof ZodError) 
         {
              const messages = err.issues.map((issue) =>(issue.message) );
-             return displaymessage(StatusCodes.BAD_REQUEST , res, messages);
+             displaymessage(StatusCodes.BAD_REQUEST , res, messages); return;
         }
            
         if(err instanceof ApplicationError) 
             switch(err.title){
-                case "NOT_FOUND": return displaymessage(StatusCodes.NOT_FOUND, res, err.message); 
-                case "UNAUTHORIZED": return displaymessage(StatusCodes.UNAUTHORIZED, res, err.message); 
-                case "FORBIDDEN": return displaymessage(StatusCodes.FORBIDDEN, res, err.message); 
-                case "CONFLICT": return displaymessage(StatusCodes.CONFLICT, res, err.message); 
-                case "BAD_REQUEST": return displaymessage(StatusCodes.BAD_REQUEST, res, err.message); 
+                case ApplicationErrorType.BAD_REQUEST: { displaymessage(StatusCodes.BAD_REQUEST, res, err.message); return; } 
+                case ApplicationErrorType.CONFLICT: { displaymessage(StatusCodes.CONFLICT, res, err.message); return; } 
+                case ApplicationErrorType.FORBIDDEN: { displaymessage(StatusCodes.FORBIDDEN, res, err.message); return; } 
+                case ApplicationErrorType.NOT_FOUND: { displaymessage(StatusCodes.NOT_FOUND, res, err.message); return; } 
+                case ApplicationErrorType.UNAUTHORIZED: { displaymessage(StatusCodes.UNAUTHORIZED, res, err.message); return; } 
             }
         if(err instanceof TypeORMError)
          {
           console.log("err----------->",err);
           
-              return displaymessage(StatusCodes.INTERNAL_SERVER_ERROR, res, err.message);
+              displaymessage(StatusCodes.INTERNAL_SERVER_ERROR, res, err.message); return;
          }
-        return displaymessage(StatusCodes.INTERNAL_SERVER_ERROR, res, err.message);
+        displaymessage(StatusCodes.INTERNAL_SERVER_ERROR, res, err.message);
 }

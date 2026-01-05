@@ -1,4 +1,5 @@
 import { EntityManager } from "typeorm";
+
 import { DiscountModel } from "../../../domain/models/discount.models";
 import { DiscountRepoPort } from "../../port/discount-repo.port";
 

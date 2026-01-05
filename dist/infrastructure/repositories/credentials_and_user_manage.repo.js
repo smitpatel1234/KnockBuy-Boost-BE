@@ -63,7 +63,7 @@ exports.UserAndCredentialsRepo = {
             qb.andWhere("user.user_id != :avoid", { avoid: avoid });
         const user = await qb.getOne();
         if (!user) {
-            return { username: "", email: "", phone_number: 0 };
+            return { username: "", email: "", phone_number: '' };
         }
         else {
             return {

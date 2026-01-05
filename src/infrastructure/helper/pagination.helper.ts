@@ -1,12 +1,13 @@
 import { SelectQueryBuilder } from "typeorm";
+
 import { pageParams, PaginationResponse } from "../../domain/globalTypes/commonFields";
 
 export async function applyPaginationAndFilters<T>(
     queryBuilder: SelectQueryBuilder<any>,
     params: pageParams,
-    raw: boolean = true
+    raw = true
 ): Promise<PaginationResponse<T>> {
-    const { pagination, filters, sort } = params;
+    const { filters, pagination, sort } = params;
     const skip = (pagination.page - 1) * pagination.limit;
 
     if (filters && filters.length > 0) {
@@ -36,9 +37,9 @@ export async function applyPaginationAndFilters<T>(
     return {
         data: data as T[],
         meta: {
-            total,
-            page: pagination.page,
             limit: pagination.limit,
+            page: pagination.page,
+            total,
             totalPages,
         },
     };

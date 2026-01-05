@@ -1,31 +1,32 @@
 import { EntityManager } from "typeorm";
-import { UserCredentials, UserProfile } from "../../domain/models/User.models";
+
 import { pageParams, PaginationResponse } from "../../domain/globalTypes/commonFields";
+import { UserCredentials, UserProfile } from "../../domain/models/User.models";
 
 export interface UserAndCredentialsRepoPort {
-  getallUser: (t: EntityManager) => Promise<UserProfile[]>;
+  checkUserExists: (
+    t: EntityManager,
+    criteria: { email: string; phone_number: string; username: string; },
+    avoid?: string
+  ) => Promise<{ email: string; phone_number: string; username: string; }>;
 
+  deleteUser: (t: EntityManager, id: string) => Promise<void>,
+  getallUser: (t: EntityManager) => Promise<UserProfile[]>;
+  getallUserPage: (
+    t: EntityManager,
+    data: pageParams
+  ) => Promise<PaginationResponse<UserProfile>>;
   getUser: (
     t: EntityManager,
     id: string
 
-  ) => Promise<UserProfile | null>;
-  updateUser: (t: EntityManager, user: UserProfile) => Promise<boolean>;
-  deleteUser: (t: EntityManager, id: string) => Promise<boolean>,
-  checkUserExists: (
-    t: EntityManager,
-    criteria: { username: string; email: string; phone_number: number },
-    avoid?: string
-  ) => Promise<{ username: string; email: string; phone_number: number }>;
+  ) => Promise<null | UserProfile>;
   saveUser: (
     t: EntityManager,
     UserCredentials: UserCredentials
   ) => Promise<UserCredentials>;
 
-  getallUserPage: (
-    t: EntityManager,
-    data: pageParams
-  ) => Promise<PaginationResponse<UserProfile>>;
+  updateUser: (t: EntityManager, user: UserProfile) => Promise<boolean>;
 
   wrapTransaction: <T>(fun: (t: EntityManager) => Promise<T>) => Promise<T>;
 }

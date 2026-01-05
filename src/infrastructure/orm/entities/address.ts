@@ -1,26 +1,33 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, DeleteDateColumn } from "typeorm";
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+
 import { User } from "./user";
 
 @Entity()
 export class Address {
-    @PrimaryGeneratedColumn('uuid')
-    address_id!: string
-    @Column({ type: "varchar", nullable: false, length: 255 })
-    address_line1!: string
-    @Column({ type: "varchar", nullable: true, length: 255 })
-    address_line2!: string
-    @Column({ type: "varchar", nullable: false, length: 255 })
-    city!: string
-    @Column({ type: "varchar", nullable: false, length: 255 })
-    state!: string
-    @Column({ type: "varchar", nullable: false, length: 255 })
-    country!: string
-    @Column({ type: 'int', nullable: false })
-    pincode!: number
-    @ManyToOne(() => User  )
-    @JoinColumn({ name: "user_id" })
-    user_id!: User | string;
-    @DeleteDateColumn()
-    deletedAt?: Date; 
-
+  @PrimaryGeneratedColumn("uuid")
+  address_id!: string;
+  @Column({ length: 255, nullable: false, type: "varchar" })
+  address_line1!: string;
+  @Column({ length: 255, nullable: true, type: "varchar" })
+  address_line2!: string;
+  @Column({ length: 255, nullable: false, type: "varchar" })
+  city!: string;
+  @Column({ length: 255, nullable: false, type: "varchar" })
+  country!: string;
+  @DeleteDateColumn()
+  deletedAt?: Date;
+  @Column({ nullable: false, type: "int" })
+  pincode!: number;
+  @Column({ length: 255, nullable: false, type: "varchar" })
+  state!: string;
+  @JoinColumn({ name: "user_id" })
+  @ManyToOne(() => User)
+  user_id!: string | User;
 }

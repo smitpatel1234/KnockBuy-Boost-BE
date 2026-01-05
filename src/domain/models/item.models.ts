@@ -1,26 +1,26 @@
 export interface AddItemModel {
+    category_id: string,
+    description: string,
+    images?: string[]
+
     item_name: string,
     item_price: number,
-    category_id: string,
-
     rating?: number,
     sku?: string,
     stock: number,
-    description: string,
     variant?: { variantProperty_id: string; variantValue_id: string }[]
-    variant_collections?: string[]
-    images?: string[]
-}
-export interface ItemModel extends AddItemModel {
-    item_id: string,
-    slug: string
-    category_name?: string
-
+    variant_collections?: { item_id: string; item_name: string, }[]
 }
 export interface GetItemModel extends AddItemModel {
     category_name: string,
-    variant_info?: { property: string; value: string }[],
-    image_url?: string
     image_id?: string
+    image_url?: string
+    variant_info?: { property: string; value: string }[],
+}
+export interface ItemModel extends AddItemModel {
+    category_name?: string
+    item_id: string,
+    slug: string
+
 }
 

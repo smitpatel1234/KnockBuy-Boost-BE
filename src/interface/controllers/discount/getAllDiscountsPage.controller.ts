@@ -1,9 +1,10 @@
-import { EntityManager } from "typeorm";
 import Express from "express";
-import { successmessage } from "../../../infrastructure/helper/displaymessage";
+import { EntityManager } from "typeorm";
+
 import { DiscountRepoPort } from "../../../application/port/discount-repo.port";
-import { parsePaginationParams } from "../../../infrastructure/helper/request.helper";
 import { get_all_discounts_page } from "../../../application/useCases/discount";
+import { successmessage } from "../../../infrastructure/helper/displaymessage";
+import { parsePaginationParams } from "../../../infrastructure/helper/request.helper";
 
 export const getAllDiscountsPageController = (discountRepo: DiscountRepoPort) => {
     return async (req: Express.Request, res: Express.Response) =>
@@ -12,6 +13,6 @@ export const getAllDiscountsPageController = (discountRepo: DiscountRepoPort) =>
 
             const discountsData = await get_all_discounts_page(t, params, discountRepo);
 
-            return successmessage(res, "Get all discounts page successfully", discountsData);
+            successmessage(res, "Get all discounts page successfully", discountsData);
         });
 };

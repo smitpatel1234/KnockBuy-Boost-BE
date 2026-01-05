@@ -32,8 +32,8 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: "int", nullable: false, unique: true }),
-    __metadata("design:type", Number)
+    (0, typeorm_1.Column)({ type: "varchar", nullable: false, unique: true, length: 10 }),
+    __metadata("design:type", String)
 ], User.prototype, "phone_number", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: "enum", enum: ["ADMIN", "USER"], default: "USER" }),

@@ -16,10 +16,6 @@ const uploadMultipleFilesController = async (req, res) => {
     if (fileUrls.length === 0) {
         throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.BAD_REQUEST, "No files uploaded");
     }
-    const { type } = req.query;
-    if (type === 'user' || type === 'category') {
-        return (0, displaymessage_1.successmessage)(res, "File uploaded successfully", fileUrls[0]);
-    }
     return (0, displaymessage_1.successmessage)(res, "Files uploaded successfully", fileUrls);
 };
 exports.uploadMultipleFilesController = uploadMultipleFilesController;

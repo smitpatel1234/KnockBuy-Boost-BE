@@ -7,7 +7,7 @@ const getall_category_page_usecase_1 = require("../../../application/useCases/ca
 const getAllCategoryPageController = (categoryRepo) => {
     return async (req, res) => categoryRepo.wrapTransaction(async (t) => {
         const params = (0, request_helper_1.parsePaginationParams)(req);
-        const data = await (0, getall_category_page_usecase_1.getallCategoryPage)(categoryRepo)(t, params);
+        const data = await (0, getall_category_page_usecase_1.getallCategoryPage)(t, categoryRepo, params);
         return (0, displaymessage_1.successmessage)(res, "Categories fetched successfully", data);
     });
 };

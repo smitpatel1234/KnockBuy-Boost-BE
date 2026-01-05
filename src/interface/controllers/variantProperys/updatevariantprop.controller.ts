@@ -1,17 +1,20 @@
-import { EntityManager } from "typeorm";
+
+
 import Express from "express";
-import { update_varient_property } from "../../../application/useCases/variant_prop/index";
+import { EntityManager } from "typeorm";
+
 import { VariantRepoPort } from "../../../application/port/variant-repo.port";
+import { update_varient_property } from "../../../application/useCases/variant_prop/index";
 import { successmessage } from "../../../infrastructure/helper/displaymessage";
-import { ApplicationError , ApplicationErrorType} from "../../../infrastructure/helper/middleware/GlobelErrorHandler";
+import { ApplicationError, ApplicationErrorType } from "../../../infrastructure/helper/middleware/GlobelErrorHandler";
 export const UpdateVariantPropController = (variantRepo: VariantRepoPort) => {
   return async (req: Express.Request, res: Express.Response) =>
     variantRepo.wrapTransaction(async (t: EntityManager) => {
 
-        const data = req.body;
-        const IsUpdated = await update_varient_property(t, variantRepo, data);
-        if(!IsUpdated) throw new ApplicationError(ApplicationErrorType.NOT_FOUND,"Variant Property Not Found");
-        return successmessage(res, "Variant property updated successfully");
+      const data = req.body;
+      const IsUpdated = await update_varient_property(t, variantRepo, data);
+      if (!IsUpdated) throw new ApplicationError(ApplicationErrorType.NOT_FOUND, "Variant Property Not Found");
+      successmessage(res, "Variant property updated successfully");
 
     });
 };

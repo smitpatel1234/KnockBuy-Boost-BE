@@ -1,5 +1,6 @@
-import { EntityManager } from "typeorm";
 import Express from "express";
+import { EntityManager } from "typeorm";
+
 import { DiscountRepoPort } from "../../../application/port/discount-repo.port";
 import { create_discount } from "../../../application/useCases/discount";
 import { successmessage } from "../../../infrastructure/helper/displaymessage";
@@ -12,6 +13,6 @@ export const createDiscountController = (discountRepo: DiscountRepoPort) => {
             console.log(data);
             const IsCreated = await create_discount(t, data, discountRepo);
             if (!IsCreated) throw new ApplicationError(ApplicationErrorType.BAD_REQUEST, "Discount Not Created");
-            return successmessage(res, "Discount created successfully");
+            successmessage(res, "Discount created successfully");
         });
 };

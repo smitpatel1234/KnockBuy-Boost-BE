@@ -1,56 +1,58 @@
 import {
-  Entity,
   Column,
   CreateDateColumn,
-  UpdateDateColumn,
-  PrimaryGeneratedColumn,
-  OneToMany,
   DeleteDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from "typeorm";
+
 import { Address } from "./address";
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn("uuid")
-  user_id!: string;
-
-  @Column({ type: "varchar", unique: true, nullable: false, length: 50 })
-  username!: string;
-
-  @Column({ type: "varchar", nullable: false, unique: true, length: 255 })
-  email!: string;
-
-  @Column({ type: "varchar", nullable: false, length: 255 })
-  password!: string;
-
-  @Column({ type: "int", nullable: false, unique: true })
-  phone_number!: number;
-
-  @Column({type: "enum", enum: ["ADMIN", "USER"], default: "USER"})
-  role!: "ADMIN" | "USER";
+  @OneToMany(() => Address, (address) => address.user_id)
+  addresses!: Address[] | string[];
 
   @CreateDateColumn({ type: "timestamp" })
   created_at!: Date;
 
+  @DeleteDateColumn()
+  deletedAt?: Date;
+
+  @Column({ length: 255, nullable: false, type: "varchar", unique: true })
+  email!: string;
+
+  @Column({ length: 255, nullable: false, type: "varchar" })
+  password!: string;
+
+  @Column({ length: 10, nullable: false, type: "varchar", unique: true })
+  phone_number!: string;
+
+  @Column({ nullable: true, type: "varchar" })
+  profile_image!: string;
+
+  @Column({ nullable: true, type: "timestamp" })
+  refresh_expires_at?: Date;
+
+  @Column({ default: false, type: "boolean" })
+  refresh_is_revoked?: boolean;
+
+  @Column({ nullable: true, type: "text" })
+  refresh_token?: null | string;
+
+  @Column({default: "USER", enum: ["ADMIN", "USER"], type: "enum"})
+  role!: "ADMIN" | "USER";
+
   @UpdateDateColumn({ type: "timestamp" })
   updated_at!: Date;
 
-  @Column({ type: "varchar", length: 20, nullable: true })
+  @PrimaryGeneratedColumn("uuid")
+  user_id!: string;
+
+  @Column({ length: 50, nullable: false, type: "varchar", unique: true })
+  username!: string;
+  
+  @Column({ length: 20, nullable: true, type: "varchar" })
   wishlist_name!: string;
-
-  @Column({ type: "varchar", nullable: true })
-  profile_image!: string;
-
-  @OneToMany(() => Address, (address) => address.user_id)
-  addresses!: Address[] | string[];
-
-  @Column({ type: "text", nullable: true })
-  refresh_token?: string | null;
-
-  @Column({ type: "timestamp", nullable: true })
-  refresh_expires_at?: Date;
-
-  @Column({ type: "boolean", default: false })
-  refresh_is_revoked?: boolean;
-  @DeleteDateColumn()
-  deletedAt?: Date;
 }

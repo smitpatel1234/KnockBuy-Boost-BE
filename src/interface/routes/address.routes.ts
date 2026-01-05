@@ -1,46 +1,62 @@
 import express from "express";
-import { authVerification } from "../../infrastructure/helper/middleware/authvarification";
-import { validateDetails } from "../../infrastructure/helper/validator";
+
+import { UserRole } from "../../domain/models/User.models";
 import {
-  AddressSchema,
   AddressIdSchema,
+  AddressSchema,
   UpdateAddressSchema,
 } from "../../domain/schemas/address";
+import { authVerification } from "../../infrastructure/helper/middleware/authvarification";
+import { validateDetails } from "../../infrastructure/helper/validator";
 import { AddressRepo } from "../../infrastructure/repositories/address.repo";
 import {
   createAddressController,
-  updateAddressController,
   deleteAddressController,
   getAddressController,
   getALLAddressController,
+  getALLAddressControllerInParams,
+  updateAddressController,
 } from "../controllers/address";
 const router = express.Router();
 router.put(
   "/update-address",
-  authVerification(),
+  authVerification([UserRole.USER]),
   validateDetails(UpdateAddressSchema),
-  createAddressController(AddressRepo)
+  updateAddressController(AddressRepo)
 );
 router.delete(
   "/delete-address",
-  authVerification(),
+  authVerification([UserRole.USER]),
   validateDetails(AddressIdSchema),
   deleteAddressController(AddressRepo)
 );
 router.get(
   "/get-address",
-  authVerification(),
+  authVerification([UserRole.USER]),
   validateDetails(AddressIdSchema),
   getAddressController(AddressRepo)
 );
+
 router.get(
   "/getall-address-for-user",
-  authVerification(),
+  authVerification([UserRole.USER]),
   getALLAddressController(AddressRepo)
+);
+router.get(
+  "/getall-address-for-user/:id",
+  authVerification([]),
+  getALLAddressControllerInParams(AddressRepo)
 );
 router.post(
   "/create-address",
-  authVerification(),
+  authVerification([UserRole.USER]),
+  validateDetails(AddressSchema),
+  createAddressController(AddressRepo)
+);
+
+router.post(
+  "/create-address/:id",
+  authVerification([]),
   validateDetails(AddressSchema),
   createAddressController(AddressRepo)
 );

@@ -1,46 +1,54 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, OneToMany, JoinColumn } from "typeorm";
-import { Address } from "./address";
-import { User } from "./user";
-import { OrderItems } from "./order_items";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Relation } from "typeorm";
 
+import { Address } from "./address";
+import { Discount } from "./discount";
+import { OrderItems } from "./order_items";
+import { User } from "./user";
 @Entity()
 export class Order {
-	@PrimaryGeneratedColumn('uuid')
-	order_id!: string
-
-	@ManyToOne(() => Address)
 	@JoinColumn({ name: 'address_id' })
-	address!: Address
+	@ManyToOne(() => Address, { nullable: true })
+	address?: Relation<Address>
+
+	@Column({ default: 'pending', length: 50, nullable: true, type: 'varchar' })
+	delivery_status?: string
+
+	@JoinColumn({ name: 'discount_id' })
+	@ManyToOne(() => Discount)
+	discount?: Relation<Discount>
+
+	@Column({ nullable: true, type: 'timestamp' })
+	invoice_date?: Date
 
 	@CreateDateColumn({ type: 'timestamp' })
 	order_date!: Date
 
-	@Column({ type: 'varchar', nullable: true, length: 50 })
-	status?: string
-
-	@ManyToOne(() => User)
-	@JoinColumn({ name: 'user_id' })
-	user!: User
-
-	@Column({ type: 'timestamp', nullable: true })
-	invoice_date?: Date
-
-	@Column({ type: 'decimal', nullable: true, precision: 12, scale: 2 })
-	subtotal?: number
-
-	@Column({ type: 'decimal', nullable: true, precision: 12, scale: 2 })
-	tax?: number
-
-	@Column({ type: 'decimal', nullable: true, precision: 12, scale: 2 })
-	total_amount?: number
-
-	@Column({ type: 'varchar', nullable: true, length: 50 })
-	payment_status?: string
-
-	@Column({ type: 'varchar', nullable: true, length: 50 })
-	payment_method?: string
+	@PrimaryGeneratedColumn('uuid')
+	order_id!: string
 
 	@OneToMany(() => OrderItems, oi => oi.order)
 	order_items?: OrderItems[]
+
+	@Column({ length: 50, nullable: true, type: 'varchar' })
+	payment_method?: string
+
+	@Column({ length: 50, nullable: true, type: 'varchar' })
+	payment_status?: string
+
+	@Column({ length: 50, nullable: true, type: 'varchar' })
+	status?: string
+
+	@Column({ nullable: true, precision: 12, scale: 2, type: 'decimal' })
+	subtotal?: number
+
+	@Column({ nullable: true, precision: 12, scale: 2, type: 'decimal' })
+	tax?: number
+
+	@Column({ nullable: true, precision: 12, scale: 2, type: 'decimal' })
+	total_amount?: number
+
+	@JoinColumn({ name: 'user_id' })
+	@ManyToOne(() => User)
+	user!: Relation<User>
 }
 

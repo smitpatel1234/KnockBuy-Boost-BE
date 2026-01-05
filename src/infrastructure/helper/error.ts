@@ -1,6 +1,6 @@
 export class NotFoundError extends Error {
+  public argument: number | string;
   public entity: string;
-  public argument: string | number;
 
   constructor(entity: string, argument: string ) {
     super(`${entity} not found for this : ${argument}`);

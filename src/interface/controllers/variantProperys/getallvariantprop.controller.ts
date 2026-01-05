@@ -1,7 +1,8 @@
-import { EntityManager } from "typeorm";
 import Express from "express";
-import { getall_variant_properties } from "../../../application/useCases/variant_prop/index";
+import { EntityManager } from "typeorm";
+
 import { VariantRepoPort } from "../../../application/port/variant-repo.port";
+import { getall_variant_properties } from "../../../application/useCases/variant_prop/index";
 import { successmessage } from "../../../infrastructure/helper/displaymessage";
 
 export const getAllVariantPropertiesController = (
@@ -10,6 +11,6 @@ export const getAllVariantPropertiesController = (
   return async (req: Express.Request, res: Express.Response) =>
     variantRepo.wrapTransaction(async (t: EntityManager) => {
         const data = await getall_variant_properties(t, variantRepo);
-        return successmessage(res,"Get all the variant properties successfully",data);
+        successmessage(res,"Get all the variant properties successfully",data);
     });
 };

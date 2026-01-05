@@ -11,11 +11,14 @@ const refreshToken = async (entitiesmanager, authRepo, refrehToken, user_id) => 
     if (tokenhash) {
         const isMatch = bcrypt_1.default.compareSync(refrehToken, tokenhash);
         if (isMatch) {
-            const token = await (0, TokenGenerator_1.regenerateToken)(refrehToken);
-            return { accessToken: token.accesstoken, refreshToken: refrehToken, expIN: token.expIN };
+            const tokens = await (0, TokenGenerator_1.regenerateToken)(refrehToken);
+            return {
+                accessToken: tokens.accesstoken,
+                expIN: tokens.expIN
+            };
         }
         else {
-            throw new Error("Invalid tokent");
+            throw new Error("Invalid token");
         }
     }
 };

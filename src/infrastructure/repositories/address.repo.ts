@@ -1,9 +1,9 @@
 import { EntityManager } from "typeorm";
-import { Address } from "../orm/entities/address";
+
 import { AddressRepoPort } from "../../application/port/address-repo.port";
+import { AddAddress, Address as AddressType,DeleteAddress } from "../../domain/models/address.models";
 import { wrapTransaction } from "../helper/transaction";
-import { AddAddress, DeleteAddress,Address as AddressType } from "../../domain/models/address.models";
-import { logger } from "../helper/logger";
+import { Address } from "../orm/entities/address";
 export const AddressRepo: AddressRepoPort = {
   addAddress: async (entityManager: EntityManager, addAddress: AddAddress) => {
     return await entityManager.getRepository(Address).save(addAddress);
@@ -18,6 +18,11 @@ export const AddressRepo: AddressRepoPort = {
       .softDelete({address_id: address_id});
     return (res.affected ?? 0) > 0 ? true : false;
   },
+  getAddressByID: async (entityManager: EntityManager, address_id: string) => {
+    return await entityManager
+      .getRepository(Address)
+      .findOneOrFail({ where: { address_id: address_id } });
+  },
   getAllAddressByUserID: async (
     entityManager: EntityManager,
     user_id: string
@@ -27,19 +32,12 @@ export const AddressRepo: AddressRepoPort = {
       .find({ where: { user_id: user_id } });
   },
   updateAddress: async (entityManager: EntityManager, address: AddressType) => {
-    logger.info(address);
+    const addAddress = entityManager.create(Address, address);
     const res = await entityManager
       .getRepository(Address)
-      .createQueryBuilder("address")
-      .where({ address_id: address.address_id })
-      .update(address)
-      .execute();
-    return (res.affected ?? 0) > 0 ? true : false;
-  },
-  getAddressByID: async (entityManager: EntityManager, address_id: string) => {
-    return await entityManager
-      .getRepository(Address)
-      .findOneOrFail({ where: { address_id: address_id } });
+      .save(addAddress)
+      
+    return res  ? true : false;
   },
   wrapTransaction: wrapTransaction,
 };

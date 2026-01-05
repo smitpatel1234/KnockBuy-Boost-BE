@@ -1,42 +1,51 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, JoinColumn } from "typeorm";
-import { VariantCollection } from "./variant_collection";
+import { Column, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Relation } from "typeorm";
+
 import { BaseSlugEntity } from "../commanEntity/base-slug.entity";
 import { Category } from "./category";
-import { Relation } from "typeorm";
+import { Image } from "./image";
+import { VariantCollection } from "./variant_collection";
+
 @Entity()
 export class Item extends BaseSlugEntity {
+	@JoinColumn({ name: 'category_id' })
+	@ManyToOne(() => Category, (category) => category.items, { nullable: true, onDelete: "CASCADE" })
+	category!: Relation<Category>;
+
+	@DeleteDateColumn()
+	deleted_at?: Date;
+
+	@Column({ length: 255, nullable: true, type: 'varchar' })
+	description!: string
+
+	@OneToMany(() => Image, (image) => image.item)
+	images?: Image[];
+
+
 	@PrimaryGeneratedColumn('uuid')
 	item_id!: string
 
-	getSlugSource(): string {
-		return `${this.item_name}-${this.item_price}-${this.category || 'default'}-${this.item_id?.substring(0, 8) || ''}`;
-	}
 
-	@Column({ type: 'varchar', nullable: false, length: 255 })
+	@Column({ length: 255, nullable: false, type: 'varchar' })
 	item_name!: string
 
 	@Column({ type: 'int' })
 	item_price!: number
 
-
-	@ManyToOne(() => Category, (category) => category.items, { nullable: true, onDelete: "CASCADE" })
-	@JoinColumn({ name: 'category_id' })
-	category!: Relation<Category>;
-
-
-	@Column({ type: 'decimal', nullable: true, precision: 3, scale: 2 })
+	@Column({ nullable: true, precision: 3, scale: 2, type: 'decimal' })
 	rating?: number
 
-	@Column({ type: 'varchar', nullable: true, length: 100 })
+	@Column({ length: 100, nullable: true, type: 'varchar' })
 	sku?: string
 
-	@Column({ type: 'int', nullable: true })
+	@Column({ nullable: true, type: 'int' })
 	stock!: number
 
-	@Column({ type: 'varchar', nullable: true, length: 255 })
-	description!: string
-
-	@OneToMany(() => VariantCollection, vc => vc.item_id)
+	@OneToMany(() => VariantCollection, vc => vc.variant_collection_id)
 	variant_collections?: string[]
+
+	getSlugSource(): string {
+		return `${this.item_name}-${this.item_price}-${this.category || 'default'}-${this.item_id?.substring(0, 8) || ''}`;
+	}
 }
 

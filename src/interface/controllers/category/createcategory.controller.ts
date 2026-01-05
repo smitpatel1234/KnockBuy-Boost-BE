@@ -1,5 +1,6 @@
-import { EntityManager } from "typeorm";
 import Express from "express";
+import { EntityManager } from "typeorm";
+
 import { CategoryRepoPort } from "../../../application/port/category-repo.port";
 import { create_category } from "../../../application/useCases/category/index";
 import {successmessage} from '../../../infrastructure/helper/displaymessage'
@@ -10,7 +11,7 @@ export const createCategoryController = (CategoryRepo: CategoryRepoPort) => {
       {
         const data = req.body;
         await create_category(t, data, CategoryRepo);
-        return successmessage(res, "Category created successfully");
+        successmessage(res, "Category created successfully"); return;
       }
     });
 };

@@ -12,7 +12,7 @@ exports.PasswordField = zod_1.z.string()
     .min(8)
     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[-&!])[A-Za-z\d-&!]{8,}$/, "Invalid password");
 exports.EmailField = zod_1.z.email();
-exports.PhoneField = zod_1.z.number().min(1000000000).max(9999999999);
+exports.PhoneField = zod_1.z.string().regex(/^[0-9]{10}$/, "Invalid phone number");
 exports.userCredentials = zod_1.z.object({
     username: exports.UsernameField,
     password: exports.PasswordField,

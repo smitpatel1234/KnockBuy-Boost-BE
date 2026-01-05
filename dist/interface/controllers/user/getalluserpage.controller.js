@@ -7,7 +7,7 @@ const getall_user_page_usecase_1 = require("../../../application/useCases/user/g
 const getAllUserPageController = (userRepo) => {
     return async (req, res) => userRepo.wrapTransaction(async (t) => {
         const params = (0, request_helper_1.parsePaginationParams)(req);
-        const data = await (0, getall_user_page_usecase_1.getallUserPage)(userRepo)(t, params);
+        const data = await (0, getall_user_page_usecase_1.getallUserPage)(t, userRepo, params);
         return (0, displaymessage_1.successmessage)(res, "Users fetched successfully", data);
     });
 };

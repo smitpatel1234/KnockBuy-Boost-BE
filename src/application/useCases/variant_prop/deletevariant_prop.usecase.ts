@@ -1,6 +1,7 @@
-import { EntityManager } from "typeorm";
-import { VariantRepoPort } from '../../port/variant-repo.port';
 import { UUID } from "crypto";
+import { EntityManager } from "typeorm";
+
+import { VariantRepoPort } from '../../port/variant-repo.port';
 
 
 export const delete_varient_property = async (

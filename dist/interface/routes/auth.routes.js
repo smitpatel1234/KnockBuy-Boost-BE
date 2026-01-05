@@ -14,11 +14,12 @@ const login_out_controller_1 = require("../controllers/auth/login-out.controller
 const auth_repo_1 = require("../../infrastructure/repositories/auth.repo");
 const authvarification_1 = require("../../infrastructure/helper/middleware/authvarification");
 const refresh_controller_1 = require("../controllers/auth/refresh.controller");
+const User_models_1 = require("../../domain/models/User.models");
 const router = express_1.default.Router();
 router.post('/register', (0, validator_1.validateDetails)(user_1.userCredentials), (0, register_controller_1.registerUserController)(credentials_and_user_manage_repo_1.UserAndCredentialsRepo));
 router.post('/refresh-token', (0, refresh_controller_1.refreshTokenController)(auth_repo_1.AuthRepo));
 router.post('/login', (0, validator_1.validateDetails)(auth_1.LoginCredentials), (0, login_out_controller_1.LoginUserController)(auth_repo_1.AuthRepo));
-router.post('/logout', (0, authvarification_1.authVerification)(), (0, login_out_controller_1.LogoutUserController)(auth_repo_1.AuthRepo));
+router.post('/logout', (0, authvarification_1.authVerification)([User_models_1.UserRole.USER]), (0, login_out_controller_1.LogoutUserController)(auth_repo_1.AuthRepo));
 // router.get('/google',
 //   passport.authenticate('google', {
 //     scope: ['profile', 'email'],
