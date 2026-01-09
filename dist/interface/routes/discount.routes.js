@@ -4,12 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const User_models_1 = require("../../domain/models/User.models");
+const discount_1 = require("../../domain/schemas/discount");
 const authvarification_1 = require("../../infrastructure/helper/middleware/authvarification");
 const validator_1 = require("../../infrastructure/helper/validator");
-const discount_1 = require("../../domain/schemas/discount");
 const discount_repo_1 = require("../../infrastructure/repositories/discount.repo");
 const discount_2 = require("../controllers/discount");
-const User_models_1 = require("../../domain/models/User.models");
 const router = express_1.default.Router();
 router.post('/create-discount', (0, authvarification_1.authVerification)([]), (0, validator_1.validateDetails)(discount_1.AddDiscountSchema), (0, discount_2.createDiscountController)(discount_repo_1.DiscountRepo));
 router.put('/update-discount', (0, authvarification_1.authVerification)([]), (0, validator_1.validateDetails)(discount_1.UpdateDiscountSchema), (0, discount_2.updateDiscountController)(discount_repo_1.DiscountRepo));

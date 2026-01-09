@@ -10,7 +10,7 @@ const UpdateVariantPropController = (variantRepo) => {
         const IsUpdated = await (0, index_1.update_varient_property)(t, variantRepo, data);
         if (!IsUpdated)
             throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.NOT_FOUND, "Variant Property Not Found");
-        return (0, displaymessage_1.successmessage)(res, "Variant property updated successfully");
+        (0, displaymessage_1.successmessage)(res, "Variant property updated successfully");
     });
 };
 exports.UpdateVariantPropController = UpdateVariantPropController;

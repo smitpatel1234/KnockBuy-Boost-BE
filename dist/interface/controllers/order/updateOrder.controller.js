@@ -10,7 +10,8 @@ const UpdateOrderController = (OrderRepo) => {
         data.order_id = id;
         const success = await (0, updateOrder_usecase_1.updateOrder)(t, OrderRepo, data);
         if (success) {
-            return (0, displaymessage_1.successmessage)(res, "Order updated successfully");
+            (0, displaymessage_1.successmessage)(res, "Order updated successfully");
+            return;
         }
         throw new Error("Failed to update order");
     });

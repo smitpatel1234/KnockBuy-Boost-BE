@@ -36,8 +36,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.pageParamsSchema = void 0;
 const zod = __importStar(require("zod"));
 const paginationSchema = zod.object({
-    page: zod.number().min(1),
     limit: zod.number().min(1),
+    page: zod.number().min(1),
 });
 const filterSchema = zod.object({
     column: zod.string(),
@@ -48,7 +48,7 @@ const sortSchema = zod.object({
     order: zod.enum(["ASC", "DESC"])
 });
 exports.pageParamsSchema = zod.object({
-    pagination: paginationSchema,
     filters: zod.array(filterSchema).optional(),
+    pagination: paginationSchema,
     sort: zod.array(sortSchema).optional(),
 });

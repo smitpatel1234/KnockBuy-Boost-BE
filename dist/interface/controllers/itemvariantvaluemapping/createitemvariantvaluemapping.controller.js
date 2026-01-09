@@ -7,7 +7,7 @@ const createItemVariantValueMapping_Controller = (VariantRepo) => {
     return async (req, res) => VariantRepo.wrapTransaction(async (t) => {
         const data = req.body;
         await (0, index_1.createvariantvalue_item_mapping)(t, VariantRepo, data);
-        return (0, displaymessage_1.successmessage)(res, "Item variant value mapping created successfully");
+        (0, displaymessage_1.successmessage)(res, "Item variant value mapping created successfully");
     });
 };
 exports.createItemVariantValueMapping_Controller = createItemVariantValueMapping_Controller;

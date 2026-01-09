@@ -36,13 +36,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ItemCartIdSchema = exports.UpdateItemCartSchema = exports.ItemCartSchema = void 0;
 const zod = __importStar(require("zod"));
 exports.ItemCartSchema = zod.object({
-    item: zod.string().uuid(),
+    item: zod.string(),
     quantity: zod.number().min(1),
 });
 exports.UpdateItemCartSchema = exports.ItemCartSchema.extend({
-    cart_item_id: zod.string().uuid(),
+    cart_item_id: zod.string(),
     quantity: zod.number().min(1),
 }).partial().required({ cart_item_id: true });
 exports.ItemCartIdSchema = zod.object({
-    cart_item_id: zod.string().uuid(),
+    cart_item_id: zod.string(),
 });

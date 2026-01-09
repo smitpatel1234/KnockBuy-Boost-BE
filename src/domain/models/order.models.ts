@@ -1,12 +1,15 @@
+import { UserProfile } from "./User.models";
+
 export interface OrderAllType {
-  delivery_status: string;
+  delivery_status?: string;
   order_date: Date;
   order_id: string;
-  payment_method: string;
-  payment_status: string;
-  status: string;
-  total_amount: number;
-  username: string;
+  payment_method?: string;
+  payment_status?: string;
+  status?: string;
+  total_amount?: number;
+  user?:UserProfile
+  username?: string;
 }
 
 export interface PlaceOrder {

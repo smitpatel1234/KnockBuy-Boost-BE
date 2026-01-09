@@ -20,12 +20,12 @@ __decorate([
     __metadata("design:type", String)
 ], Delivery.prototype, "delivery_id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', length: 100 }),
+    (0, typeorm_1.Column)({ length: 100, type: 'varchar' }),
     __metadata("design:type", String)
 ], Delivery.prototype, "delivery_state", void 0);
 __decorate([
-    (0, typeorm_1.OneToOne)(() => order_1.Order),
     (0, typeorm_1.JoinColumn)({ name: 'order_id' }),
+    (0, typeorm_1.OneToOne)(() => order_1.Order),
     __metadata("design:type", order_1.Order)
 ], Delivery.prototype, "order", void 0);
 exports.Delivery = Delivery = __decorate([

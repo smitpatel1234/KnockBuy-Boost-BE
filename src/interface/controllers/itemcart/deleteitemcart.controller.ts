@@ -2,19 +2,20 @@ import Express from "express";
 import { EntityManager } from "typeorm";
 
 import { ItemCartRepoPort } from "../../../application/port/itemcart-repo.port";
-import { delete_itemcart  } from "../../../application/useCases/itemcart/index";
-import {successmessage} from '../../../infrastructure/helper/displaymessage'
-import { ApplicationError,ApplicationErrorType } from "../../../infrastructure/helper/middleware/GlobelErrorHandler";
+import { delete_itemcart } from "../../../application/useCases/itemcart/index";
+import { successmessage } from '../../../infrastructure/helper/displaymessage'
+import { ApplicationError, ApplicationErrorType } from "../../../infrastructure/helper/middleware/GlobelErrorHandler";
+import { AuthRequest } from "../../types/request.types";
 
 
 export const deleteItemCartController = (ItemCartRepo: ItemCartRepoPort) => {
-  return async (req: Express.Request, res: Express.Response) =>
+  return async (req: AuthRequest<{ cart_item_id: string }>, res: Express.Response) =>
     ItemCartRepo.wrapTransaction(async (t: EntityManager) => {
       {
-          const cart_item_id = req.body.cart_item_id;
-         const IsDeleted =  await delete_itemcart(t, ItemCartRepo, {cart_item_id:cart_item_id} );    
-         if(!IsDeleted) throw new ApplicationError(ApplicationErrorType.NOT_FOUND,"addess Not Found");``
-          successmessage(res, "addess deleted successfully"); return;   
+        const cart_item_id = req.body.cart_item_id;
+        const IsDeleted = await delete_itemcart(t, ItemCartRepo, { cart_item_id: cart_item_id });
+        if (!IsDeleted) throw new ApplicationError(ApplicationErrorType.NOT_FOUND, "addess Not Found");
+        successmessage(res, "item from cart removed successfully"); return;
       }
     });
 };

@@ -17,28 +17,28 @@ let ItemCart = class ItemCart {
 };
 exports.ItemCart = ItemCart;
 __decorate([
+    (0, typeorm_1.CreateDateColumn)({ type: 'timestamp' }),
+    __metadata("design:type", Date)
+], ItemCart.prototype, "added_at", void 0);
+__decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
     __metadata("design:type", String)
 ], ItemCart.prototype, "cart_item_id", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => item_1.Item, { onDelete: "CASCADE", nullable: false }),
     (0, typeorm_1.JoinColumn)({ name: 'item_id' }),
+    (0, typeorm_1.ManyToOne)(() => item_1.Item, { nullable: false, onDelete: "CASCADE" }),
     __metadata("design:type", Object)
 ], ItemCart.prototype, "item", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => user_1.User, { onDelete: "CASCADE", nullable: false }),
-    (0, typeorm_1.JoinColumn)({ name: 'user_id' }),
-    __metadata("design:type", Object)
-], ItemCart.prototype, "user", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'int', nullable: false }),
+    (0, typeorm_1.Column)({ nullable: false, type: 'int' }),
     __metadata("design:type", Number)
 ], ItemCart.prototype, "quantity", void 0);
 __decorate([
-    (0, typeorm_1.CreateDateColumn)({ type: 'timestamp' }),
-    __metadata("design:type", Date)
-], ItemCart.prototype, "added_at", void 0);
+    (0, typeorm_1.JoinColumn)({ name: 'user_id' }),
+    (0, typeorm_1.ManyToOne)(() => user_1.User, { nullable: false, onDelete: "CASCADE" }),
+    __metadata("design:type", Object)
+], ItemCart.prototype, "user", void 0);
 exports.ItemCart = ItemCart = __decorate([
-    (0, typeorm_1.Unique)(['item', 'user']),
-    (0, typeorm_1.Entity)()
+    (0, typeorm_1.Entity)(),
+    (0, typeorm_1.Unique)(['item', 'user'])
 ], ItemCart);

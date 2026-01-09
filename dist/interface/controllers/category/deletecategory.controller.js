@@ -11,8 +11,8 @@ const deleteCategoryController = (CategoryRepo) => {
             const IsDeleted = await (0, index_1.delete_category)(t, CategoryRepo, category_id);
             if (!IsDeleted)
                 throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.NOT_FOUND, "Category Not Found");
-            ``;
-            return (0, displaymessage_1.successmessage)(res, "Category deleted successfully");
+            (0, displaymessage_1.successmessage)(res, "Category deleted successfully");
+            return;
         }
     });
 };

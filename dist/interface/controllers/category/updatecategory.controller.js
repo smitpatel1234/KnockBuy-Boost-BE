@@ -11,7 +11,8 @@ const updateCategoryController = (CategoryRepo) => {
             const IsUpdated = await (0, index_1.update_category)(t, CategoryRepo, data);
             if (!IsUpdated)
                 throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.NOT_FOUND, "Category Not Found");
-            return (0, displaymessage_1.successmessage)(res, "Category updated successfully");
+            (0, displaymessage_1.successmessage)(res, "Category updated successfully");
+            return;
         }
     });
 };

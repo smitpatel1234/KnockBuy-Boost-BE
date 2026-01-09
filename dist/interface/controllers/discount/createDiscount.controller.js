@@ -7,11 +7,10 @@ const GlobelErrorHandler_1 = require("../../../infrastructure/helper/middleware/
 const createDiscountController = (discountRepo) => {
     return async (req, res) => discountRepo.wrapTransaction(async (t) => {
         const data = req.body;
-        console.log(data);
         const IsCreated = await (0, discount_1.create_discount)(t, data, discountRepo);
         if (!IsCreated)
             throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.BAD_REQUEST, "Discount Not Created");
-        return (0, displaymessage_1.successmessage)(res, "Discount created successfully");
+        (0, displaymessage_1.successmessage)(res, "Discount created successfully");
     });
 };
 exports.createDiscountController = createDiscountController;

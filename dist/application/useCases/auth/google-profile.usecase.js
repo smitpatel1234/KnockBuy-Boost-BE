@@ -1,18 +1,28 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getGoogleProfileData = void 0;
-const getGoogleProfileData = (googleProfile) => {
-    return {
-        googleId: googleProfile.id,
-        displayName: googleProfile.displayName,
-        email: googleProfile.emails?.[0]?.value,
-        profilePhoto: googleProfile.photos?.[0]?.value,
-        givenName: googleProfile.name?.givenName,
-        familyName: googleProfile.name?.familyName,
-        allEmails: googleProfile.emails,
-        allPhotos: googleProfile.photos,
-        provider: googleProfile.provider,
-        rawData: googleProfile._json,
-    };
-};
-exports.getGoogleProfileData = getGoogleProfileData;
+// export interface GoogleProfile {
+//   _json?: any;
+//   _raw?: string;
+//   displayName: string;
+//   emails?: { value: string; verified?: boolean }[];
+//   id: string;
+//   name?: {
+//     familyName?: string;
+//     givenName?: string;
+//   };
+//   photos?: { value: string }[];
+//   provider?: string;
+// }
+// export const getGoogleProfileData = (googleProfile: GoogleProfile) => {
+//   return {
+//     allEmails: googleProfile.emails,
+//     allPhotos: googleProfile.photos,
+//     displayName: googleProfile.displayName,
+//     email: googleProfile.emails?.[0]?.value,
+//     familyName: googleProfile.name?.familyName,
+//     givenName: googleProfile.name?.givenName,
+//     googleId: googleProfile.id,
+//     profilePhoto: googleProfile.photos?.[0]?.value,
+//     provider: googleProfile.provider,
+//     rawData: googleProfile._json,
+//   };
+// };

@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.confirmOrder = void 0;
 const GlobelErrorHandler_1 = require("../../../infrastructure/helper/middleware/GlobelErrorHandler");
 const confirmOrder = async (em, orderRepo, data) => {
-    // Verify ownership
     const userOrders = await orderRepo.getOrdersByUserId(em, data.user_id);
     const order = userOrders.find(o => o.order_id === data.order_id);
     if (!order) {
@@ -13,12 +12,12 @@ const confirmOrder = async (em, orderRepo, data) => {
         throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.BAD_REQUEST, "Order is already confirmed");
     }
     const updateData = {
-        order_id: data.order_id,
-        status: "placed",
+        address_id: data.address_id,
         delivery_status: "pending",
+        order_id: data.order_id,
         payment_method: data.payment_method,
         payment_status: data.payment_method === "CASH_ON_DELIVERY" ? "pending" : "paid",
-        address_id: data.address_id
+        status: "placed"
     };
     return await orderRepo.UpdateOrder(em, updateData);
 };

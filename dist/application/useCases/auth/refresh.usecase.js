@@ -4,21 +4,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.refreshToken = void 0;
-const TokenGenerator_1 = require("../../../infrastructure/helper/TokenGenerator");
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const GlobelErrorHandler_1 = require("../../../infrastructure/helper/middleware/GlobelErrorHandler");
+const TokenGenerator_1 = require("../../../infrastructure/helper/TokenGenerator");
 const refreshToken = async (entitiesmanager, authRepo, refrehToken, user_id) => {
     const tokenhash = await authRepo.findRefreshTokenHash(entitiesmanager, user_id);
     if (tokenhash) {
         const isMatch = bcrypt_1.default.compareSync(refrehToken, tokenhash);
         if (isMatch) {
-            const tokens = await (0, TokenGenerator_1.regenerateToken)(refrehToken);
+            const tokens = (0, TokenGenerator_1.regenerateToken)(refrehToken);
             return {
                 accessToken: tokens.accesstoken,
                 expIN: tokens.expIN
             };
         }
         else {
-            throw new Error("Invalid token");
+            throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.BAD_REQUEST, "Invalid token");
         }
     }
 };

@@ -1,167 +1,33 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ItemRepo = void 0;
+const pagination_helper_1 = require("../helper/pagination.helper");
+const transaction_1 = require("../helper/transaction");
 const item_1 = require("../orm/entities/item");
 const image_1 = require("../orm/entities/image");
-const transaction_1 = require("../helper/transaction");
-const pagination_helper_1 = require("../helper/pagination.helper");
+const variant_repo_1 = require("./variant.repo");
 exports.ItemRepo = {
-    GetAllItemsPage: async (em, data) => {
-        const ItemBuilders = em
-            .getRepository(item_1.Item)
-            .createQueryBuilder("item")
-            .leftJoin("item.category", "category")
-            .select([
-            "item.item_id AS item_id",
-            "item.item_name AS item_name",
-            "item.item_price AS item_price",
-            "category.category_id AS category_id",
-            "category.category_name AS category_name",
-            "item.rating AS rating",
-            "item.sku AS sku",
-            "item.stock AS stock",
-            "item.description AS description",
-            "item.slug AS slug",
-        ]).addSelect((subQuery) => {
-            return subQuery
-                .select("image.image_URL")
-                .from("image", "image")
-                .where("image.items_id = item.item_id")
-                .limit(1);
-        }, "image_url");
-        return (0, pagination_helper_1.applyPaginationAndFilters)(ItemBuilders, data);
-    },
-    getItemBySlug: async (em, slug) => {
-        const item = await em.getRepository(item_1.Item).findOne({
-            where: { slug: slug },
-        });
-        return item;
-    },
-    getItemById: async (em, id) => {
-        const item = await em
-            .getRepository(item_1.Item)
-            .createQueryBuilder("item")
-            .leftJoin("item.category", "category")
-            .select([
-            "item.item_id AS item_id",
-            "item.item_name AS item_name",
-            "item.item_price AS item_price",
-            "item.description AS description",
-            "item.rating AS rating",
-            "item.sku AS sku",
-            "item.stock AS stock",
-            "category.category_id AS category_id",
-            "category.category_name AS category_name",
-        ])
-            .where("item.item_id = :id", { id })
-            .getRawOne();
-        if (!item)
-            return null;
-        const related = await em
-            .getRepository("VariantCollection")
-            .createQueryBuilder("vc")
-            .leftJoin("vc.variant_item", "variant_item")
-            .select([
-            "variant_item.item_id AS item_id",
-            "variant_item.item_name AS item_name",
-        ])
-            .where("vc.main_item = :itemId", { itemId: id })
-            .getRawMany();
-        const result = {
-            ...item,
-            variant_collections: related,
-        };
-        return result;
-    },
-    getImagesByItemId: async (em, id) => {
-        const images = await em
-            .getRepository(image_1.Image)
-            .createQueryBuilder("image")
-            .where("image.item = :itemId", { itemId: id })
-            .getMany();
-        return images.map(img => img.image_URL);
-    },
     CreateItem: async (em, data) => {
         const itemRepo = em.getRepository(item_1.Item);
         const newItem = itemRepo.create({
+            category: { category_id: data.category_id },
+            description: data.description,
             item_name: data.item_name,
             item_price: data.item_price,
-            description: data.description,
             rating: data.rating,
             sku: data.sku,
             stock: data.stock,
-            category: { category_id: data.category_id },
         });
         const savedItem = await itemRepo.save(newItem);
-        if (data.variant && data.variant.length > 0) {
-            const mappingRepo = em.getRepository("ItemVariantValueMapping");
-            const mappings = data.variant.map((v) => mappingRepo.create({
-                item: savedItem,
-                variantValue: { variantValue_id: v.variantValue_id },
-            }));
-            await mappingRepo.save(mappings);
-        }
-        if (data.variant_collections && data.variant_collections.length > 0) {
-            const vcRepo = em.getRepository("VariantCollection");
-            const vcs = data.variant_collections.map((vid) => vcRepo.create({
-                main_item: { item_id: savedItem.item_id },
-                variant_item: { item_id: vid.item_id },
-            }));
-            if (vcs.length > 0)
-                await vcRepo.save(vcs);
-        }
+        await variant_repo_1.VariantRepo.createVariantCollection(em, data.variant_collections, savedItem.item_id);
+        await variant_repo_1.VariantRepo.mapItemToVariantValue(em, data.variant, savedItem.item_id);
         if (data.images && data.images.length > 0) {
             const imageRepo = em.getRepository("Image");
-            const images = data.images.map(url => imageRepo.create({
+            const images = data.images.map((url) => imageRepo.create({
                 image_URL: url,
-                item: savedItem
+                item: savedItem,
             }));
             await imageRepo.save(images);
-        }
-        return true;
-    },
-    UpdateItem: async (em, data) => {
-        const itemRepo = em.getRepository(item_1.Item);
-        const existing = await itemRepo.findOneBy({ item_id: data.item_id });
-        if (!existing)
-            return false;
-        existing.item_name = data.item_name;
-        existing.item_price = data.item_price;
-        existing.description = data.description;
-        existing.rating = data.rating;
-        existing.sku = data.sku;
-        existing.stock = data.stock;
-        existing.category = { ...existing.category, category_id: data.category_id };
-        await itemRepo.save(existing);
-        if (data.variant) {
-            const mappingRepo = em.getRepository("ItemVariantValueMapping");
-            await mappingRepo.delete({ item: { item_id: data.item_id } });
-            const mappings = data.variant.map((v) => mappingRepo.create({
-                item: { item_id: data.item_id },
-                variantValue: { variantValue_id: v.variantValue_id },
-            }));
-            await mappingRepo.save(mappings);
-        }
-        if (data.variant_collections) {
-            const vcRepo = em.getRepository("VariantCollection");
-            await vcRepo.delete({ main_item: { item_id: data.item_id } });
-            const vcs = data.variant_collections.map((vid) => vcRepo.create({
-                main_item: { item_id: data.item_id },
-                variant_item: { item_id: vid.item_id },
-            }));
-            if (vcs.length > 0)
-                await vcRepo.save(vcs);
-        }
-        if (data.images) {
-            const imageRepo = em.getRepository(image_1.Image);
-            await imageRepo.delete({ item: { item_id: data.item_id } });
-            if (data.images.length > 0) {
-                const images = data.images.map(url => imageRepo.create({
-                    image_URL: url,
-                    item: { item_id: data.item_id }
-                }));
-                await imageRepo.save(images);
-            }
         }
         return true;
     },
@@ -188,6 +54,131 @@ exports.ItemRepo = {
         ])
             .getRawMany();
         return items;
+    },
+    GetAllItemsPage: async (em, data) => {
+        const ItemBuilders = em
+            .getRepository(item_1.Item)
+            .createQueryBuilder("item")
+            .leftJoin("item.category", "category")
+            .select([
+            "item.item_id AS item_id",
+            "item.item_name AS item_name",
+            "item.item_price AS item_price",
+            "category.category_id AS category_id",
+            "category.category_name AS category_name",
+            "item.rating AS rating",
+            "item.sku AS sku",
+            "item.stock AS stock",
+            "item.description AS description",
+            "item.slug AS slug",
+        ])
+            .addSelect((subQuery) => {
+            return subQuery
+                .select("image.image_URL")
+                .from("image", "image")
+                .where("image.items_id = item.item_id")
+                .limit(1);
+        }, "image_url");
+        return await (0, pagination_helper_1.applyPaginationAndFilters)(ItemBuilders, data);
+    },
+    getImagesByItemId: async (em, id) => {
+        const images = await em
+            .getRepository(image_1.Image)
+            .createQueryBuilder("image")
+            .where("image.item = :itemId", { itemId: id })
+            .getMany();
+        return images.map((img) => img.image_URL);
+    },
+    getItemByIdOrSlug: async (em, id, slug) => {
+        const item = em
+            .getRepository(item_1.Item)
+            .createQueryBuilder("item")
+            .leftJoin("item.category", "category")
+            .select([
+            "item.item_id AS item_id",
+            "item.item_name AS item_name",
+            "item.item_price AS item_price",
+            "item.description AS description",
+            "item.rating AS rating",
+            "item.sku AS sku",
+            "item.stock AS stock",
+            "category.category_id AS category_id",
+            "category.category_name AS category_name",
+            "item.slug AS slug",
+        ]);
+        if (id)
+            item.where("item.item_id = :id", { id });
+        if (slug)
+            item.where("item.slug = :slug", { slug });
+        if (!slug && !id)
+            return undefined;
+        const data = await item.getRawOne();
+        return data;
+    },
+    searchItems: async (em, data) => {
+        const queryBuilder = em
+            .getRepository(item_1.Item)
+            .createQueryBuilder("item")
+            .leftJoin("item.category", "category")
+            .leftJoin("ItemVariantValueMapping", "mapping", "mapping.item_id = item.item_id")
+            .leftJoin("mapping.variantValue", "variantValue")
+            .select([
+            "item.item_id AS item_id",
+            "item.item_name AS item_name",
+            "item.item_price AS item_price",
+            "category.category_id AS category_id",
+            "category.category_name AS category_name",
+            "item.rating AS rating",
+            "item.sku AS sku",
+            "item.stock AS stock",
+            "item.description AS description",
+            "item.slug AS slug",
+        ])
+            .addSelect((subQuery) => {
+            return subQuery
+                .select("image.image_URL")
+                .from("image", "image")
+                .where("image.items_id = item.item_id")
+                .limit(1);
+        }, "image_url")
+            .distinct(true);
+        return await (0, pagination_helper_1.applySearchAndFilters)(queryBuilder, data);
+    },
+    UpdateItem: async (em, data) => {
+        const itemRepo = em.getRepository(item_1.Item);
+        const existing = await itemRepo.findOneBy({ item_id: data.item_id });
+        if (!existing)
+            return false;
+        existing.item_name = data.item_name;
+        existing.item_price = data.item_price;
+        existing.description = data.description;
+        existing.rating = data.rating;
+        existing.sku = data.sku;
+        existing.stock = data.stock;
+        existing.category = { category_id: data.category_id };
+        await itemRepo.save(existing);
+        await variant_repo_1.VariantRepo.deleteVariantCollection(em, existing.item_id);
+        await variant_repo_1.VariantRepo.createVariantCollection(em, data.variant_collections, existing.item_id);
+        await variant_repo_1.VariantRepo.deleteItemVariantMapping(em, existing.item_id);
+        await variant_repo_1.VariantRepo.mapItemToVariantValue(em, data.variant, existing.item_id);
+        if (data.images) {
+            const imageRepo = em.getRepository(image_1.Image);
+            await imageRepo.delete({ item: { item_id: data.item_id } });
+            if (data.images.length > 0) {
+                const images = data.images.map((url) => imageRepo.create({
+                    image_URL: url,
+                    item: { item_id: data.item_id },
+                }));
+                await imageRepo.save(images);
+            }
+        }
+        return true;
+    },
+    ISItemInStock: async (em, item_id, quantity) => {
+        const item = await em
+            .getRepository(item_1.Item)
+            .findOneOrFail({ where: { item_id: item_id } });
+        return item.stock >= quantity;
     },
     wrapTransaction: transaction_1.wrapTransaction,
 };

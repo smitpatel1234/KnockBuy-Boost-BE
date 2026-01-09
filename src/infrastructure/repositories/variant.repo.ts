@@ -1,24 +1,25 @@
-import e from "express";
 import { EntityManager } from "typeorm";
-
 import { VariantRepoPort } from "../../application/port/variant-repo.port";
-import { pageParams, PaginationResponse } from "../../domain/globalTypes/commonFields";
+import {
+  pageParams,
+  PaginationResponse,
+} from "../../domain/globalTypes/commonFields";
 import {
   GetItemVariantValueMappingModel,
-  ItemVariantValueMappingModel,
-  VariantCollectionModel,
   VariantPropertyModel,
   VariantValueModel,
   VariantValueModelWithvariantProperty,
 } from "../../domain/models/Variant.models";
 import { applyPaginationAndFilters } from "../helper/pagination.helper";
 import { wrapTransaction } from "../helper/transaction";
-import { Item } from "../orm/entities/item";
 import { ItemVariantValueMapping } from "../orm/entities/item_variantVlaue_mapping";
 import { VariantCollection } from "../orm/entities/variant_collection";
 import { VariantPropertys } from "../orm/entities/variantPropertys";
 import { VariantValues } from "../orm/entities/variantValues";
-
+import {
+  VariantCollectionForOneItem,
+  VariantForOneItem,
+} from "../../domain/models/item.models";
 export const VariantRepo: VariantRepoPort = {
   createProperty: async (
     em: EntityManager,
@@ -35,7 +36,7 @@ export const VariantRepo: VariantRepoPort = {
   ): Promise<VariantValues> => {
     const property = await em.findOneOrFail(VariantPropertys, {
       where: {
-        variantProperty_id: data.variantProperty_id as unknown as string,
+        variantProperty_id: data.variantProperty_id,
       },
     });
 
@@ -49,55 +50,52 @@ export const VariantRepo: VariantRepoPort = {
 
   createVariantCollection: async (
     em: EntityManager,
-    data: VariantCollectionModel
-  ): Promise<VariantCollection> => {
-    const item = await em.findOneOrFail(Item, {
-      where: { item_id: data.item_id as unknown as string },
-    });
-
-    const variantItem = await em.findOneOrFail(Item, {
-      where: { item_id: data.variant_item_id as unknown as string },
-    });
-
-    const entity = em.create(VariantCollection, {
-      main_item: item,
-      variant_item: variantItem,
-    });
-
-    return em.save(entity);
+    variant_collections: VariantCollectionForOneItem[] | undefined,
+    item_id: string
+  ): Promise<void> => {
+    if (variant_collections && variant_collections.length > 0) {
+      const vcRepo = em.getRepository(VariantCollection);
+      const vcs = variant_collections.map((vid) =>
+        vcRepo.create({
+          main_item: { item_id: item_id },
+          variant_item: { item_id: vid.item_id },
+        })
+      );
+      if (vcs.length > 0) await vcRepo.save(vcs);
+    }
   },
   deleteItemVariantMapping: async (
     em: EntityManager,
-    id: string
+    item_id: string
   ): Promise<boolean> => {
     const value = await em.delete(ItemVariantValueMapping, {
-      item_variantvalue_mapping_id: id as unknown as string,
+      item_id: item_id,
     });
     return (value.affected ?? 0) > 0;
   },
 
   deleteProperty: async (em: EntityManager, id: string): Promise<boolean> => {
     const result = await em.delete(VariantPropertys, {
-      variantProperty_id: id as unknown as string,
+      variantProperty_id: id,
     });
     return (result.affected ?? 0) > 0;
   },
   deleteValue: async (em: EntityManager, id: string): Promise<boolean> => {
     const result = await em.delete(VariantValues, {
-      variantValue_id: id as unknown as string,
+      variantValue_id: id,
     });
     return (result.affected ?? 0) > 0;
   },
 
   deleteVariantCollection: async (
     em: EntityManager,
-    id: string
+    item_id: string
   ): Promise<void> => {
     await em.delete(VariantCollection, {
-      variant_collection_id: id as unknown as string,
+      main_item: { item_id: item_id },
     });
   },
-  getall_variant_values: async (em: EntityManager, data: VariantValueModel) => {
+  getall_variant_values: async (em: EntityManager) => {
     return em
       .getRepository(VariantValues)
       .createQueryBuilder("vv")
@@ -126,10 +124,10 @@ export const VariantRepo: VariantRepoPort = {
         "vp.property_name AS property_name",
       ]);
 
-    return applyPaginationAndFilters<VariantValueModelWithvariantProperty>(
-      qb,
-      data
-    );
+    return applyPaginationAndFilters<
+      VariantValues,
+      VariantValueModelWithvariantProperty
+    >(qb, data);
   },
 
   getAllVariantProperties: async (
@@ -160,61 +158,91 @@ export const VariantRepo: VariantRepoPort = {
       ])
       .getRawMany();
   },
+  getItemVariantCollectionForItem: async (
+    em: EntityManager,
+    item_id: string
+  ) => {
+    return await em
+      .getRepository(VariantCollection)
+      .createQueryBuilder("vc")
+      .leftJoin("vc.variant_item", "item")
+      .select([
+        "item.item_id AS item_id",
+        "item.item_name AS item_name",
+        "item.item_price AS item_price",
+        "item.description AS description",
+        "item.rating AS rating",
+        "item.sku AS sku",
+        "item.stock AS stock",
+         "item.slug AS slug",
+      ])
+      .where("vc.main_item = :itemId", { itemId: item_id })
+      .addSelect((subQuery) => {
+        return subQuery
+          .select("image.image_URL")
+          .from("image", "image")
+          .where("image.items_id = item.item_id")
+          .limit(1);
+      }, "image_url")
+      .getRawMany<VariantCollectionForOneItem>();
+  },
+
   mapItemToVariantValue: async (
     em: EntityManager,
-    data: ItemVariantValueMappingModel
-  ): Promise<ItemVariantValueMapping> => {
-    const item = await em.findOneOrFail(Item, {
-      where: { item_id: data.item_id as unknown as string },
-    });
-
-    const value = await em.findOneOrFail(VariantValues, {
-      where: { variantValue_id: data.variantValue_id as unknown as string },
-    });
-
-    const entity = em.create(ItemVariantValueMapping, {
-      item,
-      variantValue: value,
-    });
-
-    return em.save(entity);
+    variant: VariantForOneItem[] | undefined,
+    item_id: string
+  ): Promise<void> => {
+    if (variant && variant.length > 0) {
+      const mappingRepo = em.getRepository(ItemVariantValueMapping);
+      const mappings = variant.map((v) =>
+        mappingRepo.create({
+          item: { item_id: item_id },
+          variantValue: { variantValue_id: v.variantValue_id },
+        })
+      );
+      await mappingRepo.save(mappings);
+    }
   },
+
   updateProperty: async (
     em: EntityManager,
     data: VariantPropertyModel
-  ): Promise<boolean | null> => {
+  ): Promise<null | VariantPropertyModel> => {
+    if (!data.variantProperty_id) {
+      return null;
+    }
     const entity = await em.findOne(VariantPropertys, {
-      where: { variantProperty_id: data.variantProperty_id! },
+      where: { variantProperty_id: data.variantProperty_id },
     });
     if (!entity) {
       return null;
     }
     entity.property_name = data.property_name;
-    await em.save(entity);
-    return true;
+    const variant = await em.save(entity);
+    return variant;
   },
 
-  updateValue: async (em: EntityManager, data: VariantValueModel) => {
-    try {
-      const entity = await em.findOne(VariantValues, {
-        where: { variantValue_id: data.variantValue_id! },
-      });
-      if (!entity) {
-        return null;
-      }
-
-      const variantProperty = await em.findOneOrFail(VariantPropertys, {
-        where: { variantProperty_id: data.variantProperty_id }
-      });
-
-      entity.variant_value = data.variant_value;
-      entity.variantProperty = variantProperty;
-      await em.save(entity);
-      return entity;
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : "Error while updating value";
-      throw Error(errorMessage);
+  updateValue: async (
+    em: EntityManager,
+    data: VariantValueModel
+  ): Promise<null | VariantValues> => {
+    if (!data.variantValue_id) {
+      return null;
     }
+    const entity = await em.findOne(VariantValues, {
+      where: { variantValue_id: data.variantValue_id },
+    });
+    if (!entity) {
+      return null;
+    }
+    const variantProperty = await em.findOneOrFail(VariantPropertys, {
+      where: { variantProperty_id: data.variantProperty_id },
+    });
+    entity.variant_value = data.variant_value;
+    entity.variantProperty = variantProperty;
+    await em.save(entity);
+    return entity;
   },
+
   wrapTransaction: wrapTransaction,
 };

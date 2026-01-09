@@ -1,9 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CategoryRepo = void 0;
-const category_1 = require("../orm/entities/category");
-const transaction_1 = require("../helper/transaction");
+const GlobelErrorHandler_1 = require("../helper/middleware/GlobelErrorHandler");
 const pagination_helper_1 = require("../helper/pagination.helper");
+const transaction_1 = require("../helper/transaction");
+const category_1 = require("../orm/entities/category");
 exports.CategoryRepo = {
     createCategory: async (em, input) => {
         const categoryRepo = em.getRepository(category_1.Category);
@@ -14,8 +15,8 @@ exports.CategoryRepo = {
         });
         if (input.parent_category_id) {
             const parent = await categoryRepo.findOne({
-                where: { category_id: input.parent_category_id },
                 select: ["category_id"],
+                where: { category_id: input.parent_category_id },
             });
             if (!parent) {
                 throw new Error("Parent category does not exist");
@@ -23,34 +24,6 @@ exports.CategoryRepo = {
             newCategory.parentCategory = parent;
         }
         await categoryRepo.save(newCategory);
-    },
-    updateCategory: async (em, input) => {
-        console.log(input);
-        const categoryRepo = em.getRepository(category_1.Category);
-        const existing = await categoryRepo.findOne({
-            where: { category_id: input.category_id },
-        });
-        if (!existing) {
-            throw new Error("Category not found");
-        }
-        if (input.parent_category_id) {
-            if (input.parent_category_id === input.category_id) {
-                throw new Error("Category cannot be its own parent");
-            }
-            const parent = await categoryRepo.findOne({
-                where: { category_id: input.parent_category_id },
-                select: ["category_id"],
-            });
-            if (!parent) {
-                throw new Error("Parent category does not exist");
-            }
-            existing.parentCategory = parent;
-        }
-        existing.category_name = input.category_name;
-        existing.description = input.description;
-        existing.image_url = input.image_url;
-        await categoryRepo.save(existing);
-        return true;
     },
     deleteCategory: async (em, category_id) => {
         const u = await em.getRepository(category_1.Category).delete(category_id);
@@ -86,6 +59,33 @@ exports.CategoryRepo = {
             "parent.category_name AS parent_category_name",
         ]);
         return (0, pagination_helper_1.applyPaginationAndFilters)(qb, data);
+    },
+    updateCategory: async (em, input) => {
+        const categoryRepo = em.getRepository(category_1.Category);
+        const existing = await categoryRepo.findOne({
+            where: { category_id: input.category_id },
+        });
+        if (!existing) {
+            throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.NOT_FOUND, "Category not found");
+        }
+        if (input.parent_category_id) {
+            if (input.parent_category_id === input.category_id) {
+                throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.NOT_FOUND, "Category cannot be its own parent");
+            }
+            const parent = await categoryRepo.findOne({
+                select: ["category_id"],
+                where: { category_id: input.parent_category_id },
+            });
+            if (!parent) {
+                throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.NOT_FOUND, "Parent category does not exist");
+            }
+            existing.parentCategory = parent;
+        }
+        existing.category_name = input.category_name;
+        existing.description = input.description;
+        existing.image_url = input.image_url;
+        await categoryRepo.save(existing);
+        return true;
     },
     wrapTransaction: transaction_1.wrapTransaction,
 };

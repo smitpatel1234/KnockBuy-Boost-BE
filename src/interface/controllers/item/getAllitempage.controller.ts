@@ -4,10 +4,6 @@ import { EntityManager } from "typeorm";
 import { ItemRepoPort } from "../../../application/port/item-repo.port";
 import { get_all_items_page } from "../../../application/useCases/item";
 import { successmessage } from "../../../infrastructure/helper/displaymessage";
-import {
-  ApplicationError,
-  ApplicationErrorType,
-} from "../../../infrastructure/helper/middleware/GlobelErrorHandler";
 import { parsePaginationParams } from "../../../infrastructure/helper/request.helper";
 
 export const getAllItemsPageController = (itemRepo: ItemRepoPort) => {

@@ -1,24 +1,19 @@
 import express from "express";
 
-import { UserRole } from "../../domain/models/User.models";
-import { pageParamsSchema } from "../../domain/schemas/pagination";
 import {
   AddVarientPropertysSchema,
-  AddVarientPropWithCollectionSchema,
   AddVarientWithValuesSchema,
   ItemVariantValueMappingId,
   ItemVariantValueMappingSchema,
   VariantCollectionIdSchema,
   VarientPropertysID,
   VarientPropertysSchema,
-  VarientPropWithCollectionSchema,
   VarientValuesID,
   VarientWithValuesSchema,
 } from "../../domain/schemas/variant/Variant";
 import { authVerification } from "../../infrastructure/helper/middleware/authvarification";
 import { validateDetails } from "../../infrastructure/helper/validator";
 import { VariantRepo } from "../../infrastructure/repositories/variant.repo";
-import { createItemVariantValueMapping_Controller, deleteItemVariantValueMapping_Controller } from "../controllers/itemvariantvaluemapping/index";
 import { deleteVariantCollectionController } from "../controllers/variant-collection/deleteVariantCollection.controller";
 import { createVariantPropController } from "../controllers/variantProperys/createvariantprop.controller";
 import { deleteVariantPropController } from "../controllers/variantProperys/deletevariantprop.controller";
@@ -81,18 +76,6 @@ router.delete(
   deleteVariantValueController(VariantRepo)
 );
 
-router.post(
-  "/create-item-variant-value-mapping",
-  authVerification([]),
-  validateDetails(ItemVariantValueMappingSchema),
-  createItemVariantValueMapping_Controller(VariantRepo)
-);
-router.delete(
-  "/delete-item-variant-value-mapping",
-  authVerification([]),
-  validateDetails(ItemVariantValueMappingId),
-  deleteItemVariantValueMapping_Controller(VariantRepo)
-);
 router.get(
   "/get-all-variant-values-page",
   authVerification([]),

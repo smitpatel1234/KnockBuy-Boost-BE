@@ -1,6 +1,5 @@
 import express from "express";
 
-import { UserRole } from "../../domain/models/User.models";
 import { AddItemSchema, ItemIdSchema, UpdateItemSchema } from "../../domain/schemas/item";
 import { authVerification } from "../../infrastructure/helper/middleware/authvarification";
 import { validateDetails } from "../../infrastructure/helper/validator";
@@ -12,6 +11,7 @@ import {
     getAllItemsController,
     getAllItemsPageController,
     getItemController,
+    searchItemsController,
     updateItemController
 } from "../controllers/item";
 
@@ -25,6 +25,7 @@ router.get('/get-item/slug/:slug', getItemController(ItemRepo, VariantRepo));
 router.get('/get-all-items', getAllItemsController(ItemRepo));
 router.get('/get-all-items-page', getAllItemsPageController(ItemRepo));
 router.get('/public/get-all-items-page', getAllItemsPageController(ItemRepo));
+router.get('/public/search-items', searchItemsController(ItemRepo));
 
 
 export default router;

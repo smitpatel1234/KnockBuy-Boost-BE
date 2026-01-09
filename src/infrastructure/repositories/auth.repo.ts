@@ -4,15 +4,13 @@ import { AuthRepoPort } from "../../application/port/auth-repo.port";
 import { LoginCredentials } from "../../domain/models/Auth.models";
 import { wrapTransaction } from "../helper/transaction";
 import { User } from "../orm/entities/user";
-
 export const AuthRepo: AuthRepoPort = {
   findRefreshTokenHash: async (t: EntityManager, id: string) => {
     const user = await t
       .getRepository(User)
       .findOne({ where: { user_id: id } });
-    return user?.refresh_token ? user.refresh_token : null;
+    return user?.refresh_token ?? null;
   },
-
   FindUser: async (t: EntityManager, credentials: LoginCredentials) => {
 
     return await t

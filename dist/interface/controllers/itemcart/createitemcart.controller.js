@@ -7,15 +7,15 @@ const createItemCartController = (ItemCartRepo) => {
     return async (req, res) => ItemCartRepo.wrapTransaction(async (t) => {
         {
             const user_id = req.body.user.id;
-            const itemcart = req.body;
+            const { item, quantity } = req.body;
             const data = {
-                item: itemcart.item,
+                item: item,
+                quantity: quantity,
                 user: user_id,
-                quantity: itemcart.quantity,
-                added_at: new Date(),
             };
             await (0, index_1.create_itemcart)(t, ItemCartRepo, data);
-            return (0, displaymessage_1.successmessage)(res, "add to cart successfully");
+            (0, displaymessage_1.successmessage)(res, "add to cart successfully");
+            return;
         }
     });
 };

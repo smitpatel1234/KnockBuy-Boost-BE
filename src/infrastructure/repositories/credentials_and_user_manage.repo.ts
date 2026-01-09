@@ -13,7 +13,7 @@ export const UserAndCredentialsRepo: UserAndCredentialsRepoPort = {
     criteria: { email: string; phone_number: string; username: string; },
     avoid?: string
   ) => {
-    const qb = await entitiesmanager
+    const qb = entitiesmanager
       .getRepository(User)
       .createQueryBuilder("user")
       .where(
@@ -41,9 +41,9 @@ export const UserAndCredentialsRepo: UserAndCredentialsRepoPort = {
   deleteUser: async (
     entitiesmanager: EntityManager,
     id: string
-  ): Promise<boolean> => {
-    const res = await entitiesmanager.softDelete(User, { user_id: id });
-    return (res.affected ?? 0) > 0;
+  ): Promise<void> => {
+    await entitiesmanager.softDelete(User, { user_id: id });
+
   },
   getallUser: async (
     entitiesManager: EntityManager
@@ -63,7 +63,7 @@ export const UserAndCredentialsRepo: UserAndCredentialsRepoPort = {
 
     userQB.select(["user.user_id", "user.username", "user.email", "user.phone_number"]);
 
-    return applyPaginationAndFilters<UserProfile>(
+    return applyPaginationAndFilters<User, UserProfile>(
       userQB,
       data,
       false
@@ -81,14 +81,14 @@ export const UserAndCredentialsRepo: UserAndCredentialsRepoPort = {
   },
   saveUser: async (
     entitiesmanager: EntityManager,
-    UserserCredentials: UserCredentials
+    userCredentials: UserCredentials
   ) => {
     const user = entitiesmanager.create(User, {
-      email: UserserCredentials.email,
-      password: UserserCredentials.password,
-      phone_number: UserserCredentials.phone_number,
+      email: userCredentials.email,
+      password: userCredentials.password,
+      phone_number: userCredentials.phone_number,
       role: "USER",
-      username: UserserCredentials.username,
+      username: userCredentials.username,
     });
 
     return await entitiesmanager.save(user);

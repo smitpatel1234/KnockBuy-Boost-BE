@@ -1,35 +1,35 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const passport_1 = __importDefault(require("passport"));
-const passport_google_oauth20_1 = require("passport-google-oauth20");
-const index_1 = require("./env/index");
-const ENV_VARS = {
-    Client_ID: index_1.ENV.Client_ID,
-    Client_secret: index_1.ENV.Client_secret,
-};
-passport_1.default.use(new passport_google_oauth20_1.Strategy({
-    clientID: ENV_VARS.Client_ID,
-    clientSecret: ENV_VARS.Client_secret,
-    callbackURL: "http://localhost:5000/auth/google/callback",
-}, async (accessToken, refreshToken, profile, cb) => {
-    try {
-        console.log("Google profile:", profile);
-        // Return the full profile object
-        return cb(null, profile);
-    }
-    catch (error) {
-        return cb(error);
-    }
-}));
-// Serialize user for session
-passport_1.default.serializeUser((user, cb) => {
-    cb(null, user);
-});
-// Deserialize user from session
-passport_1.default.deserializeUser((user, cb) => {
-    cb(null, user);
-});
-exports.default = passport_1.default;
+// import passport from "passport";
+// import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+// import { ENV } from "./env/index";
+// const ENV_VARS = {
+//   Client_ID: ENV.Client_ID,
+//   Client_secret: ENV.Client_secret,
+// };
+// passport.use(
+//   new GoogleStrategy(
+//     {
+//       callbackURL: "http://localhost:5000/auth/google/callback",
+//       clientID: ENV_VARS.Client_ID,
+//       clientSecret: ENV_VARS.Client_secret,
+//     },
+//     async (accessToken, refreshToken, profile, cb) => {
+//       try {
+//         console.log("Google profile:", profile);
+//         // Return the full profile object
+//         cb(null, profile); return;
+//       } catch (error) {
+//         cb(error); return;
+//       }
+//     }
+//   )
+// );
+// // Serialize user for session
+// passport.serializeUser((user, cb) => {
+//   cb(null, user);
+// });
+// // Deserialize user from session
+// passport.deserializeUser((user, cb) => {
+//   cb(null, user as any);
+// });
+// export default passport;

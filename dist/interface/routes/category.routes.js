@@ -4,9 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const category_1 = require("../../domain/schemas/category");
 const authvarification_1 = require("../../infrastructure/helper/middleware/authvarification");
 const validator_1 = require("../../infrastructure/helper/validator");
-const category_1 = require("../../domain/schemas/category");
 const category_repo_1 = require("../../infrastructure/repositories/category.repo");
 const category_2 = require("../controllers/category");
 const router = express_1.default.Router();

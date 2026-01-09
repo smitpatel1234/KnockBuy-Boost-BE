@@ -1,7 +1,5 @@
-import { error } from "console";
-import Express, { Request, Response } from "express";
+import  { Request, Response } from "express";
 import { EntityManager } from "typeorm";
-import { th } from "zod/locales";
 
 import { UserAndCredentialsRepoPort } from "../../../application/port/User-repo.port";
 import { successmessage } from "../../../infrastructure/helper/displaymessage";

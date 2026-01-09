@@ -1,4 +1,4 @@
-import { Column, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, VersionColumn } from "typeorm";
 import { Relation } from "typeorm";
 
 import { BaseSlugEntity } from "../commanEntity/base-slug.entity";
@@ -9,7 +9,7 @@ import { VariantCollection } from "./variant_collection";
 @Entity()
 export class Item extends BaseSlugEntity {
 	@JoinColumn({ name: 'category_id' })
-	@ManyToOne(() => Category, (category) => category.items, { nullable: true, onDelete: "CASCADE" })
+	@ManyToOne(() => Category, (category) => category.items, { nullable: true, onDelete: "SET NULL" })
 	category!: Relation<Category>;
 
 	@DeleteDateColumn()
@@ -43,9 +43,11 @@ export class Item extends BaseSlugEntity {
 
 	@OneToMany(() => VariantCollection, vc => vc.variant_collection_id)
 	variant_collections?: string[]
-
+   
 	getSlugSource(): string {
-		return `${this.item_name}-${this.item_price}-${this.category || 'default'}-${this.item_id?.substring(0, 8) || ''}`;
+		return `${this.item_name}-${String(this.item_price)}-${this.category.category_id}-${this.description}-${crypto.randomUUID()}`;
 	}
+	@VersionColumn()
+    version!: number
 }
 

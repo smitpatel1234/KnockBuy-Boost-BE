@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AddressRepo = void 0;
-const address_1 = require("../orm/entities/address");
 const transaction_1 = require("../helper/transaction");
+const address_1 = require("../orm/entities/address");
 exports.AddressRepo = {
     addAddress: async (entityManager, addAddress) => {
         return await entityManager.getRepository(address_1.Address).save(addAddress);
@@ -12,7 +12,12 @@ exports.AddressRepo = {
         const res = await entityManager
             .getRepository(address_1.Address)
             .softDelete({ address_id: address_id });
-        return (res.affected ?? 0) > 0 ? true : false;
+        return (res.affected ?? 0) > 0;
+    },
+    getAddressByID: async (entityManager, address_id) => {
+        return await entityManager
+            .getRepository(address_1.Address)
+            .findOneOrFail({ where: { address_id: address_id } });
     },
     getAllAddressByUserID: async (entityManager, user_id) => {
         return await entityManager
@@ -24,12 +29,7 @@ exports.AddressRepo = {
         const res = await entityManager
             .getRepository(address_1.Address)
             .save(addAddress);
-        return res ? true : false;
-    },
-    getAddressByID: async (entityManager, address_id) => {
-        return await entityManager
-            .getRepository(address_1.Address)
-            .findOneOrFail({ where: { address_id: address_id } });
+        return !!res;
     },
     wrapTransaction: transaction_1.wrapTransaction,
 };

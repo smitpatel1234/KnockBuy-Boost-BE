@@ -10,7 +10,7 @@ const createItemController = (itemRepo) => {
         const IsCreated = await (0, item_1.create_item)(t, data, itemRepo);
         if (!IsCreated)
             throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.NOT_FOUND, "Item Not Found");
-        return (0, displaymessage_1.successmessage)(res, "Item created successfully");
+        (0, displaymessage_1.successmessage)(res, "Item created successfully");
     });
 };
 exports.createItemController = createItemController;

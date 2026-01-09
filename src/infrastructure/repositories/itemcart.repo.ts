@@ -4,11 +4,12 @@ import { ItemCartRepoPort } from "../../application/port/itemcart-repo.port";
 import {
   AddItemCartType,
   ItemCartDeleteType,
-  ItemCartType,
   ItemCartUpdateType,
 } from "../../domain/models/itemcart.models";
 import { wrapTransaction } from "../helper/transaction";
 import { ItemCart } from "../orm/entities/item_cart";
+import { ApplicationError ,ApplicationErrorType} from "../helper/middleware/GlobelErrorHandler"
+import { ItemRepo } from "../repositories/item.repo"
 export const ItemCartRepo: ItemCartRepoPort = {
   clearCartEntry: async (em: EntityManager, user_id: string) => {
     const result = await em.getRepository(ItemCart).delete({ user: { user_id } });
@@ -22,13 +23,17 @@ export const ItemCartRepo: ItemCartRepoPort = {
         user: { user_id: data.user },
       },
     })
+   
     if (exist) {
+        const ISItemInStock = await ItemRepo.ISItemInStock(em,data.item,exist.quantity + data.quantity)
+        if(!ISItemInStock){
+            throw new ApplicationError(ApplicationErrorType.BAD_REQUEST,"stock is not availabel")
+        }
       const result = await em
         .getRepository(ItemCart)
         .update(exist.cart_item_id, { quantity: exist.quantity + data.quantity });
       return (result.affected ?? 0) > 0;
     }
-
     const cart_item = em.create(ItemCart, {
       item: { item_id: data.item },
       quantity: data.quantity,
@@ -51,7 +56,7 @@ export const ItemCartRepo: ItemCartRepoPort = {
       .addSelect((subQuery) => {
         return subQuery
           .select("img.image_URL")
-          .from("image", "img") // Assuming table name is lowercase 'image'
+          .from("image", "img") 
           .where("img.items_id = item.item_id")
           .limit(1);
       }, "image_url")
@@ -80,7 +85,7 @@ export const ItemCartRepo: ItemCartRepoPort = {
       const result = await em.getRepository(ItemCart).delete(data.cart_item_id);
       return (result.affected ?? 0) > 0;
     }
-    if (data.quantity > 0) {
+    if (data.quantity > 0 ) {
       const result = await em
         .getRepository(ItemCart)
         .update(data.cart_item_id, { quantity: data.quantity });

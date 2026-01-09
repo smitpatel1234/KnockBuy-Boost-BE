@@ -22,7 +22,7 @@ export class Address {
   @Column({ length: 255, nullable: false, type: "varchar" })
   country!: string;
   @DeleteDateColumn()
-  deletedAt?: Date;
+  deleted_at?: Date;
   @Column({ nullable: false, type: "int" })
   pincode!: number;
   @Column({ length: 255, nullable: false, type: "varchar" })

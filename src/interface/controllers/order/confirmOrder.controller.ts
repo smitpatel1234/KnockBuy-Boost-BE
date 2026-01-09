@@ -1,14 +1,14 @@
 import Express from "express";
 import { EntityManager } from "typeorm";
 
-import { ItemCartRepoPort } from "../../../application/port/itemcart-repo.port";
 import { OrderRepoPort } from "../../../application/port/order-repo.port";
 import { confirmOrder } from "../../../application/useCases/order/confirmOrder.usecase";
 import { successmessage } from "../../../infrastructure/helper/displaymessage";
 import { ApplicationError, ApplicationErrorType } from "../../../infrastructure/helper/middleware/GlobelErrorHandler";
+import { AuthRequest } from "../../types/request.types";
 
 export const ConfirmOrderController = (OrderRepo: OrderRepoPort) => {
-    return async (req: Express.Request, res: Express.Response) =>
+    return async (req: AuthRequest<{ address_id: string; payment_method: string }>, res: Express.Response) =>
         OrderRepo.wrapTransaction(async (t: EntityManager) => {
             const { id } = req.params;
             const user_id = req.body.user.id;

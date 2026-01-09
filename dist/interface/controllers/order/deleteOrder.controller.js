@@ -8,7 +8,8 @@ const DeleteOrderController = (OrderRepo) => {
         const { id } = req.params;
         const success = await (0, deleteOrder_usecase_1.deleteOrder)(t, OrderRepo, id);
         if (success) {
-            return (0, displaymessage_1.successmessage)(res, "Order deleted successfully");
+            (0, displaymessage_1.successmessage)(res, "Order deleted successfully");
+            return;
         }
         throw new Error("Failed to delete order");
     });

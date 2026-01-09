@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { TypeORMError } from "typeorm";
 import { ZodError } from "zod";
+
 import { StatusCodes } from "../../config/constants";
 import { displaymessage } from "../displaymessage";
 import { HttpError } from "../httpError";
@@ -24,13 +25,13 @@ export class ApplicationError extends Error {
 
 }
 
-export const GlobelErrorHandler = (err:  ApplicationError| Error | HttpError | TypeORMError | ZodError, req: Request, res: Response, next: NextFunction) => {
+export const GlobelErrorHandler = (err:  ApplicationError| Error | HttpError | TypeORMError | ZodError, req: Request, res: Response,next:NextFunction) => {
         if(err instanceof HttpError) 
              { displaymessage(err.statusCode, res, err.message, err.field); return; }
         if(err instanceof ZodError) 
         {
              const messages = err.issues.map((issue) =>(issue.message) );
-             displaymessage(StatusCodes.BAD_REQUEST , res, messages); return;
+             displaymessage(StatusCodes.UNPROCESSABLE_ENTITY , res, messages); return;
         }
            
         if(err instanceof ApplicationError) 
@@ -42,10 +43,9 @@ export const GlobelErrorHandler = (err:  ApplicationError| Error | HttpError | T
                 case ApplicationErrorType.UNAUTHORIZED: { displaymessage(StatusCodes.UNAUTHORIZED, res, err.message); return; } 
             }
         if(err instanceof TypeORMError)
-         {
-          console.log("err----------->",err);
-          
+         {  
               displaymessage(StatusCodes.INTERNAL_SERVER_ERROR, res, err.message); return;
          }
         displaymessage(StatusCodes.INTERNAL_SERVER_ERROR, res, err.message);
+        next()
 }

@@ -10,7 +10,7 @@ const updateItemController = (itemRepo) => {
         const IsUpdated = await (0, item_1.update_item)(t, data, itemRepo);
         if (!IsUpdated)
             throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.NOT_FOUND, "Item Not Found");
-        return (0, displaymessage_1.successmessage)(res, "Item updated successfully");
+        (0, displaymessage_1.successmessage)(res, "Item updated successfully");
     });
 };
 exports.updateItemController = updateItemController;

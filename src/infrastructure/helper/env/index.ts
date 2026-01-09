@@ -23,8 +23,8 @@ export const ENV = {
   DB_TYPE: loadAsString(process.env.DB_TYPE),
   DB_USER: loadAsString(process.env.DB_USERNAME),
   JWT_EXPIRESIN: loadAsNumber(process.env.jwt_expiresIn),
-  JWT_SECRET: loadAsString(process.env.jwt_secret ?? 'your-super-secret-jwt-key'),
-  PassWordSalt: loadAsNumber(process.env.saltRounds) ?? 10,
+  JWT_SECRET: loadAsString(process.env.jwt_secret),
+  PassWordSalt: loadAsNumber(process.env.saltRounds),
   REFRESH_TOKEN_EXPIRESIN: loadAsNumber(process.env.refresh_token_expiresIn),
-  SERVER_PORT: loadAsNumber(process.env.PORT) ?? 5000,
+  SERVER_PORT: loadAsNumber(process.env.PORT),
 }

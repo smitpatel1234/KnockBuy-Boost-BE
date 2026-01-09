@@ -8,10 +8,11 @@ import {
 } from "typeorm";
 
 import { Item } from "./item";
+import { nullable } from "zod";
 @Entity()
 export class Category {
   @PrimaryGeneratedColumn("uuid")
-  category_id!: string;
+  category_id!: string | undefined ;
 
   @Column({ length: 100, type: "varchar" })
   category_name!: string;

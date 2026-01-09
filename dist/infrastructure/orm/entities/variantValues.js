@@ -16,18 +16,18 @@ let VariantValues = class VariantValues {
 };
 exports.VariantValues = VariantValues;
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
-    __metadata("design:type", String)
-], VariantValues.prototype, "variantValue_id", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', nullable: false, length: 255 }),
+    (0, typeorm_1.Column)({ length: 255, nullable: false, type: 'varchar' }),
     __metadata("design:type", String)
 ], VariantValues.prototype, "variant_value", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => variantPropertys_1.VariantPropertys, vp => vp.variant_property_values, { onDelete: "CASCADE", nullable: false }),
     (0, typeorm_1.JoinColumn)({ name: 'variant_property_id', referencedColumnName: 'variantProperty_id' }),
+    (0, typeorm_1.ManyToOne)(() => variantPropertys_1.VariantPropertys, vp => vp.variant_property_values, { nullable: false, onDelete: "CASCADE" }),
     __metadata("design:type", variantPropertys_1.VariantPropertys)
 ], VariantValues.prototype, "variantProperty", void 0);
+__decorate([
+    (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
+    __metadata("design:type", String)
+], VariantValues.prototype, "variantValue_id", void 0);
 exports.VariantValues = VariantValues = __decorate([
     (0, typeorm_1.Entity)()
 ], VariantValues);

@@ -17,18 +17,18 @@ let ItemVariantValueMapping = class ItemVariantValueMapping {
 };
 exports.ItemVariantValueMapping = ItemVariantValueMapping;
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
-    __metadata("design:type", String)
-], ItemVariantValueMapping.prototype, "item_variantvalue_mapping_id", void 0);
-__decorate([
-    (0, typeorm_1.ManyToOne)(() => item_1.Item, { onDelete: 'SET NULL' }),
-    (0, typeorm_1.JoinColumn)({ name: 'item_id' }),
+    (0, typeorm_1.JoinColumn)({ name: "item_id" }),
+    (0, typeorm_1.ManyToOne)(() => item_1.Item, { nullable: false, onDelete: "CASCADE" }),
     __metadata("design:type", Object)
 ], ItemVariantValueMapping.prototype, "item", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => variantValues_1.VariantValues, { onDelete: 'SET NULL' }),
-    (0, typeorm_1.JoinColumn)({ name: 'variantValue_id' }),
-    __metadata("design:type", variantValues_1.VariantValues)
+    (0, typeorm_1.PrimaryGeneratedColumn)("uuid"),
+    __metadata("design:type", String)
+], ItemVariantValueMapping.prototype, "item_variantvalue_mapping_id", void 0);
+__decorate([
+    (0, typeorm_1.JoinColumn)({ name: "variantValue_id" }),
+    (0, typeorm_1.ManyToOne)(() => variantValues_1.VariantValues, { nullable: false, onDelete: "CASCADE" }),
+    __metadata("design:type", Object)
 ], ItemVariantValueMapping.prototype, "variantValue", void 0);
 exports.ItemVariantValueMapping = ItemVariantValueMapping = __decorate([
     (0, typeorm_1.Entity)()

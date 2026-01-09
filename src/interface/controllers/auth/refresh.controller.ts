@@ -1,18 +1,19 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import { EntityManager } from "typeorm";
 
 import { AuthRepoPort } from "../../../application/port/auth-repo.port";
 import { refreshToken } from "../../../application/useCases/auth/refresh.usecase";
-import { jwtPayload } from "../../../domain/models/User.models";
+import { MYJwtPayload } from "../../../domain/models/User.models";
 import { successmessage } from "../../../infrastructure/helper/displaymessage";
 import {
   ApplicationError,
   ApplicationErrorType,
 } from "../../../infrastructure/helper/middleware/GlobelErrorHandler";
 import { decodedToken } from "../../../infrastructure/helper/TokenGenerator";
+import { TypedRequest } from "../../types/request.types";
 
 export const refreshTokenController = (Authrepo: AuthRepoPort) => {
-  return async (req: Request, res: Response) =>
+  return async (req: TypedRequest<unknown, { refreshToken?: string }>, res: Response) =>
     Authrepo.wrapTransaction(async (t: EntityManager) => {
       const refrehToken = req.cookies.refreshToken;
       if (!refrehToken) {
@@ -22,8 +23,8 @@ export const refreshTokenController = (Authrepo: AuthRepoPort) => {
         );
       }
 
-      const payload = (await decodedToken(refrehToken)) as jwtPayload;
-      if (!payload?.id) {
+      const payload = decodedToken(refrehToken) as MYJwtPayload;
+      if (!payload.id) {
         throw new ApplicationError(
           ApplicationErrorType.UNAUTHORIZED,
           "Invalid refresh token"

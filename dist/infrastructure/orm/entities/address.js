@@ -20,38 +20,38 @@ __decorate([
     __metadata("design:type", String)
 ], Address.prototype, "address_id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: "varchar", nullable: false, length: 255 }),
+    (0, typeorm_1.Column)({ length: 255, nullable: false, type: "varchar" }),
     __metadata("design:type", String)
 ], Address.prototype, "address_line1", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: "varchar", nullable: true, length: 255 }),
+    (0, typeorm_1.Column)({ length: 255, nullable: true, type: "varchar" }),
     __metadata("design:type", String)
 ], Address.prototype, "address_line2", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: "varchar", nullable: false, length: 255 }),
+    (0, typeorm_1.Column)({ length: 255, nullable: false, type: "varchar" }),
     __metadata("design:type", String)
 ], Address.prototype, "city", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: "varchar", nullable: false, length: 255 }),
-    __metadata("design:type", String)
-], Address.prototype, "state", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: "varchar", nullable: false, length: 255 }),
+    (0, typeorm_1.Column)({ length: 255, nullable: false, type: "varchar" }),
     __metadata("design:type", String)
 ], Address.prototype, "country", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: "int", nullable: false }),
+    (0, typeorm_1.DeleteDateColumn)(),
+    __metadata("design:type", Date)
+], Address.prototype, "deleted_at", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: false, type: "int" }),
     __metadata("design:type", Number)
 ], Address.prototype, "pincode", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => user_1.User),
+    (0, typeorm_1.Column)({ length: 255, nullable: false, type: "varchar" }),
+    __metadata("design:type", String)
+], Address.prototype, "state", void 0);
+__decorate([
     (0, typeorm_1.JoinColumn)({ name: "user_id" }),
+    (0, typeorm_1.ManyToOne)(() => user_1.User),
     __metadata("design:type", Object)
 ], Address.prototype, "user_id", void 0);
-__decorate([
-    (0, typeorm_1.DeleteDateColumn)(),
-    __metadata("design:type", Date)
-], Address.prototype, "deletedAt", void 0);
 exports.Address = Address = __decorate([
     (0, typeorm_1.Entity)()
 ], Address);

@@ -38,10 +38,10 @@ const winston_1 = __importStar(require("winston"));
 exports.logger = undefined;
 const createLoggerInstance = () => {
     exports.logger = winston_1.default.createLogger({
-        level: 'info',
-        format: winston_1.format.combine(winston_1.format.colorize(), winston_1.format.timestamp(), winston_1.format.errors({ stack: true }), winston_1.format.json()),
-        silent: false,
         defaultMeta: { service: 'user-service' },
+        format: winston_1.format.combine(winston_1.format.colorize(), winston_1.format.timestamp(), winston_1.format.errors({ stack: true }), winston_1.format.json()),
+        level: 'info',
+        silent: false,
         transports: [
             new winston_1.default.transports.Console(),
         ],

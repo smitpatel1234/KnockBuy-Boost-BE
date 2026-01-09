@@ -11,6 +11,7 @@ import orderRoute from "../../../interface/routes/order.routes"
 import uploadsRouter from "../../../interface/routes/upload.routes";
 import userRouter from "../../../interface/routes/user.routes";
 import variantRouter from "../../../interface/routes/variant.routes";
+import wishlistRouter from "../../../interface/routes/wishlist.route"
 export const createRoutes = (): express.Router => {
   const router = express.Router();
   router.use("/auth", authRouter);
@@ -24,5 +25,6 @@ export const createRoutes = (): express.Router => {
   router.use("/discount", discountRouter);
   router.use("/itemcart", itemcartRoute);
   router.use("/order",orderRoute);
+  router.use("/wishlist",wishlistRouter)
   return router;
 };

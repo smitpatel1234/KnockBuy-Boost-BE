@@ -3,11 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.update_user = void 0;
 const GlobelErrorHandler_1 = require("../../../infrastructure/helper/middleware/GlobelErrorHandler");
 const update_user = async (entitiesmanager, userRepo, userProfile) => {
-    const { user_id, username, email, phone_number, wishlist_name, profile_image } = userProfile;
-    const allowedProfile = { user_id, username, email, phone_number, wishlist_name, profile_image };
-    const userCredentials = { username, email, phone_number };
+    const { email, phone_number, profile_image, user_id, username, wishlist_name } = userProfile;
+    const allowedProfile = { email, phone_number, profile_image, user_id, username, wishlist_name };
+    const userCredentials = { email, phone_number, username };
     const existingUser = await userRepo.checkUserExists(entitiesmanager, userCredentials, user_id);
-    let errors = [];
+    const errors = [];
     if (existingUser.username === username)
         errors.push('Username already exists');
     if (existingUser.email === email)

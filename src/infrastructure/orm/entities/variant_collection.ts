@@ -11,7 +11,7 @@ export class VariantCollection {
 	@PrimaryGeneratedColumn('uuid')
 	variant_collection_id!: string
 	@JoinColumn({ name: 'variant_item_id' })
-	@ManyToOne(() => Item, { nullable: true, onDelete: "SET NULL" })
+	@ManyToOne(() => Item,  { nullable:false , onDelete:"CASCADE"  })
 	variant_item?: Relation<Item>
 }
 

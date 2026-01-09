@@ -16,17 +16,17 @@ let VariantPropertys = class VariantPropertys {
 };
 exports.VariantPropertys = VariantPropertys;
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
-    __metadata("design:type", String)
-], VariantPropertys.prototype, "variantProperty_id", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', nullable: false, length: 255 }),
+    (0, typeorm_1.Column)({ length: 255, nullable: false, type: 'varchar' }),
     __metadata("design:type", String)
 ], VariantPropertys.prototype, "property_name", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => variantValues_1.VariantValues, vv => vv.variantProperty),
     __metadata("design:type", Array)
 ], VariantPropertys.prototype, "variant_property_values", void 0);
+__decorate([
+    (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
+    __metadata("design:type", String)
+], VariantPropertys.prototype, "variantProperty_id", void 0);
 exports.VariantPropertys = VariantPropertys = __decorate([
     (0, typeorm_1.Entity)()
 ], VariantPropertys);

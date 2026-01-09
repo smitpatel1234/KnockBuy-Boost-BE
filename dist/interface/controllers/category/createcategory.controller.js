@@ -8,7 +8,8 @@ const createCategoryController = (CategoryRepo) => {
         {
             const data = req.body;
             await (0, index_1.create_category)(t, data, CategoryRepo);
-            return (0, displaymessage_1.successmessage)(res, "Category created successfully");
+            (0, displaymessage_1.successmessage)(res, "Category created successfully");
+            return;
         }
     });
 };

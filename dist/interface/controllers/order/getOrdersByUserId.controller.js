@@ -5,9 +5,9 @@ const getOrdersByUserId_usecase_1 = require("../../../application/useCases/order
 const displaymessage_1 = require("../../../infrastructure/helper/displaymessage");
 const GetOrdersByUserIdController = (OrderRepo) => {
     return async (req, res) => OrderRepo.wrapTransaction(async (t) => {
-        const user_id = req.body.user?.id || req.body.user?.user_id;
+        const user_id = req.body.user.id;
         const orders = await (0, getOrdersByUserId_usecase_1.getOrdersByUserId)(t, OrderRepo, user_id);
-        return (0, displaymessage_1.successmessage)(res, "Order history fetched successfully", orders);
+        (0, displaymessage_1.successmessage)(res, "Order history fetched successfully", orders);
     });
 };
 exports.GetOrdersByUserIdController = GetOrdersByUserIdController;

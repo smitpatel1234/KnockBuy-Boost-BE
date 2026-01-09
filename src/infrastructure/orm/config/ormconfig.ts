@@ -1,8 +1,7 @@
 import { DataSource } from 'typeorm';
 
 import { ENV } from '../../helper/env/index';
-import { Address } from '../../orm/entities/address';
-import { User } from '../../orm/entities/user';
+
 export const Envvar = {
     database: ENV.DB_NAME,
     dbhost: ENV.DB_HOST,

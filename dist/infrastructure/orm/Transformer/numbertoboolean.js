@@ -2,13 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BooleanTransformer = void 0;
 class BooleanTransformer {
-    // To database: boolean | null to 1 | 0 | null
-    to(value) {
-        if (value === null) {
-            return null;
-        }
-        return value ? 1 : 0;
-    }
     // From database: 1 | 0 | Buffer | null to boolean | null
     from(value) {
         if (value === null) {
@@ -20,6 +13,13 @@ class BooleanTransformer {
         }
         // Handle number for tinyint(1) or other numeric types
         return value === 1;
+    }
+    // To database: boolean | null to 1 | 0 | null
+    to(value) {
+        if (value === null) {
+            return null;
+        }
+        return value ? 1 : 0;
     }
 }
 exports.BooleanTransformer = BooleanTransformer;

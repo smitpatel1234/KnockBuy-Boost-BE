@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn,DeleteDateColumn } from "typeorm";
 
 import { BooleanTransformer } from "../Transformer/numbertoboolean";
 @Entity()
@@ -28,5 +28,7 @@ export class Discount {
     
 	@Column({ nullable: true, type: 'int' })
 	duration?: number
+	@DeleteDateColumn()
+	deletedAt?: Date;
 }
 

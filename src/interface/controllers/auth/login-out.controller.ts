@@ -1,6 +1,5 @@
 import Express from "express";
 import { EntityManager } from "typeorm";
-import { success } from "zod";
 
 import { AuthRepoPort } from "../../../application/port/auth-repo.port";
 import { loginUser } from "../../../application/useCases/auth/login.usecase";
@@ -8,10 +7,12 @@ import { logoutUser } from "../../../application/useCases/auth/logout.usecase";
 import { LoginCredentials } from "../../../domain/models/Auth.models";
 import { successmessage } from "../../../infrastructure/helper/displaymessage";
 import { ApplicationError, ApplicationErrorType } from "../../../infrastructure/helper/middleware/GlobelErrorHandler";
+import { PublicRequest, TypedRequest } from "../../types/request.types";
+
 export const LoginUserController = (AuthRepo: AuthRepoPort) => {
-  return async (req: Express.Request, res: Express.Response) =>
+  return async (req: PublicRequest<LoginCredentials>, res: Express.Response) =>
     AuthRepo.wrapTransaction(async (t: EntityManager) => {
-      const credentials: LoginCredentials = req.body;
+      const credentials = req.body;
       const { token, user } = await loginUser(t, credentials, AuthRepo);
       res.cookie("accessToken", token.accessToken, {
         httpOnly: true,
@@ -40,12 +41,14 @@ export const LoginUserController = (AuthRepo: AuthRepoPort) => {
     });
 
 };
+
 export const LogoutUserController = (AuthRepo: AuthRepoPort) => {
-  return async (req: Express.Request, res: Express.Response) =>
+  return async (req: TypedRequest<unknown, { accessToken?: string }>, res: Express.Response) =>
     AuthRepo.wrapTransaction(async (t: EntityManager) => {
-      if (!req.cookies.accessToken)
+      const token = req.cookies.accessToken;
+      if (!token)
         throw new ApplicationError(ApplicationErrorType.UNAUTHORIZED, "Invalid access token");
-      logoutUser(t, req.cookies.accessToken, AuthRepo);
+      await logoutUser(t, token, AuthRepo);
       res.clearCookie("accessToken");
       successmessage(res, "User logged Out successfully");
     });

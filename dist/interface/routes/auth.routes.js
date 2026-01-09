@@ -4,17 +4,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const credentials_and_user_manage_repo_1 = require("../../infrastructure/repositories/credentials_and_user_manage.repo");
-const register_controller_1 = require("../controllers/auth/register.controller");
-const validator_1 = require("../../infrastructure/helper/validator");
-const user_1 = require("../../domain/schemas/user");
+const User_models_1 = require("../../domain/models/User.models");
 const auth_1 = require("../../domain/schemas/auth");
-const login_out_controller_1 = require("../controllers/auth/login-out.controller");
+const user_1 = require("../../domain/schemas/user");
+const authvarification_1 = require("../../infrastructure/helper/middleware/authvarification");
+//import passport from "../../infrastructure/helper/passportStrategy"
+const validator_1 = require("../../infrastructure/helper/validator");
 // import { LoginUserInGoogleController } from '../controllers/auth/google.controller';
 const auth_repo_1 = require("../../infrastructure/repositories/auth.repo");
-const authvarification_1 = require("../../infrastructure/helper/middleware/authvarification");
+const credentials_and_user_manage_repo_1 = require("../../infrastructure/repositories/credentials_and_user_manage.repo");
+const login_out_controller_1 = require("../controllers/auth/login-out.controller");
 const refresh_controller_1 = require("../controllers/auth/refresh.controller");
-const User_models_1 = require("../../domain/models/User.models");
+const register_controller_1 = require("../controllers/auth/register.controller");
 const router = express_1.default.Router();
 router.post('/register', (0, validator_1.validateDetails)(user_1.userCredentials), (0, register_controller_1.registerUserController)(credentials_and_user_manage_repo_1.UserAndCredentialsRepo));
 router.post('/refresh-token', (0, refresh_controller_1.refreshTokenController)(auth_repo_1.AuthRepo));

@@ -2,9 +2,15 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthRepo = void 0;
 const typeorm_1 = require("typeorm");
-const user_1 = require("../orm/entities/user");
 const transaction_1 = require("../helper/transaction");
+const user_1 = require("../orm/entities/user");
 exports.AuthRepo = {
+    findRefreshTokenHash: async (t, id) => {
+        const user = await t
+            .getRepository(user_1.User)
+            .findOne({ where: { user_id: id } });
+        return user?.refresh_token ?? null;
+    },
     FindUser: async (t, credentials) => {
         return await t
             .getRepository(user_1.User)
@@ -18,21 +24,15 @@ exports.AuthRepo = {
             .setParameter("identifier", credentials.identifier)
             .getOne();
     },
-    saveRefreshToken: async (t, { id, refreshToken }) => {
-        await t
-            .getRepository(user_1.User)
-            .update({ user_id: id }, { refresh_token: refreshToken });
-    },
     removeRefreshToken: async (t, id) => {
         await t
             .getRepository(user_1.User)
             .update({ user_id: id }, { refresh_token: null });
     },
-    findRefreshTokenHash: async (t, id) => {
-        const user = await t
+    saveRefreshToken: async (t, { id, refreshToken }) => {
+        await t
             .getRepository(user_1.User)
-            .findOne({ where: { user_id: id } });
-        return user?.refresh_token ? user.refresh_token : null;
+            .update({ user_id: id }, { refresh_token: refreshToken });
     },
     wrapTransaction: transaction_1.wrapTransaction,
 };

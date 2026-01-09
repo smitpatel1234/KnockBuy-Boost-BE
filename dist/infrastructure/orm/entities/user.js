@@ -16,65 +16,65 @@ let User = class User {
 };
 exports.User = User;
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)("uuid"),
-    __metadata("design:type", String)
-], User.prototype, "user_id", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: "varchar", unique: true, nullable: false, length: 50 }),
-    __metadata("design:type", String)
-], User.prototype, "username", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: "varchar", nullable: false, unique: true, length: 255 }),
-    __metadata("design:type", String)
-], User.prototype, "email", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: "varchar", nullable: false, length: 255 }),
-    __metadata("design:type", String)
-], User.prototype, "password", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: "varchar", nullable: false, unique: true, length: 10 }),
-    __metadata("design:type", String)
-], User.prototype, "phone_number", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: "enum", enum: ["ADMIN", "USER"], default: "USER" }),
-    __metadata("design:type", String)
-], User.prototype, "role", void 0);
+    (0, typeorm_1.OneToMany)(() => address_1.Address, (address) => address.user_id),
+    __metadata("design:type", Array)
+], User.prototype, "addresses", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({ type: "timestamp" }),
     __metadata("design:type", Date)
 ], User.prototype, "created_at", void 0);
 __decorate([
+    (0, typeorm_1.DeleteDateColumn)(),
+    __metadata("design:type", Date)
+], User.prototype, "deleted_at", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ length: 255, nullable: false, type: "varchar", unique: true }),
+    __metadata("design:type", String)
+], User.prototype, "email", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ length: 255, nullable: false, type: "varchar" }),
+    __metadata("design:type", String)
+], User.prototype, "password", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ length: 10, nullable: false, type: "varchar", unique: true }),
+    __metadata("design:type", String)
+], User.prototype, "phone_number", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true, type: "varchar" }),
+    __metadata("design:type", String)
+], User.prototype, "profile_image", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true, type: "timestamp" }),
+    __metadata("design:type", Date)
+], User.prototype, "refresh_expires_at", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: false, type: "boolean" }),
+    __metadata("design:type", Boolean)
+], User.prototype, "refresh_is_revoked", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true, type: "text" }),
+    __metadata("design:type", Object)
+], User.prototype, "refresh_token", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: "USER", enum: ["ADMIN", "USER"], type: "enum" }),
+    __metadata("design:type", String)
+], User.prototype, "role", void 0);
+__decorate([
     (0, typeorm_1.UpdateDateColumn)({ type: "timestamp" }),
     __metadata("design:type", Date)
 ], User.prototype, "updated_at", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: "varchar", length: 20, nullable: true }),
+    (0, typeorm_1.PrimaryGeneratedColumn)("uuid"),
+    __metadata("design:type", String)
+], User.prototype, "user_id", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ length: 50, nullable: false, type: "varchar", unique: true }),
+    __metadata("design:type", String)
+], User.prototype, "username", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ length: 20, nullable: true, type: "varchar" }),
     __metadata("design:type", String)
 ], User.prototype, "wishlist_name", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: "varchar", nullable: true }),
-    __metadata("design:type", String)
-], User.prototype, "profile_image", void 0);
-__decorate([
-    (0, typeorm_1.OneToMany)(() => address_1.Address, (address) => address.user_id),
-    __metadata("design:type", Array)
-], User.prototype, "addresses", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: "text", nullable: true }),
-    __metadata("design:type", Object)
-], User.prototype, "refresh_token", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: "timestamp", nullable: true }),
-    __metadata("design:type", Date)
-], User.prototype, "refresh_expires_at", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: "boolean", default: false }),
-    __metadata("design:type", Boolean)
-], User.prototype, "refresh_is_revoked", void 0);
-__decorate([
-    (0, typeorm_1.DeleteDateColumn)(),
-    __metadata("design:type", Date)
-], User.prototype, "deletedAt", void 0);
 exports.User = User = __decorate([
     (0, typeorm_1.Entity)()
 ], User);

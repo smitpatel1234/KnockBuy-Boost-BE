@@ -11,8 +11,8 @@ const deleteAddressController = (AddressRepo) => {
             const IsDeleted = await (0, address_1.delete_address)(t, AddressRepo, address_id);
             if (!IsDeleted)
                 throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.NOT_FOUND, "addess Not Found");
-            ``;
-            return (0, displaymessage_1.successmessage)(res, "addess deleted successfully");
+            (0, displaymessage_1.successmessage)(res, "addess deleted successfully");
+            return;
         }
     });
 };

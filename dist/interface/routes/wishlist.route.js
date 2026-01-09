@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const wishlist_repo_1 = require("../../infrastructure/repositories/wishlist.repo");
+const authvarification_1 = require("../../infrastructure/helper/middleware/authvarification");
+const index_1 = require("../controllers/wishlist/index");
+const User_models_1 = require("../../domain/models/User.models");
+const router = (0, express_1.Router)();
+router.get("/get-wishlist", (0, authvarification_1.authVerification)([User_models_1.UserRole.USER]), (0, index_1.getUserWishlistController)(wishlist_repo_1.WishlistRepo));
+router.post("/post-wishlist", (0, authvarification_1.authVerification)([User_models_1.UserRole.USER]), (0, index_1.addToWishlistController)(wishlist_repo_1.WishlistRepo));
+router.delete("/remove-wishlist/:item_id", (0, authvarification_1.authVerification)([User_models_1.UserRole.USER]), (0, index_1.removeFromWishlistController)(wishlist_repo_1.WishlistRepo));
+exports.default = router;

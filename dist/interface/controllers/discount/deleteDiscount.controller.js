@@ -10,7 +10,7 @@ const deleteDiscountController = (discountRepo) => {
         const IsDeleted = await (0, discount_1.delete_discount)(t, discount_id, discountRepo);
         if (!IsDeleted)
             throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.NOT_FOUND, "Discount Not Found");
-        return (0, displaymessage_1.successmessage)(res, "Discount deleted successfully");
+        (0, displaymessage_1.successmessage)(res, "Discount deleted successfully");
     });
 };
 exports.deleteDiscountController = deleteDiscountController;

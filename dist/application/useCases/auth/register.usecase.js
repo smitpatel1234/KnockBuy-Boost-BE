@@ -5,11 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.registerUser = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const ormconfig_1 = require("../../../infrastructure/orm/config/ormconfig");
 const GlobelErrorHandler_1 = require("../../../infrastructure/helper/middleware/GlobelErrorHandler");
+const ormconfig_1 = require("../../../infrastructure/orm/config/ormconfig");
 const registerUser = async (entitiesmanager, userCredentials, userRepo) => {
     const user = await userRepo.checkUserExists(entitiesmanager, userCredentials);
-    let error = [];
+    const error = [];
     if (user.username === userCredentials.username) {
         error.push('Username already exists');
     }

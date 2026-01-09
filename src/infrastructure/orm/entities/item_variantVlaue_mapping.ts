@@ -1,20 +1,19 @@
-import { on } from "events";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-
+import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Relation } from "typeorm";
 import { Item } from "./item";
 import { VariantValues } from "./variantValues";
 
 @Entity()
 export class ItemVariantValueMapping {
-	@JoinColumn({ name: 'item_id' } )
-	@ManyToOne(() => Item, {onDelete:'SET NULL'})
-	item!: Item | string
+  @JoinColumn({ name: "item_id" })
+  @ManyToOne(() => Item, { nullable:false , onDelete:"CASCADE" })
+  item!: Relation<Item>;
 
-	@PrimaryGeneratedColumn('uuid')
-	item_variantvalue_mapping_id!: string
+  @PrimaryGeneratedColumn("uuid")
+  item_variantvalue_mapping_id!: string;
 
-	@JoinColumn({ name: 'variantValue_id' })
-	@ManyToOne(() => VariantValues , {onDelete:'SET NULL'})
-	variantValue!: VariantValues
+  @JoinColumn({ name: "variantValue_id" })
+  @ManyToOne(() => VariantValues, { nullable:false , onDelete:"CASCADE"  })
+  variantValue!: Relation<VariantValues>;
+
+  
 }
-

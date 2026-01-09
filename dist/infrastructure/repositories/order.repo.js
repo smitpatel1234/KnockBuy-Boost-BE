@@ -1,87 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OrderRepo = void 0;
-const order_items_1 = require("../orm/entities/order_items");
-const order_1 = require("../orm/entities/order");
+const GlobelErrorHandler_1 = require("../helper/middleware/GlobelErrorHandler");
+const pagination_helper_1 = require("../helper/pagination.helper");
 const transaction_1 = require("../helper/transaction");
-const item_cart_1 = require("../orm/entities/item_cart");
 const discount_1 = require("../orm/entities/discount");
 const item_1 = require("../orm/entities/item");
-const pagination_helper_1 = require("../helper/pagination.helper");
+const item_cart_1 = require("../orm/entities/item_cart");
+const order_1 = require("../orm/entities/order");
+const order_items_1 = require("../orm/entities/order_items");
+const user_1 = require("../orm/entities/user");
 exports.OrderRepo = {
-    placeOrder: async (em, data) => {
-        const cartItems = await em.getRepository(item_cart_1.ItemCart).find({
-            where: { user: { user_id: data.user_id } },
-            relations: ["item"],
-        });
-        if (cartItems.length === 0) {
-            throw new Error("Cart is empty");
-        }
-        let subtotal = 0;
-        cartItems.forEach((cartItem) => {
-            subtotal += cartItem.item.item_price * cartItem.quantity;
-        });
-        let total_amount = subtotal;
-        let appliedDiscount = null;
-        if (data.discount_id) {
-            appliedDiscount = await em.getRepository(discount_1.Discount).findOne({
-                where: { discount_id: data.discount_id, active_flag: 1 },
-            });
-            if (appliedDiscount) {
-                if (appliedDiscount.discount_type === "percentage") {
-                    total_amount = subtotal - (subtotal * (appliedDiscount.discount_amount ?? 0)) / 100;
-                }
-                else {
-                    total_amount = subtotal - (appliedDiscount.discount_amount ?? 0);
-                }
-            }
-        }
-        const shipping = subtotal > 100 ? 0 : 9.99;
-        total_amount += shipping;
-        const order = em.create(order_1.Order, {
-            user: { user_id: data.user_id },
-            address: data.address_id ? { address_id: data.address_id } : undefined,
-            discount: appliedDiscount ? { discount_id: appliedDiscount.discount_id } : undefined,
-            payment_method: data.payment_method,
-            subtotal,
-            total_amount,
-            status: "pending",
-            delivery_status: "pending",
-            payment_status: "pending",
-        });
-        const savedOrder = await em.save(order_1.Order, order);
-        const orderItems = cartItems.map((cartItem) => {
-            return em.create(order_items_1.OrderItems, {
-                item: { item_id: cartItem.item.item_id },
-                item_quantity: cartItem.quantity,
-                item_purchase_price: cartItem.item.item_price,
-                order: { order_id: savedOrder.order_id },
-            });
-        });
-        await em.getRepository(order_items_1.OrderItems).save(orderItems);
-        for (const cartItem of cartItems) {
-            const item = cartItem.item;
-            if (item.stock < cartItem.quantity) {
-                throw new Error(`Insufficient stock for item: ${item.item_name}`);
-            }
-            item.stock -= cartItem.quantity;
-            await em.getRepository(item_1.Item).save(item);
-        }
-        await em.getRepository(item_cart_1.ItemCart).delete({ user: { user_id: data.user_id } });
-        return savedOrder.order_id;
-    },
-    getOrdersByUserId: async (em, user_id) => {
-        return await em.getRepository(order_1.Order).find({
-            where: { user: { user_id } },
-            relations: ["order_items", "order_items.item", "order_items.item.images", "discount", "address"],
-            order: { order_date: "DESC" },
-        });
-    },
-    getOrderById: async (em, order_id) => {
-        return await em.getRepository(order_1.Order).findOne({
-            where: { order_id },
-            relations: ["order_items", "order_items.item", "order_items.item.images", "discount", "address", "user"],
-        });
+    DeleteOrder: async (em, order_id) => {
+        const result = await em.getRepository(order_1.Order).softDelete(order_id);
+        return (result.affected ?? 0) > 0;
     },
     GetAllOrdersPage: async (em, data) => {
         const qb = em
@@ -99,6 +31,111 @@ exports.OrderRepo = {
             "order.payment_method AS payment_method",
         ]);
         return (0, pagination_helper_1.applyPaginationAndFilters)(qb, data);
+    },
+    getOrderById: async (em, order_id) => {
+        const order = await em.getRepository(order_1.Order).findOne({
+            relations: [
+                "order_items",
+                "order_items.item",
+                "order_items.item.images",
+                "discount",
+                "address",
+            ],
+            withDeleted: true,
+            where: { order_id },
+        });
+        const user = await em.getRepository(user_1.User)
+            .createQueryBuilder('user')
+            .select([
+            "user.username as username",
+            "user.email as email",
+            "user.user_id as user_id",
+            "user.phone_number as phone_number",
+        ]).getRawOne();
+        if (!order || !user) {
+            return order;
+        }
+        order.user = { ...order.user, ...user };
+        return order;
+    },
+    getOrdersByUserId: async (em, user_id) => {
+        return await em.getRepository(order_1.Order).find({
+            order: { order_date: "DESC" },
+            relations: [
+                "order_items",
+                "order_items.item",
+                "order_items.item.images",
+                "discount",
+                "address",
+            ],
+            withDeleted: true,
+            where: { user: { user_id } },
+        });
+    },
+    placeOrder: async (em, data) => {
+        const cartItems = await em.getRepository(item_cart_1.ItemCart).find({
+            relations: ["item"],
+            where: { user: { user_id: data.user_id } },
+        });
+        if (cartItems.length === 0) {
+            throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.NOT_FOUND, "Cart is empty");
+        }
+        let subtotal = 0;
+        cartItems.forEach((cartItem) => {
+            subtotal += cartItem.item.item_price * cartItem.quantity;
+        });
+        let total_amount = subtotal;
+        let appliedDiscount = null;
+        if (data.discount_id) {
+            appliedDiscount = await em.getRepository(discount_1.Discount).findOne({
+                where: { active_flag: 1, discount_id: data.discount_id },
+            });
+            if (appliedDiscount) {
+                if (appliedDiscount.discount_type === "percentage") {
+                    total_amount =
+                        subtotal -
+                            (subtotal * (appliedDiscount.discount_amount ?? 0)) / 100;
+                }
+                else {
+                    total_amount = subtotal - (appliedDiscount.discount_amount ?? 0);
+                }
+            }
+        }
+        for (const cartItem of cartItems) {
+            const item = cartItem.item;
+            if (item.stock < cartItem.quantity) {
+                throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.BAD_REQUEST, `Insufficient stock for item: ${item.item_name}`);
+            }
+            item.stock -= cartItem.quantity;
+            await em.getRepository(item_1.Item).save(item);
+        }
+        const order = em.create(order_1.Order, {
+            address: data.address_id ? { address_id: data.address_id } : undefined,
+            delivery_status: "pending",
+            discount: appliedDiscount
+                ? { discount_id: appliedDiscount.discount_id }
+                : undefined,
+            payment_method: data.payment_method,
+            payment_status: "pending",
+            status: "pending",
+            subtotal,
+            total_amount,
+            user: { user_id: data.user_id },
+        });
+        const savedOrder = await em.save(order_1.Order, order);
+        const orderItems = cartItems.map((cartItem) => {
+            return em.create(order_items_1.OrderItems, {
+                item: { item_id: cartItem.item.item_id },
+                item_purchase_price: cartItem.item.item_price,
+                item_quantity: cartItem.quantity,
+                order: { order_id: savedOrder.order_id },
+            });
+        });
+        await em.getRepository(order_items_1.OrderItems).save(orderItems);
+        await em
+            .getRepository(item_cart_1.ItemCart)
+            .delete({ user: { user_id: data.user_id } });
+        return savedOrder.order_id;
     },
     UpdateOrder: async (em, data) => {
         const orderRepo = em.getRepository(order_1.Order);
@@ -118,11 +155,5 @@ exports.OrderRepo = {
         await orderRepo.save(existing);
         return true;
     },
-    DeleteOrder: async (em, order_id) => {
-        const result = await em.getRepository(order_1.Order).delete(order_id);
-        return (result.affected ?? 0) > 0;
-    },
-    wrapTransaction: async (fn) => {
-        return await (0, transaction_1.wrapTransaction)(fn);
-    },
+    wrapTransaction: transaction_1.wrapTransaction,
 };

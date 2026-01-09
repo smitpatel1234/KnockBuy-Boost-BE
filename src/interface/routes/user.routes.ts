@@ -1,7 +1,6 @@
 import express from "express";
 
 import { UserRole } from "../../domain/models/User.models";
-import { pageParamsSchema } from "../../domain/schemas/pagination";
 import { userProfile } from "../../domain/schemas/user";
 import { user_id_schema } from "../../domain/schemas/user";
 import { authVerification } from "../../infrastructure/helper/middleware/authvarification";

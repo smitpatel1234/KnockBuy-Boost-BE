@@ -6,17 +6,13 @@ import { OrderRepoPort } from "../../../application/port/order-repo.port";
 import { placeOrder } from "../../../application/useCases/order/placeOrder.usecase";
 import { PlaceOrder } from "../../../domain/models/order.models";
 import { successmessage } from "../../../infrastructure/helper/displaymessage";
-import { ApplicationError, ApplicationErrorType } from "../../../infrastructure/helper/middleware/GlobelErrorHandler";
+import { AuthRequest } from "../../types/request.types";
 
 export const PlaceorderController = (OrderRepo: OrderRepoPort, ItemCartRepo: ItemCartRepoPort) => {
-  return async (req: Express.Request, res: Express.Response) =>
+  return async (req: AuthRequest<PlaceOrder>, res: Express.Response) =>
     OrderRepo.wrapTransaction(async (t: EntityManager) => {
-      const data = req.body as PlaceOrder;
-      const user_id = req.body.user.id as string | undefined;
-
-      if (!user_id) throw new ApplicationError(ApplicationErrorType.UNAUTHORIZED, "User not authenticated");
-      if (!data.address_id) throw new ApplicationError(ApplicationErrorType.BAD_REQUEST, "Address is required");
-      if (!data.payment_method) throw new ApplicationError(ApplicationErrorType.BAD_REQUEST, "Payment method is required");
+      const data = req.body;
+      const user_id = req.body.user.id;
 
       const placeorderparams = {
         address_id: data.address_id,

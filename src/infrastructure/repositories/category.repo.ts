@@ -1,8 +1,19 @@
 import { EntityManager } from "typeorm";
 
 import { CategoryRepoPort } from "../../application/port/category-repo.port";
-import { pageParams, PaginationResponse } from "../../domain/globalTypes/commonFields";
-import { AddCategory, CategoryAllType, CategoryType } from "../../domain/models/category.models";
+import {
+  pageParams,
+  PaginationResponse,
+} from "../../domain/globalTypes/commonFields";
+import {
+  AddCategory,
+  CategoryAllType,
+  CategoryType,
+} from "../../domain/models/category.models";
+import {
+  ApplicationError,
+  ApplicationErrorType,
+} from "../helper/middleware/GlobelErrorHandler";
 import { applyPaginationAndFilters } from "../helper/pagination.helper";
 import { wrapTransaction } from "../helper/transaction";
 import { Category } from "../orm/entities/category";
@@ -38,7 +49,6 @@ export const CategoryRepo: CategoryRepoPort = {
   },
 
   getAllCategories: async (em: EntityManager) => {
-
     const categories = await em
       .getRepository(Category)
       .createQueryBuilder("child")
@@ -72,23 +82,27 @@ export const CategoryRepo: CategoryRepoPort = {
         "parent.category_name AS parent_category_name",
       ]);
 
-    return applyPaginationAndFilters<CategoryAllType>(qb, data);
+    return applyPaginationAndFilters<Category, CategoryAllType>(qb, data);
   },
   updateCategory: async (em: EntityManager, input: CategoryType) => {
-    console.log(input)
     const categoryRepo = em.getRepository(Category);
-
     const existing = await categoryRepo.findOne({
       where: { category_id: input.category_id },
     });
 
     if (!existing) {
-      throw new Error("Category not found");
+      throw new ApplicationError(
+        ApplicationErrorType.NOT_FOUND,
+        "Category not found"
+      );
     }
 
     if (input.parent_category_id) {
       if (input.parent_category_id === input.category_id) {
-        throw new Error("Category cannot be its own parent");
+        throw new ApplicationError(
+          ApplicationErrorType.NOT_FOUND,
+          "Category cannot be its own parent"
+        );
       }
 
       const parent = await categoryRepo.findOne({
@@ -97,7 +111,10 @@ export const CategoryRepo: CategoryRepoPort = {
       });
 
       if (!parent) {
-        throw new Error("Parent category does not exist");
+        throw new ApplicationError(
+          ApplicationErrorType.NOT_FOUND,
+          "Parent category does not exist"
+        );
       }
 
       existing.parentCategory = parent;

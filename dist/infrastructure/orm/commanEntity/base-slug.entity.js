@@ -13,17 +13,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BaseSlugEntity = void 0;
+const slugify_1 = __importDefault(require("slugify"));
 // common/base-slug.entity.ts
 const typeorm_1 = require("typeorm");
-const slugify_1 = __importDefault(require("slugify"));
 class BaseSlugEntity {
     generateSlug() {
         if (!this.slug && this.getSlugSource()) {
             this.slug = (0, slugify_1.default)(this.getSlugSource(), {
                 locale: "vi",
-                replacement: "_",
-                remove: /[*+~.()'"!:@]/g,
                 lower: true,
+                remove: /[*+~.()'"!:@]/g,
+                replacement: "_",
                 strict: true,
                 trim: true,
             });

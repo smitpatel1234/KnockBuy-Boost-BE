@@ -10,7 +10,6 @@ export const GetAllOrdersPageController = (OrderRepo: OrderRepoPort) => {
     return async (req: Express.Request, res: Express.Response) =>
         OrderRepo.wrapTransaction(async (t: EntityManager) => {
             const params = parsePaginationParams(req);
-
             const data = await getAllOrdersPage(t, OrderRepo, params);
             successmessage(res, "Orders fetched successfully", data);
         });

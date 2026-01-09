@@ -20,7 +20,7 @@ const router = express.Router();
 
 router.post('/placeorder', authVerification([UserRole.USER]), validateDetails(PlaceOrderSchema), PlaceorderController(OrderRepo, ItemCartRepo));
 router.post('/confirm/:id', authVerification([UserRole.USER]), ConfirmOrderController(OrderRepo));
-router.get('/history', authVerification([UserRole.USER]), GetOrdersByUserIdController(OrderRepo));
+router.get('/history', authVerification([UserRole.USER, UserRole.ADMIN]), GetOrdersByUserIdController(OrderRepo));
 router.get('/get-order/:id', authVerification([UserRole.USER, UserRole.ADMIN]), GetOrderController(OrderRepo));
 
 router.get('/', authVerification([UserRole.ADMIN]), GetAllOrdersPageController(OrderRepo));

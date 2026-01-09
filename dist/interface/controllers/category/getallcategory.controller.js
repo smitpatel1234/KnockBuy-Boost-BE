@@ -7,7 +7,8 @@ const getALLCategoryController = (CategoryRepo) => {
     return async (req, res) => CategoryRepo.wrapTransaction(async (t) => {
         {
             const data = await (0, index_1.getALL_category)(t, CategoryRepo);
-            return (0, displaymessage_1.successmessage)(res, "Get all the categories successfully", data);
+            (0, displaymessage_1.successmessage)(res, "Get all the categories successfully", data);
+            return;
         }
     });
 };

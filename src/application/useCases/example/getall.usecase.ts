@@ -1,9 +1,3 @@
 import { EntityManager } from "typeorm";
 
-
-
-
-export const getALL_ = () => {
-
-    
-};
+export const getALL_ = () => {};

@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-import { jwtPayload } from "../../domain/models/User.models";
+import { MYJwtPayload } from "../../domain/models/User.models";
 import { ENV } from "../helper/env/index";
 import { ApplicationError, ApplicationErrorType } from "./middleware/GlobelErrorHandler";
 export const Envvar = {
@@ -9,67 +9,70 @@ export const Envvar = {
   PassWordSalt: ENV.PassWordSalt,
   REFRESH_TOKEN_EXPIRESIN: ENV.REFRESH_TOKEN_EXPIRESIN,
 };
-const accessTokengenrator = async (payload: jwtPayload,) => {
+const accessTokengenrator = (payload: MYJwtPayload,) => {
   return jwt.sign(payload, Envvar.JWT_SECRET, {
     algorithm: 'HS512',
     expiresIn: Envvar.JWT_EXPIRESIN,
 
   });
 };
-const refreshTokengenrator = async (payload: jwtPayload) => {
+const refreshTokengenrator = (payload: MYJwtPayload) => {
   return jwt.sign(payload, Envvar.JWT_SECRET, {
     algorithm: 'HS512',
     expiresIn: Envvar.REFRESH_TOKEN_EXPIRESIN,
 
   });
 };
-export const genrateToken = async (payload: jwtPayload) => {
-  const token = await accessTokengenrator(payload);
-  const decoded = await verifyToken(token);
+export const genrateToken = (payload: MYJwtPayload) => {
+  try {
+    const token = accessTokengenrator(payload);
+    const decoded = verifyToken(token);
+    const token_refreshToken = refreshTokengenrator(payload);
+    return { accessToken: token, expIN: decoded.exp, refreshToken: token_refreshToken };
+  }
+  catch {
+    throw new ApplicationError(ApplicationErrorType.UNAUTHORIZED, "Unauthorized User");
+  }
 
-  const token_refreshToken = await refreshTokengenrator(payload);
-  return { accessToken: token, expIN: decoded.exp, refreshToken: token_refreshToken };
+
 };
 
-export const verifyToken = async (token: string) => {
+export const verifyToken = (token: string) => {
   try {
-    const decoded =  jwt.verify(token, Envvar.JWT_SECRET) as jwtPayload;
+    const decoded = jwt.verify(token, Envvar.JWT_SECRET) as MYJwtPayload;
     return decoded;
-  } catch  {
+  } catch {
     throw new ApplicationError(ApplicationErrorType.UNAUTHORIZED, "Unauthorized User");
   }
 }
-export const decodedToken = async (token: string) => {
+export const decodedToken = (token: string) => {
   try {
-    const decoded =  jwt.decode(token);
+    const decoded = jwt.decode(token);
     return decoded;
-  } catch  {
-    return new ApplicationError(ApplicationErrorType.UNAUTHORIZED, "Unauthorized User");
+  } catch {
+    throw new ApplicationError(ApplicationErrorType.UNAUTHORIZED, "Unauthorized User");
   }
 }
-export const regenerateToken = async (refresh_token: string) => {
+export const regenerateToken = (refresh_token: string) => {
   try {
-    const decoded = ( jwt.verify(
+    const decoded = (jwt.verify(
       refresh_token,
       Envvar.JWT_SECRET
-    )) as jwtPayload;
+    )) as MYJwtPayload;
 
-    const { exp, iat, ...newPayload } = decoded;
+    const newPayload: Partial<MYJwtPayload> = { ...decoded };
+    delete newPayload.exp;
+    delete newPayload.iat;
 
-    const newToken = await accessTokengenrator(newPayload as jwtPayload);
+    const newToken = accessTokengenrator(newPayload as MYJwtPayload);
 
-    const decoded1 = (await decodedToken(newToken)) as jwtPayload;
-    if (!decoded1)
-      throw new ApplicationError(
-        ApplicationErrorType.UNAUTHORIZED,
-        "Unauthorized User"
-      );
+    const decoded1 = (decodedToken(newToken)) as MYJwtPayload;
 
     return {
       accesstoken: newToken,
       expIN: decoded1.exp
     };
-  } catch  {
+  } catch {
     throw new ApplicationError(
       ApplicationErrorType.UNAUTHORIZED,
       "Unauthorized User"

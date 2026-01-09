@@ -1,2 +1,0 @@
-export { createItemVariantValueMapping_Controller } from "./createitemvariantvaluemapping.controller";
-export { deleteItemVariantValueMapping_Controller } from "./deleteitemvariantvaluemapping.controller";

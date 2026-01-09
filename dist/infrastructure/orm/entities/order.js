@@ -12,71 +12,75 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Order = void 0;
 const typeorm_1 = require("typeorm");
 const address_1 = require("./address");
-const user_1 = require("./user");
-const order_items_1 = require("./order_items");
 const discount_1 = require("./discount");
+const order_items_1 = require("./order_items");
+const user_1 = require("./user");
 let Order = class Order {
 };
 exports.Order = Order;
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
-    __metadata("design:type", String)
-], Order.prototype, "order_id", void 0);
-__decorate([
-    (0, typeorm_1.ManyToOne)(() => address_1.Address, { nullable: true }),
     (0, typeorm_1.JoinColumn)({ name: 'address_id' }),
+    (0, typeorm_1.ManyToOne)(() => address_1.Address, { nullable: true, onDelete: "SET NULL" }),
     __metadata("design:type", Object)
 ], Order.prototype, "address", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: 'pending', length: 50, nullable: true, type: 'varchar' }),
+    __metadata("design:type", String)
+], Order.prototype, "delivery_status", void 0);
+__decorate([
+    (0, typeorm_1.JoinColumn)({ name: 'discount_id' }),
+    (0, typeorm_1.ManyToOne)(() => discount_1.Discount, { nullable: true, onDelete: "SET NULL" }),
+    __metadata("design:type", Object)
+], Order.prototype, "discount", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true, type: 'timestamp' }),
+    __metadata("design:type", Date)
+], Order.prototype, "invoice_date", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({ type: 'timestamp' }),
     __metadata("design:type", Date)
 ], Order.prototype, "order_date", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', nullable: true, length: 50 }),
+    (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
     __metadata("design:type", String)
-], Order.prototype, "status", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', nullable: true, length: 50, default: 'pending' }),
-    __metadata("design:type", String)
-], Order.prototype, "delivery_status", void 0);
-__decorate([
-    (0, typeorm_1.ManyToOne)(() => user_1.User),
-    (0, typeorm_1.JoinColumn)({ name: 'user_id' }),
-    __metadata("design:type", Object)
-], Order.prototype, "user", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'timestamp', nullable: true }),
-    __metadata("design:type", Date)
-], Order.prototype, "invoice_date", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'decimal', nullable: true, precision: 12, scale: 2 }),
-    __metadata("design:type", Number)
-], Order.prototype, "subtotal", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'decimal', nullable: true, precision: 12, scale: 2 }),
-    __metadata("design:type", Number)
-], Order.prototype, "tax", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'decimal', nullable: true, precision: 12, scale: 2 }),
-    __metadata("design:type", Number)
-], Order.prototype, "total_amount", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', nullable: true, length: 50 }),
-    __metadata("design:type", String)
-], Order.prototype, "payment_status", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', nullable: true, length: 50 }),
-    __metadata("design:type", String)
-], Order.prototype, "payment_method", void 0);
+], Order.prototype, "order_id", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => order_items_1.OrderItems, oi => oi.order),
     __metadata("design:type", Array)
 ], Order.prototype, "order_items", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => discount_1.Discount),
-    (0, typeorm_1.JoinColumn)({ name: 'discount_id' }),
+    (0, typeorm_1.Column)({ length: 50, nullable: true, type: 'varchar' }),
+    __metadata("design:type", String)
+], Order.prototype, "payment_method", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ length: 50, nullable: true, type: 'varchar' }),
+    __metadata("design:type", String)
+], Order.prototype, "payment_status", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ length: 50, nullable: true, type: 'varchar' }),
+    __metadata("design:type", String)
+], Order.prototype, "status", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true, precision: 12, scale: 2, type: 'decimal' }),
+    __metadata("design:type", Number)
+], Order.prototype, "subtotal", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true, precision: 12, scale: 2, type: 'decimal' }),
+    __metadata("design:type", Number)
+], Order.prototype, "tax", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true, precision: 12, scale: 2, type: 'decimal' }),
+    __metadata("design:type", Number)
+], Order.prototype, "total_amount", void 0);
+__decorate([
+    (0, typeorm_1.JoinColumn)({ name: 'user_id' }),
+    (0, typeorm_1.ManyToOne)(() => user_1.User),
     __metadata("design:type", Object)
-], Order.prototype, "discount", void 0);
+], Order.prototype, "user", void 0);
+__decorate([
+    (0, typeorm_1.DeleteDateColumn)(),
+    __metadata("design:type", Date)
+], Order.prototype, "deleted_at", void 0);
 exports.Order = Order = __decorate([
     (0, typeorm_1.Entity)()
 ], Order);

@@ -4,7 +4,7 @@ import { UserRole } from '../../domain/models/User.models';
 import { LoginCredentials } from '../../domain/schemas/auth';
 import { userCredentials } from '../../domain/schemas/user';
 import { authVerification } from '../../infrastructure/helper/middleware/authvarification';
-import passport from "../../infrastructure/helper/passportStrategy"
+//import passport from "../../infrastructure/helper/passportStrategy"
 import { validateDetails } from '../../infrastructure/helper/validator';
 // import { LoginUserInGoogleController } from '../controllers/auth/google.controller';
 import { AuthRepo } from '../../infrastructure/repositories/auth.repo';

@@ -1,19 +1,36 @@
 import { EntityManager } from "typeorm";
 
 import { OrderRepoPort } from "../../application/port/order-repo.port";
-import { pageParams, PaginationResponse } from "../../domain/globalTypes/commonFields";
-import { OrderAllType, PlaceOrder, UpdateOrderModel } from "../../domain/models/order.models";
+import {
+  pageParams,
+  PaginationResponse,
+} from "../../domain/globalTypes/commonFields";
+import {
+  OrderAllType,
+  PlaceOrder,
+  UpdateOrderModel,
+} from "../../domain/models/order.models";
+import {
+  ApplicationError,
+  ApplicationErrorType,
+} from "../helper/middleware/GlobelErrorHandler";
 import { applyPaginationAndFilters } from "../helper/pagination.helper";
 import { wrapTransaction } from "../helper/transaction";
+import { Address } from "../orm/entities/address";
 import { Discount } from "../orm/entities/discount";
 import { Item } from "../orm/entities/item";
 import { ItemCart } from "../orm/entities/item_cart";
 import { Order } from "../orm/entities/order";
 import { OrderItems } from "../orm/entities/order_items";
+import { User } from "../orm/entities/user";
+import { UserProfile } from "../../domain/models/User.models";
 
 export const OrderRepo: OrderRepoPort = {
-  DeleteOrder: async (em: EntityManager, order_id: string): Promise<boolean> => {
-    const result = await em.getRepository(Order).delete(order_id);
+  DeleteOrder: async (
+    em: EntityManager,
+    order_id: string
+  ): Promise<boolean> => {
+    const result = await em.getRepository(Order).softDelete(order_id);
     return (result.affected ?? 0) > 0;
   },
 
@@ -36,20 +53,49 @@ export const OrderRepo: OrderRepoPort = {
         "order.payment_method AS payment_method",
       ]);
 
-    return applyPaginationAndFilters<OrderAllType>(qb, data);
+    return applyPaginationAndFilters<Order, OrderAllType>(qb, data);
   },
 
   getOrderById: async (em: EntityManager, order_id: string) => {
-    return await em.getRepository(Order).findOne({
-      relations: ["order_items", "order_items.item", "order_items.item.images", "discount", "address", "user"],
+    const order = await em.getRepository(Order).findOne({
+      relations: [
+        "order_items",
+        "order_items.item",
+        "order_items.item.images",
+        "discount",
+        "address",
+      ],
+       withDeleted:true,
       where: { order_id },
     });
+    const user = await em.getRepository(User)
+    .createQueryBuilder('user')
+    .select([
+       "user.username as username",
+       "user.email as email",
+       "user.user_id as user_id",
+       "user.phone_number as phone_number",
+
+    ]).getRawOne<UserProfile>()
+    if (!order || !user) {
+      return order;
+    }
+    order.user = {...order.user,...user}
+    return order;
   },
 
   getOrdersByUserId: async (em: EntityManager, user_id: string) => {
     return await em.getRepository(Order).find({
       order: { order_date: "DESC" },
-      relations: ["order_items", "order_items.item", "order_items.item.images", "discount", "address"],
+      relations: [
+        "order_items",
+        "order_items.item",
+        "order_items.item.images",
+        "discount",
+        "address",
+        
+      ],
+      withDeleted:true,
       where: { user: { user_id } },
     });
   },
@@ -61,7 +107,10 @@ export const OrderRepo: OrderRepoPort = {
     });
 
     if (cartItems.length === 0) {
-      throw new Error("Cart is empty");
+      throw new ApplicationError(
+        ApplicationErrorType.NOT_FOUND,
+        "Cart is empty"
+      );
     }
 
     let subtotal = 0;
@@ -79,20 +128,32 @@ export const OrderRepo: OrderRepoPort = {
 
       if (appliedDiscount) {
         if (appliedDiscount.discount_type === "percentage") {
-          total_amount = subtotal - (subtotal * (appliedDiscount.discount_amount ?? 0)) / 100;
+          total_amount =
+            subtotal -
+            (subtotal * (appliedDiscount.discount_amount ?? 0)) / 100;
         } else {
           total_amount = subtotal - (appliedDiscount.discount_amount ?? 0);
         }
       }
     }
-
-    const shipping = subtotal > 100 ? 0 : 9.99;
-    total_amount += shipping;
+    for (const cartItem of cartItems) {
+      const item = cartItem.item;
+      if (item.stock < cartItem.quantity) {
+        throw new ApplicationError(
+          ApplicationErrorType.BAD_REQUEST,
+          `Insufficient stock for item: ${item.item_name}`
+        );
+      }
+      item.stock -= cartItem.quantity;
+      await em.getRepository(Item).save(item);
+    }
 
     const order = em.create(Order, {
       address: data.address_id ? { address_id: data.address_id } : undefined,
       delivery_status: "pending",
-      discount: appliedDiscount ? { discount_id: appliedDiscount.discount_id } : undefined,
+      discount: appliedDiscount
+        ? { discount_id: appliedDiscount.discount_id }
+        : undefined,
       payment_method: data.payment_method,
       payment_status: "pending",
       status: "pending",
@@ -113,22 +174,17 @@ export const OrderRepo: OrderRepoPort = {
     });
 
     await em.getRepository(OrderItems).save(orderItems);
-
-    for (const cartItem of cartItems) {
-      const item = cartItem.item;
-      if (item.stock < cartItem.quantity) {
-        throw new Error(`Insufficient stock for item: ${item.item_name}`);
-      }
-      item.stock -= cartItem.quantity;
-      await em.getRepository(Item).save(item);
-    }
-
-    await em.getRepository(ItemCart).delete({ user: { user_id: data.user_id } });
+    await em
+      .getRepository(ItemCart)
+      .delete({ user: { user_id: data.user_id } });
 
     return savedOrder.order_id;
   },
 
-  UpdateOrder: async (em: EntityManager, data: UpdateOrderModel): Promise<boolean> => {
+  UpdateOrder: async (
+    em: EntityManager,
+    data: UpdateOrderModel
+  ): Promise<boolean> => {
     const orderRepo = em.getRepository(Order);
     const existing = await orderRepo.findOneBy({ order_id: data.order_id });
     if (!existing) return false;
@@ -137,13 +193,11 @@ export const OrderRepo: OrderRepoPort = {
     if (data.delivery_status) existing.delivery_status = data.delivery_status;
     if (data.payment_status) existing.payment_status = data.payment_status;
     if (data.payment_method) existing.payment_method = data.payment_method;
-    if (data.address_id) existing.address = { address_id: data.address_id } as any;
+    if (data.address_id)
+      existing.address = { address_id: data.address_id } as unknown as Address;
 
     await orderRepo.save(existing);
     return true;
   },
-
-  wrapTransaction: async (fn: (em: EntityManager) => Promise<any>) => {
-    return await wrapTransaction(fn);
-  },
+  wrapTransaction: wrapTransaction,
 };

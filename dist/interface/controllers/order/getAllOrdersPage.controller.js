@@ -8,7 +8,7 @@ const GetAllOrdersPageController = (OrderRepo) => {
     return async (req, res) => OrderRepo.wrapTransaction(async (t) => {
         const params = (0, request_helper_1.parsePaginationParams)(req);
         const data = await (0, getAllOrdersPage_usecase_1.getAllOrdersPage)(t, OrderRepo, params);
-        return (0, displaymessage_1.successmessage)(res, "Orders fetched successfully", data);
+        (0, displaymessage_1.successmessage)(res, "Orders fetched successfully", data);
     });
 };
 exports.GetAllOrdersPageController = GetAllOrdersPageController;

@@ -12,7 +12,7 @@ const validatePromoController = (discountRepo) => {
         const discount = await (0, validatePromo_usecase_1.validatePromo)(t, code, discountRepo);
         if (!discount)
             throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.NOT_FOUND, "Invalid or inactive promo code");
-        return (0, displaymessage_1.successmessage)(res, "Promo code validated successfully", discount);
+        (0, displaymessage_1.successmessage)(res, "Promo code validated successfully", discount);
     });
 };
 exports.validatePromoController = validatePromoController;

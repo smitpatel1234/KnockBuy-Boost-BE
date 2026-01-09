@@ -5,17 +5,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createRoutes = void 0;
 const express_1 = __importDefault(require("express"));
-const auth_routes_1 = __importDefault(require("../../../interface/routes/auth.routes"));
-const user_routes_1 = __importDefault(require("../../../interface/routes/user.routes"));
-const variant_routes_1 = __importDefault(require("../../../interface/routes/variant.routes"));
-const upload_routes_1 = __importDefault(require("../../../interface/routes/upload.routes"));
-const category_routes_1 = __importDefault(require("../../../interface/routes/category.routes"));
-const item_routes_1 = __importDefault(require("../../../interface/routes/item.routes"));
-const address_routes_1 = __importDefault(require("../../../interface/routes/address.routes"));
 const path_1 = __importDefault(require("path"));
+const address_routes_1 = __importDefault(require("../../../interface/routes/address.routes"));
+const auth_routes_1 = __importDefault(require("../../../interface/routes/auth.routes"));
+const category_routes_1 = __importDefault(require("../../../interface/routes/category.routes"));
 const discount_routes_1 = __importDefault(require("../../../interface/routes/discount.routes"));
+const item_routes_1 = __importDefault(require("../../../interface/routes/item.routes"));
 const itemcart_routes_1 = __importDefault(require("../../../interface/routes/itemcart.routes"));
 const order_routes_1 = __importDefault(require("../../../interface/routes/order.routes"));
+const upload_routes_1 = __importDefault(require("../../../interface/routes/upload.routes"));
+const user_routes_1 = __importDefault(require("../../../interface/routes/user.routes"));
+const variant_routes_1 = __importDefault(require("../../../interface/routes/variant.routes"));
+const wishlist_route_1 = __importDefault(require("../../../interface/routes/wishlist.route"));
 const createRoutes = () => {
     const router = express_1.default.Router();
     router.use("/auth", auth_routes_1.default);
@@ -29,6 +30,7 @@ const createRoutes = () => {
     router.use("/discount", discount_routes_1.default);
     router.use("/itemcart", itemcart_routes_1.default);
     router.use("/order", order_routes_1.default);
+    router.use("/wishlist", wishlist_route_1.default);
     return router;
 };
 exports.createRoutes = createRoutes;

@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import { EntityManager } from "typeorm";
+
 import { ApplicationError, ApplicationErrorType } from "../../../infrastructure/helper/middleware/GlobelErrorHandler";
 import {
   regenerateToken,
@@ -20,7 +21,7 @@ export const refreshToken = async (
   if (tokenhash) {
     const isMatch = bcrypt.compareSync(refrehToken, tokenhash);
     if (isMatch) {
-      const tokens = await regenerateToken(refrehToken);
+      const tokens =  regenerateToken(refrehToken);
       return {
         accessToken: tokens.accesstoken,
         expIN: tokens.expIN

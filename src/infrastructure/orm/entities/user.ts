@@ -18,7 +18,7 @@ export class User {
   created_at!: Date;
 
   @DeleteDateColumn()
-  deletedAt?: Date;
+  deleted_at?: Date;
 
   @Column({ length: 255, nullable: false, type: "varchar", unique: true })
   email!: string;

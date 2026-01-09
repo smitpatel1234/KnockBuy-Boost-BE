@@ -17,36 +17,36 @@ let Category = class Category {
 exports.Category = Category;
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)("uuid"),
-    __metadata("design:type", String)
+    __metadata("design:type", Object)
 ], Category.prototype, "category_id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: "varchar", length: 100 }),
+    (0, typeorm_1.Column)({ length: 100, type: "varchar" }),
     __metadata("design:type", String)
 ], Category.prototype, "category_name", void 0);
-__decorate([
-    (0, typeorm_1.ManyToOne)(() => Category, (category) => category.childCategories, {
-        nullable: true,
-        onDelete: "CASCADE",
-    }),
-    (0, typeorm_1.JoinColumn)({ name: "parent_category_id" }),
-    __metadata("design:type", Object)
-], Category.prototype, "parentCategory", void 0);
-__decorate([
-    (0, typeorm_1.OneToMany)(() => item_1.Item, (Item) => Item.category),
-    __metadata("design:type", Array)
-], Category.prototype, "items", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Category, (category) => category.parentCategory),
     __metadata("design:type", Array)
 ], Category.prototype, "childCategories", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true, type: "varchar", length: 255 }),
+    (0, typeorm_1.Column)({ length: 255, nullable: true, type: "varchar" }),
+    __metadata("design:type", String)
+], Category.prototype, "description", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ length: 255, nullable: true, type: "varchar" }),
     __metadata("design:type", String)
 ], Category.prototype, "image_url", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true, type: "varchar", length: 255 }),
-    __metadata("design:type", String)
-], Category.prototype, "description", void 0);
+    (0, typeorm_1.OneToMany)(() => item_1.Item, (Item) => Item.category),
+    __metadata("design:type", Array)
+], Category.prototype, "items", void 0);
+__decorate([
+    (0, typeorm_1.JoinColumn)({ name: "parent_category_id" }),
+    (0, typeorm_1.ManyToOne)(() => Category, (category) => category.childCategories, {
+        nullable: true,
+        onDelete: "CASCADE",
+    }),
+    __metadata("design:type", Object)
+], Category.prototype, "parentCategory", void 0);
 exports.Category = Category = __decorate([
     (0, typeorm_1.Entity)()
 ], Category);

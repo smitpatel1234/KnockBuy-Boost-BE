@@ -7,7 +7,7 @@ const deleteUserController = (UserAndCredentialsRepo) => {
     return async (req, res) => UserAndCredentialsRepo.wrapTransaction(async (t) => {
         const userId = req.body.user_id;
         await (0, delete_user_usecase_1.delete_User)(t, userId, UserAndCredentialsRepo);
-        return (0, displaymessage_1.successmessage)(res, "User deleted successfully");
+        (0, displaymessage_1.successmessage)(res, "User deleted successfully");
     });
 };
 exports.deleteUserController = deleteUserController;

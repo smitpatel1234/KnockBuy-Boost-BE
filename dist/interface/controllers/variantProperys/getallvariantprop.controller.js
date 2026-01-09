@@ -6,7 +6,7 @@ const displaymessage_1 = require("../../../infrastructure/helper/displaymessage"
 const getAllVariantPropertiesController = (variantRepo) => {
     return async (req, res) => variantRepo.wrapTransaction(async (t) => {
         const data = await (0, index_1.getall_variant_properties)(t, variantRepo);
-        return (0, displaymessage_1.successmessage)(res, "Get all the variant properties successfully", data);
+        (0, displaymessage_1.successmessage)(res, "Get all the variant properties successfully", data);
     });
 };
 exports.getAllVariantPropertiesController = getAllVariantPropertiesController;

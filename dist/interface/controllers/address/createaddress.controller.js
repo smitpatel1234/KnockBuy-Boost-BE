@@ -16,7 +16,8 @@ const createAddressController = (AddressRepo) => {
             const address = req.body;
             const data = { user_id, ...address };
             await (0, index_1.create_address)(t, AddressRepo, data);
-            return (0, displaymessage_1.successmessage)(res, "address created successfully");
+            (0, displaymessage_1.successmessage)(res, "address created successfully");
+            return;
         }
     });
 };

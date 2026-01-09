@@ -8,6 +8,6 @@ export const logoutUser = async (
   token: string,
   authRepo: AuthRepoPort
 ) => {
-     const payload = await verifyToken(token) as { id: string; role: string };
+     const payload =  verifyToken(token) as { id: string; role: string };
      await authRepo.removeRefreshToken(entitiesmanager, payload.id);
 }

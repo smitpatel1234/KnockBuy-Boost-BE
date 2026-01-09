@@ -11,26 +11,26 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Wishlist = void 0;
 const typeorm_1 = require("typeorm");
-const user_1 = require("./user");
 const item_1 = require("./item");
+const user_1 = require("./user");
 let Wishlist = class Wishlist {
 };
 exports.Wishlist = Wishlist;
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
-    __metadata("design:type", String)
-], Wishlist.prototype, "wish_list_id", void 0);
+    (0, typeorm_1.JoinColumn)({ name: 'item_id' }),
+    (0, typeorm_1.ManyToOne)(() => item_1.Item, { nullable: false, onDelete: "CASCADE" }),
+    __metadata("design:type", Object)
+], Wishlist.prototype, "item", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => user_1.User, { nullable: false, onDelete: "CASCADE" }),
     (0, typeorm_1.JoinColumn)({ name: 'user_id' }),
-    __metadata("design:type", user_1.User)
+    (0, typeorm_1.ManyToOne)(() => user_1.User, { nullable: false, onDelete: "CASCADE" }),
+    __metadata("design:type", Object)
 ], Wishlist.prototype, "user", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => item_1.Item, { nullable: false, onDelete: "CASCADE" }),
-    (0, typeorm_1.JoinColumn)({ name: 'item_id' }),
-    __metadata("design:type", item_1.Item)
-], Wishlist.prototype, "item", void 0);
+    (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
+    __metadata("design:type", Object)
+], Wishlist.prototype, "wish_list_id", void 0);
 exports.Wishlist = Wishlist = __decorate([
-    (0, typeorm_1.Unique)(['user', 'item']),
-    (0, typeorm_1.Entity)()
+    (0, typeorm_1.Entity)(),
+    (0, typeorm_1.Unique)(['user', 'item'])
 ], Wishlist);

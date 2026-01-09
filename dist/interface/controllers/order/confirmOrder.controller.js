@@ -14,12 +14,12 @@ const ConfirmOrderController = (OrderRepo) => {
         if (!address_id || !payment_method)
             throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.BAD_REQUEST, "Address and Payment Method are required");
         await (0, confirmOrder_usecase_1.confirmOrder)(t, OrderRepo, {
-            order_id: id,
-            user_id,
             address_id,
-            payment_method
+            order_id: id,
+            payment_method,
+            user_id
         });
-        return (0, displaymessage_1.successmessage)(res, "Order confirmed successfully");
+        (0, displaymessage_1.successmessage)(res, "Order confirmed successfully");
     });
 };
 exports.ConfirmOrderController = ConfirmOrderController;

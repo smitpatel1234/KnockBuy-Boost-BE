@@ -3,9 +3,9 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique }
 import { Item } from "./item";
 import { Order } from "./order";
 @Entity()
-@Unique(['order', 'item'])
+@Unique(['order', 'item']) 
 export class OrderItems {
-	@JoinColumn({ name: 'item_id' })
+	@JoinColumn({ name: 'item_id' } )
 	@ManyToOne(() => Item)
 	item!: Item
 

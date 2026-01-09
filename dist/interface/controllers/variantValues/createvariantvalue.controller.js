@@ -7,7 +7,7 @@ const createVariantValueController = (variantRepo) => {
     return async (req, res) => variantRepo.wrapTransaction(async (t) => {
         const data = req.body;
         await (0, index_1.create_variant_value)(t, variantRepo, data);
-        return (0, displaymessage_1.successmessage)(res, "Variant value created successfully");
+        (0, displaymessage_1.successmessage)(res, "Variant value created successfully");
     });
 };
 exports.createVariantValueController = createVariantValueController;

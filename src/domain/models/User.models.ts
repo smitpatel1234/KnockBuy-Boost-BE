@@ -9,10 +9,15 @@ export interface ExpIN {
 
 }
 
-export interface jwtPayload extends JwtPayload {
+export interface MYJwtPayload extends JwtPayload {
     id: string;
     role: UserRole;
-
+    
+}
+export  interface Token  {
+     accessToken:string,
+     expIN:number
+     refreshToken:string,
 }
 export interface UserCredentials {
     email: string;

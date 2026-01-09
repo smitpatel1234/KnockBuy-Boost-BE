@@ -15,9 +15,9 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./createDiscount.controller"), exports);
-__exportStar(require("./updateDiscount.controller"), exports);
 __exportStar(require("./deleteDiscount.controller"), exports);
-__exportStar(require("./getDiscount.controller"), exports);
 __exportStar(require("./getAllDiscounts.controller"), exports);
 __exportStar(require("./getAllDiscountsPage.controller"), exports);
+__exportStar(require("./getDiscount.controller"), exports);
+__exportStar(require("./updateDiscount.controller"), exports);
 __exportStar(require("./validatePromo.controller"), exports);

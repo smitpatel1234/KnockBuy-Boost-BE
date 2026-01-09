@@ -16,17 +16,17 @@ let VariantCollection = class VariantCollection {
 };
 exports.VariantCollection = VariantCollection;
 __decorate([
+    (0, typeorm_1.JoinColumn)({ name: 'item_id' }),
+    (0, typeorm_1.ManyToOne)(() => item_1.Item, { nullable: false, onDelete: "CASCADE" }),
+    __metadata("design:type", Object)
+], VariantCollection.prototype, "main_item", void 0);
+__decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
     __metadata("design:type", String)
 ], VariantCollection.prototype, "variant_collection_id", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => item_1.Item, { nullable: false, onDelete: "CASCADE" }),
-    (0, typeorm_1.JoinColumn)({ name: 'item_id' }),
-    __metadata("design:type", Object)
-], VariantCollection.prototype, "main_item", void 0);
-__decorate([
-    (0, typeorm_1.ManyToOne)(() => item_1.Item, { nullable: true, onDelete: "SET NULL" }),
     (0, typeorm_1.JoinColumn)({ name: 'variant_item_id' }),
+    (0, typeorm_1.ManyToOne)(() => item_1.Item, { nullable: false, onDelete: "CASCADE" }),
     __metadata("design:type", Object)
 ], VariantCollection.prototype, "variant_item", void 0);
 exports.VariantCollection = VariantCollection = __decorate([

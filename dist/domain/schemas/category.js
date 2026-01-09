@@ -37,14 +37,14 @@ exports.DeleteCategorySchema = exports.UpdateCategorySchema = exports.AddCategor
 const zod = __importStar(require("zod"));
 exports.AddCategorySchema = zod.object({
     category_name: zod.string(),
-    parent_category_id: zod.string().optional(),
     childCategories: zod.array(zod.string()).optional(),
-    image_url: zod.string().optional(),
     description: zod.string().optional(),
+    image_url: zod.string().optional(),
+    parent_category_id: zod.string().optional(),
 });
 exports.UpdateCategorySchema = exports.AddCategorySchema.extend({
-    category_id: zod.uuid(),
+    category_id: zod.string(),
 });
 exports.DeleteCategorySchema = zod.object({
-    category_id: zod.uuid(),
+    category_id: zod.string(),
 });

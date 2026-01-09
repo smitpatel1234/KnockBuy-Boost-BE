@@ -17,6 +17,10 @@ export default tseslint.config(
         tsconfigRootDir: import.meta.dirname,
       },
     },
+     rules:{
+            'max-lines': ['error', { max: 150, skipBlankLines: true, skipComments: true }],
+      'max-lines-per-function': ['error', { max: 50, skipBlankLines: true, skipComments: true }],
+     }
   },
   perfectionist.configs["recommended-natural"],
 );

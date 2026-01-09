@@ -4,9 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const item_1 = require("../../domain/schemas/item");
 const authvarification_1 = require("../../infrastructure/helper/middleware/authvarification");
 const validator_1 = require("../../infrastructure/helper/validator");
-const item_1 = require("../../domain/schemas/item");
 const item_repo_1 = require("../../infrastructure/repositories/item.repo");
 const variant_repo_1 = require("../../infrastructure/repositories/variant.repo");
 const item_2 = require("../controllers/item");
@@ -19,4 +19,5 @@ router.get('/get-item/slug/:slug', (0, item_2.getItemController)(item_repo_1.Ite
 router.get('/get-all-items', (0, item_2.getAllItemsController)(item_repo_1.ItemRepo));
 router.get('/get-all-items-page', (0, item_2.getAllItemsPageController)(item_repo_1.ItemRepo));
 router.get('/public/get-all-items-page', (0, item_2.getAllItemsPageController)(item_repo_1.ItemRepo));
+router.get('/public/search-items', (0, item_2.searchItemsController)(item_repo_1.ItemRepo));
 exports.default = router;

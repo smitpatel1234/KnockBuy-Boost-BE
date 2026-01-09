@@ -11,8 +11,8 @@ const deleteItemCartController = (ItemCartRepo) => {
             const IsDeleted = await (0, index_1.delete_itemcart)(t, ItemCartRepo, { cart_item_id: cart_item_id });
             if (!IsDeleted)
                 throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.NOT_FOUND, "addess Not Found");
-            ``;
-            return (0, displaymessage_1.successmessage)(res, "addess deleted successfully");
+            (0, displaymessage_1.successmessage)(res, "item from cart removed successfully");
+            return;
         }
     });
 };

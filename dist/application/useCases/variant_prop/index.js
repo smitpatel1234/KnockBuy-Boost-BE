@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getall_variant_properties = exports.delete_varient_property = exports.update_varient_property = exports.create_varient_property = void 0;
+exports.update_varient_property = exports.getall_variant_properties = exports.delete_varient_property = exports.create_varient_property = void 0;
 var createvariant_prop_usecase_1 = require("./createvariant_prop.usecase");
 Object.defineProperty(exports, "create_varient_property", { enumerable: true, get: function () { return createvariant_prop_usecase_1.create_varient_property; } });
-var updatevariant_prop_usecase_1 = require("./updatevariant_prop.usecase");
-Object.defineProperty(exports, "update_varient_property", { enumerable: true, get: function () { return updatevariant_prop_usecase_1.update_varient_property; } });
 var deletevariant_prop_usecase_1 = require("./deletevariant_prop.usecase");
 Object.defineProperty(exports, "delete_varient_property", { enumerable: true, get: function () { return deletevariant_prop_usecase_1.delete_varient_property; } });
 var getallvariant_prop_usecase_1 = require("./getallvariant_prop.usecase");
 Object.defineProperty(exports, "getall_variant_properties", { enumerable: true, get: function () { return getallvariant_prop_usecase_1.getall_variant_properties; } });
+var updatevariant_prop_usecase_1 = require("./updatevariant_prop.usecase");
+Object.defineProperty(exports, "update_varient_property", { enumerable: true, get: function () { return updatevariant_prop_usecase_1.update_varient_property; } });

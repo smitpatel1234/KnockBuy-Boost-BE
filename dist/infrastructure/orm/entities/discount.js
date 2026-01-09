@@ -16,41 +16,45 @@ let Discount = class Discount {
 };
 exports.Discount = Discount;
 __decorate([
+    (0, typeorm_1.Column)({ default: false, nullable: true, transformer: new numbertoboolean_1.BooleanTransformer(), type: 'tinyint' }),
+    __metadata("design:type", Number)
+], Discount.prototype, "active_flag", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ length: 255, nullable: true, type: 'varchar' }),
+    __metadata("design:type", String)
+], Discount.prototype, "description", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true, type: 'float' }),
+    __metadata("design:type", Number)
+], Discount.prototype, "discount_amount", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ length: 255, nullable: false, type: 'varchar' }),
+    __metadata("design:type", String)
+], Discount.prototype, "discount_code", void 0);
+__decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
     __metadata("design:type", String)
 ], Discount.prototype, "discount_id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', nullable: false, length: 255 }),
+    (0, typeorm_1.Column)({ length: 255, nullable: false, type: 'varchar' }),
     __metadata("design:type", String)
 ], Discount.prototype, "discount_name", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', nullable: false, length: 255 }),
-    __metadata("design:type", String)
-], Discount.prototype, "discount_code", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', nullable: true, length: 20 }),
-    __metadata("design:type", String)
-], Discount.prototype, "discount_type", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'float', nullable: true }),
-    __metadata("design:type", Number)
-], Discount.prototype, "discount_amount", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'int', nullable: true }),
-    __metadata("design:type", Number)
-], Discount.prototype, "duration", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', nullable: true, length: 255 }),
-    __metadata("design:type", String)
-], Discount.prototype, "description", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'timestamp', nullable: true }),
+    (0, typeorm_1.Column)({ nullable: true, type: 'timestamp' }),
     __metadata("design:type", Date)
 ], Discount.prototype, "discount_start_date", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'tinyint', nullable: true, default: false, transformer: new numbertoboolean_1.BooleanTransformer() }),
+    (0, typeorm_1.Column)({ length: 20, nullable: true, type: 'varchar' }),
+    __metadata("design:type", String)
+], Discount.prototype, "discount_type", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true, type: 'int' }),
     __metadata("design:type", Number)
-], Discount.prototype, "active_flag", void 0);
+], Discount.prototype, "duration", void 0);
+__decorate([
+    (0, typeorm_1.DeleteDateColumn)(),
+    __metadata("design:type", Date)
+], Discount.prototype, "deletedAt", void 0);
 exports.Discount = Discount = __decorate([
     (0, typeorm_1.Entity)()
 ], Discount);

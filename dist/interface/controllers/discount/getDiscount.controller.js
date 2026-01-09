@@ -12,7 +12,7 @@ const getDiscountController = (discountRepo) => {
         const discount = await (0, discount_1.get_discount)(t, id, discountRepo);
         if (!discount)
             throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.NOT_FOUND, "Discount Not Found");
-        return (0, displaymessage_1.successmessage)(res, "Get discount successfully", discount);
+        (0, displaymessage_1.successmessage)(res, "Get discount successfully", discount);
     });
 };
 exports.getDiscountController = getDiscountController;

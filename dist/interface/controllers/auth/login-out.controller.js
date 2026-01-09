@@ -3,46 +3,47 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.LogoutUserController = exports.LoginUserController = void 0;
 const login_usecase_1 = require("../../../application/useCases/auth/login.usecase");
 const logout_usecase_1 = require("../../../application/useCases/auth/logout.usecase");
-const GlobelErrorHandler_1 = require("../../../infrastructure/helper/middleware/GlobelErrorHandler");
 const displaymessage_1 = require("../../../infrastructure/helper/displaymessage");
+const GlobelErrorHandler_1 = require("../../../infrastructure/helper/middleware/GlobelErrorHandler");
 const LoginUserController = (AuthRepo) => {
     return async (req, res) => AuthRepo.wrapTransaction(async (t) => {
         const credentials = req.body;
         const { token, user } = await (0, login_usecase_1.loginUser)(t, credentials, AuthRepo);
         res.cookie("accessToken", token.accessToken, {
             httpOnly: true,
-            secure: false,
             sameSite: "lax",
+            secure: false,
         });
         res.cookie("refreshToken", token.refreshToken, {
             httpOnly: true,
-            secure: false,
             sameSite: "strict",
+            secure: false,
         });
         res.cookie("expIn", (token.expIN || "").toString(), {
             httpOnly: false,
-            secure: false,
             sameSite: "lax",
+            secure: false,
         });
         const userProfile = {
-            username: user.username,
+            email: user.email,
             phone_number: user.phone_number,
             profile_image: user.profile_image,
-            email: user.email,
-            wishlist_name: user.wishlist_name,
-            user_id: user.user_id
+            user_id: user.user_id,
+            username: user.username,
+            wishlist_name: user.wishlist_name
         };
-        return (0, displaymessage_1.successmessage)(res, "User logged in successfully", userProfile);
+        (0, displaymessage_1.successmessage)(res, "User logged in successfully", userProfile);
     });
 };
 exports.LoginUserController = LoginUserController;
 const LogoutUserController = (AuthRepo) => {
     return async (req, res) => AuthRepo.wrapTransaction(async (t) => {
-        if (!req.cookies.accessToken)
+        const token = req.cookies.accessToken;
+        if (!token)
             throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.UNAUTHORIZED, "Invalid access token");
-        (0, logout_usecase_1.logoutUser)(t, req.cookies.accessToken, AuthRepo);
+        await (0, logout_usecase_1.logoutUser)(t, token, AuthRepo);
         res.clearCookie("accessToken");
-        return (0, displaymessage_1.successmessage)(res, "User logged Out successfully");
+        (0, displaymessage_1.successmessage)(res, "User logged Out successfully");
     });
 };
 exports.LogoutUserController = LogoutUserController;
