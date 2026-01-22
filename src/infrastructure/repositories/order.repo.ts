@@ -51,9 +51,33 @@ export const OrderRepo: OrderRepoPort = {
         "order.total_amount AS total_amount",
         "order.payment_status AS payment_status",
         "order.payment_method AS payment_method",
-      ]);
-
-    return applyPaginationAndFilters<Order, OrderAllType>(qb, data);
+        "order.isNew AS isNew"
+      ]).groupBy('order_id').addOrderBy('order.isNew','DESC');
+    const cqb = em.getRepository(Order).createQueryBuilder("order")
+    return applyPaginationAndFilters<Order, OrderAllType>(
+      qb,
+      cqb,
+      data,
+      [
+        "order.order_id",
+        "order.order_date",
+        "order.status",
+        "order.delivery_status",
+        "user.username",
+        "order.total_amount",
+        "order.payment_status",
+        "order.payment_method",
+        "order_id",
+        "order_date",
+        "status",
+        "delivery_status",
+        "username",
+        "total_amount",
+        "payment_status",
+        "payment_method",
+        "isNew"
+      ]
+    );
   },
 
   getOrderById: async (em: EntityManager, order_id: string) => {
@@ -65,22 +89,25 @@ export const OrderRepo: OrderRepoPort = {
         "discount",
         "address",
       ],
-       withDeleted:true,
+      withDeleted: true,
       where: { order_id },
     });
+  
+    await em.getRepository(Order).update({order_id},{isNew:0});
+  
     const user = await em.getRepository(User)
-    .createQueryBuilder('user')
-    .select([
-       "user.username as username",
-       "user.email as email",
-       "user.user_id as user_id",
-       "user.phone_number as phone_number",
+      .createQueryBuilder('user')
+      .select([
+        "user.username as username",
+        "user.email as email",
+        "user.user_id as user_id",
+        "user.phone_number as phone_number",
 
-    ]).getRawOne<UserProfile>()
+      ]).getRawOne<UserProfile>()
     if (!order || !user) {
       return order;
     }
-    order.user = {...order.user,...user}
+    order.user = { ...order.user, ...user }
     return order;
   },
 
@@ -93,9 +120,9 @@ export const OrderRepo: OrderRepoPort = {
         "order_items.item.images",
         "discount",
         "address",
-        
+
       ],
-      withDeleted:true,
+      withDeleted: true,
       where: { user: { user_id } },
     });
   },

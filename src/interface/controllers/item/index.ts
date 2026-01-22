@@ -5,3 +5,4 @@ export * from './getAllItems.controller';
 export * from './getItem.controller';
 export * from './searchItems.controller';
 export * from './updateItem.controller';
+export * from './searchSuggestions.controller';

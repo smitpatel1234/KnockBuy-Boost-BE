@@ -1,8 +1,13 @@
 export interface Filter {
   column: string;
-  value: string;
+  value?: string;
+  isSearchByNumber?: boolean;
+  isSearchByDate?: boolean;
+  upperBoundDate?: string
+  lowerBoundDate?: string
+  upperBoundNumber?: number
+  lowerBoundNumber?: number
 }
-
 export interface pageParams {
   filters: Filter[];
   pagination: Pagination;
@@ -21,9 +26,14 @@ export interface PaginationResponse<T> {
     page: number;
     total: number;
     totalPages: number;
+    constraints: MaxMinConstraints[];
   };
 }
-
+export interface MaxMinConstraints {
+  column: string;
+  max: number | string;
+  min: number | string;
+}
 export interface SearchFilter {
   between?: [number, number];
   column: string;
@@ -32,6 +42,8 @@ export interface SearchFilter {
   in?: (number | string)[];
   like?: string;
   lt?: number | string;
+  isSearchByNumber?: boolean;
+  isSearchByDate?: boolean;
 }
 
 export interface searchPageParams {

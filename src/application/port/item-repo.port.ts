@@ -28,12 +28,13 @@ export interface ItemRepoPort {
   searchItems: (
     em: EntityManager,
     data: searchPageParams
-  ) => Promise<PaginationResponse<GetItemModel>>;
+  ) => Promise<PaginationResponse<Partial<GetItemModel>>>;
   UpdateItem: (em: EntityManager, data: ItemModel) => Promise<boolean>;
   ISItemInStock: (
     em: EntityManager,
     item_id: string,
     quantity: number
   ) => Promise<boolean>;
+  searchItemsByName: (em: EntityManager, query: string) => Promise<GetItemModel[]>;
   wrapTransaction: <T>(fun: (t: EntityManager) => Promise<T>) => Promise<T>;
 }

@@ -23,6 +23,6 @@ router.get("/get-all-variant-values", (0, authvarification_1.authVerification)([
 router.post("/create-variant-value", (0, authvarification_1.authVerification)([]), (0, validator_1.validateDetails)(Variant_1.AddVarientWithValuesSchema), (0, index_1.createVariantValueController)(variant_repo_1.VariantRepo));
 router.put("/update-variant-value", (0, authvarification_1.authVerification)([]), (0, validator_1.validateDetails)(Variant_1.VarientWithValuesSchema), (0, index_1.updateVariantValueController)(variant_repo_1.VariantRepo));
 router.delete("/delete-variant-value", (0, authvarification_1.authVerification)([]), (0, validator_1.validateDetails)(Variant_1.VarientValuesID), (0, index_1.deleteVariantValueController)(variant_repo_1.VariantRepo));
-router.get("/get-all-variant-values-page", (0, authvarification_1.authVerification)([]), (0, index_1.getAllVariantValuePageController)(variant_repo_1.VariantRepo));
+router.post("/get-all-variant-values-page", (0, authvarification_1.authVerification)([]), (0, index_1.getAllVariantValuePageController)(variant_repo_1.VariantRepo));
 router.delete("/delete-variant-collection", (0, authvarification_1.authVerification)([]), (0, validator_1.validateDetails)(Variant_1.VariantCollectionIdSchema), (0, deleteVariantCollection_controller_1.deleteVariantCollectionController)(variant_repo_1.VariantRepo));
 exports.default = router;

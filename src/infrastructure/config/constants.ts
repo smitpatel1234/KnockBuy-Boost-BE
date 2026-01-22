@@ -1,3 +1,5 @@
+import e from "express";
+
  
 export enum StatusCodes {
   /**
@@ -330,4 +332,15 @@ export enum StatusCodes {
    * The 511 status code indicates that the client needs to authenticate to gain network access.
    */
   NETWORK_AUTHENTICATION_REQUIRED = 511,
+}
+export enum SocketEvents {
+  CONNECTION = "connection",
+  DISCONNECT = "disconnect",
+  NOTIFICATION = "notification",
+}
+export enum MailServices {
+  GMAIL = 'gmail',
+  YAHOO = 'yahoo',
+  OUTLOOK = 'outlook365',
+  HOTMAIL = 'hotmail',
 }

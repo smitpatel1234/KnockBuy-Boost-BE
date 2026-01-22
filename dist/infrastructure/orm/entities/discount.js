@@ -40,7 +40,7 @@ __decorate([
     __metadata("design:type", String)
 ], Discount.prototype, "discount_name", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true, type: 'timestamp' }),
+    (0, typeorm_1.Column)({ nullable: true, type: 'date' }),
     __metadata("design:type", Date)
 ], Discount.prototype, "discount_start_date", void 0);
 __decorate([

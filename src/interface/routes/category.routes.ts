@@ -10,5 +10,5 @@ router.get('/getAll-categories', getALLCategoryController(CategoryRepo));
 router.post('/create-category', authVerification([]), validateDetails(AddCategorySchema), createCategoryController(CategoryRepo));
 router.put('/update-category', authVerification([]), validateDetails(UpdateCategorySchema), updateCategoryController(CategoryRepo));
 router.delete('/delete-category', authVerification([]), validateDetails(DeleteCategorySchema), deleteCategoryController(CategoryRepo));
-router.get('/get-all-categories-page', authVerification([]), getAllCategoryPageController(CategoryRepo));
+router.post('/get-all-categories-page', authVerification([]), getAllCategoryPageController(CategoryRepo));
 export default router;

@@ -22,7 +22,7 @@ router.post('/placeorder', (0, authvarification_1.authVerification)([User_models
 router.post('/confirm/:id', (0, authvarification_1.authVerification)([User_models_1.UserRole.USER]), (0, confirmOrder_controller_1.ConfirmOrderController)(order_repo_1.OrderRepo));
 router.get('/history', (0, authvarification_1.authVerification)([User_models_1.UserRole.USER, User_models_1.UserRole.ADMIN]), (0, getOrdersByUserId_controller_1.GetOrdersByUserIdController)(order_repo_1.OrderRepo));
 router.get('/get-order/:id', (0, authvarification_1.authVerification)([User_models_1.UserRole.USER, User_models_1.UserRole.ADMIN]), (0, getOrder_controller_1.GetOrderController)(order_repo_1.OrderRepo));
-router.get('/', (0, authvarification_1.authVerification)([User_models_1.UserRole.ADMIN]), (0, getAllOrdersPage_controller_1.GetAllOrdersPageController)(order_repo_1.OrderRepo));
+router.post('/', (0, authvarification_1.authVerification)([User_models_1.UserRole.ADMIN]), (0, getAllOrdersPage_controller_1.GetAllOrdersPageController)(order_repo_1.OrderRepo));
 router.put('/:id', (0, authvarification_1.authVerification)([User_models_1.UserRole.ADMIN]), (0, updateOrder_controller_1.UpdateOrderController)(order_repo_1.OrderRepo));
 router.delete('/:id', (0, authvarification_1.authVerification)([User_models_1.UserRole.ADMIN]), (0, deleteOrder_controller_1.DeleteOrderController)(order_repo_1.OrderRepo));
 exports.default = router;

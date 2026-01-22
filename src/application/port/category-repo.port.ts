@@ -9,5 +9,6 @@ export interface CategoryRepoPort {
     getAllCategories: (em: EntityManager) => Promise<CategoryAllType[]>;
     GetAllCategoryPage: (em: EntityManager, data: pageParams) => Promise<PaginationResponse<CategoryAllType>>;
     updateCategory: (em: EntityManager, category: CategoryType) => Promise<boolean>;
+    searchCategoriesByName: (em: EntityManager, query: string) => Promise<CategoryAllType[]>;
     wrapTransaction: <T>(fun: (t: EntityManager) => Promise<T>) => Promise<T>;
 }   

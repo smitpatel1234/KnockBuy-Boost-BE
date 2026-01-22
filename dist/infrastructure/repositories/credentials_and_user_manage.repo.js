@@ -44,8 +44,18 @@ exports.UserAndCredentialsRepo = {
     },
     getallUserPage: async (entityManager, data) => {
         const userQB = entityManager.getRepository(user_1.User).createQueryBuilder("user");
+        const CuserQB = entityManager.getRepository(user_1.User).createQueryBuilder("user").groupBy("user.user_id");
         userQB.select(["user.user_id", "user.username", "user.email", "user.phone_number"]);
-        return (0, pagination_helper_1.applyPaginationAndFilters)(userQB, data, false);
+        return (0, pagination_helper_1.applyPaginationAndFilters)(userQB, CuserQB, data, [
+            "user.user_id",
+            "user.username",
+            "user.email",
+            "user.phone_number",
+            "user_id",
+            "username",
+            "email",
+            "phone_number"
+        ], false);
     },
     getUser: async (entitiesmanager, id) => {
         return await entitiesmanager

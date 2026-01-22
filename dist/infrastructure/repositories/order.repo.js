@@ -29,8 +29,28 @@ exports.OrderRepo = {
             "order.total_amount AS total_amount",
             "order.payment_status AS payment_status",
             "order.payment_method AS payment_method",
+            "order.isNew AS isNew"
+        ]).groupBy('order_id').addOrderBy('order.isNew', 'DESC');
+        const cqb = em.getRepository(order_1.Order).createQueryBuilder("order");
+        return (0, pagination_helper_1.applyPaginationAndFilters)(qb, cqb, data, [
+            "order.order_id",
+            "order.order_date",
+            "order.status",
+            "order.delivery_status",
+            "user.username",
+            "order.total_amount",
+            "order.payment_status",
+            "order.payment_method",
+            "order_id",
+            "order_date",
+            "status",
+            "delivery_status",
+            "username",
+            "total_amount",
+            "payment_status",
+            "payment_method",
+            "isNew"
         ]);
-        return (0, pagination_helper_1.applyPaginationAndFilters)(qb, data);
     },
     getOrderById: async (em, order_id) => {
         const order = await em.getRepository(order_1.Order).findOne({
@@ -44,6 +64,7 @@ exports.OrderRepo = {
             withDeleted: true,
             where: { order_id },
         });
+        await em.getRepository(order_1.Order).update({ order_id }, { isNew: 0 });
         const user = await em.getRepository(user_1.User)
             .createQueryBuilder('user')
             .select([

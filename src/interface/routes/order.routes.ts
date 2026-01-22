@@ -23,7 +23,7 @@ router.post('/confirm/:id', authVerification([UserRole.USER]), ConfirmOrderContr
 router.get('/history', authVerification([UserRole.USER, UserRole.ADMIN]), GetOrdersByUserIdController(OrderRepo));
 router.get('/get-order/:id', authVerification([UserRole.USER, UserRole.ADMIN]), GetOrderController(OrderRepo));
 
-router.get('/', authVerification([UserRole.ADMIN]), GetAllOrdersPageController(OrderRepo));
+router.post('/', authVerification([UserRole.ADMIN]), GetAllOrdersPageController(OrderRepo));
 router.put('/:id', authVerification([UserRole.ADMIN]), UpdateOrderController(OrderRepo));
 router.delete('/:id', authVerification([UserRole.ADMIN]), DeleteOrderController(OrderRepo));
 

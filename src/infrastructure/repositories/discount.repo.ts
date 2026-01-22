@@ -13,14 +13,11 @@ import {
 import { applyPaginationAndFilters } from "../helper/pagination.helper";
 import { wrapTransaction } from "../helper/transaction";
 import { Discount } from "../orm/entities/discount";
-
 export const DiscountRepo: DiscountRepoPort = {
   CreateDiscount: async (
     em: EntityManager,
     data: AddDiscountModel
   ): Promise<boolean> => {
-    console.log(data);
-
     const discountRepo = em.getRepository(Discount);
     const newDiscount = discountRepo.create({
       active_flag: data.active_flag,
@@ -60,7 +57,8 @@ export const DiscountRepo: DiscountRepoPort = {
         "discount.discount_start_date AS discount_start_date",
         "discount.active_flag AS active_flag",
       ])
-      .getRawMany();
+      .getRawMany<GetDiscountModel>();
+
     return discounts as GetDiscountModel[];
   },
 
@@ -82,8 +80,36 @@ export const DiscountRepo: DiscountRepoPort = {
         "discount.discount_start_date AS discount_start_date",
         "discount.active_flag AS active_flag",
       ]);
+    const cqm = em
+      .getRepository(Discount)
+      .createQueryBuilder("discount")
+      .groupBy("discount.discount_id")
 
-    return applyPaginationAndFilters<Discount, GetDiscountModel>(DiscountBuilder, data);
+    return applyPaginationAndFilters<Discount, GetDiscountModel>(
+      DiscountBuilder,
+      cqm,
+      data,
+      [
+        "discount.discount_id",
+        "discount.discount_name",
+        "discount.discount_code",
+        "discount.discount_type",
+        "discount.discount_amount",
+        "discount.duration",
+        "discount.description",
+        "discount.discount_start_date",
+        "discount.active_flag",
+        "discount_id",
+        "discount_name",
+        "discount_code",
+        "discount_type",
+        "discount_amount",
+        "duration",
+        "description",
+        "discount_start_date",
+        "active_flag"
+      ]
+    );
   },
 
   GetDiscountByCode: async (

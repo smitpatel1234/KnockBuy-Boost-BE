@@ -27,4 +27,9 @@ export const ENV = {
   PassWordSalt: loadAsNumber(process.env.saltRounds),
   REFRESH_TOKEN_EXPIRESIN: loadAsNumber(process.env.refresh_token_expiresIn),
   SERVER_PORT: loadAsNumber(process.env.PORT),
+  MAIL_SERVICE: loadAsString(process.env.MAIL_SERVICE),
+  SMTP_HOST: loadAsString(process.env.SMTP_HOST),
+  USER_EMAIL: loadAsString(process.env.USER_EMAIL),
+  EMAIL_PASSWORD: loadAsString(process.env.EMAIL_PASSWORD),
+  COMPANY_NAME: loadAsString(process.env.COMPANY_NAME),
 }

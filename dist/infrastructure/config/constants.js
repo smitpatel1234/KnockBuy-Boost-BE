@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.StatusCodes = void 0;
+exports.MailServices = exports.SocketEvents = exports.StatusCodes = void 0;
 var StatusCodes;
 (function (StatusCodes) {
     /**
@@ -332,3 +332,16 @@ var StatusCodes;
      */
     StatusCodes[StatusCodes["NETWORK_AUTHENTICATION_REQUIRED"] = 511] = "NETWORK_AUTHENTICATION_REQUIRED";
 })(StatusCodes || (exports.StatusCodes = StatusCodes = {}));
+var SocketEvents;
+(function (SocketEvents) {
+    SocketEvents["CONNECTION"] = "connection";
+    SocketEvents["DISCONNECT"] = "disconnect";
+    SocketEvents["NOTIFICATION"] = "notification";
+})(SocketEvents || (exports.SocketEvents = SocketEvents = {}));
+var MailServices;
+(function (MailServices) {
+    MailServices["GMAIL"] = "gmail";
+    MailServices["YAHOO"] = "yahoo";
+    MailServices["OUTLOOK"] = "outlook365";
+    MailServices["HOTMAIL"] = "hotmail";
+})(MailServices || (exports.MailServices = MailServices = {}));

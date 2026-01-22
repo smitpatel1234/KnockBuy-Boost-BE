@@ -23,7 +23,6 @@ export const ConfirmOrderController = (OrderRepo: OrderRepoPort) => {
                 payment_method,
                 user_id
             });
-
             successmessage(res, "Order confirmed successfully");
         });
 };

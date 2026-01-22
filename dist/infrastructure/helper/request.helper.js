@@ -3,6 +3,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.parsePaginationParams = parsePaginationParams;
 exports.parseSearchPaginationParams = parseSearchPaginationParams;
 function parsePaginationParams(req) {
+    if (req.body && (req.body.pagination || req.body.filters || req.body.sort)) {
+        const { pagination, filters, sort } = req.body;
+        return {
+            pagination: {
+                page: Number(pagination?.page) || 1,
+                limit: Number(pagination?.limit) || 10,
+            },
+            filters: Array.isArray(filters) ? filters : [],
+            sort: Array.isArray(sort) ? sort : [],
+        };
+    }
     const { filters, limit, page, sort } = req.query;
     const parsedPage = parseInt(page) || 1;
     const parsedLimit = parseInt(limit) || 10;
@@ -32,6 +43,17 @@ function parsePaginationParams(req) {
     };
 }
 function parseSearchPaginationParams(req) {
+    if (req.body && (req.body.pagination || req.body.filters || req.body.sort)) {
+        const { pagination, filters, sort } = req.body;
+        return {
+            pagination: {
+                page: Number(pagination?.page) || 1,
+                limit: Number(pagination?.limit) || 10,
+            },
+            filters: Array.isArray(filters) ? filters : [],
+            sort: Array.isArray(sort) ? sort : [],
+        };
+    }
     const { filters, limit, page, sort } = req.query;
     const parsedPage = parseInt(page) || 1;
     const parsedLimit = parseInt(limit) || 10;

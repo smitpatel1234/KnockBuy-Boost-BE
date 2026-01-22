@@ -39,7 +39,7 @@ exports.VariantRepo = {
     },
     deleteItemVariantMapping: async (em, item_id) => {
         const value = await em.delete(item_variantVlaue_mapping_1.ItemVariantValueMapping, {
-            item_id: item_id,
+            item: { item_id: item_id },
         });
         return (value.affected ?? 0) > 0;
     },
@@ -84,7 +84,20 @@ exports.VariantRepo = {
             "vp.variantProperty_id AS variantProperty_id",
             "vp.property_name AS property_name",
         ]);
-        return (0, pagination_helper_1.applyPaginationAndFilters)(qb, data);
+        const cqb = em
+            .getRepository(variantValues_1.VariantValues)
+            .createQueryBuilder("vv")
+            .groupBy("vv.variantValue_id");
+        return (0, pagination_helper_1.applyPaginationAndFilters)(qb, cqb, data, [
+            "vv.variantValue_id",
+            "vv.variant_value",
+            "vp.variantProperty_id",
+            "vp.property_name",
+            "variantValue_id",
+            "variant_value",
+            "variantProperty_id",
+            "property_name"
+        ]);
     },
     getAllVariantProperties: async (em) => {
         const data = await em.find(variantPropertys_1.VariantPropertys);

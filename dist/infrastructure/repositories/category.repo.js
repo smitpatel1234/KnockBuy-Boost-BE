@@ -58,7 +58,23 @@ exports.CategoryRepo = {
             "parent.category_id AS parent_category_id",
             "parent.category_name AS parent_category_name",
         ]);
-        return (0, pagination_helper_1.applyPaginationAndFilters)(qb, data);
+        const cqb = em
+            .getRepository(category_1.Category)
+            .createQueryBuilder("category")
+            .groupBy("category.category_id");
+        return (0, pagination_helper_1.applyPaginationAndFilters)(qb, cqb, data, [
+            "category.category_id",
+            "category.category_name",
+            "category.image_url",
+            "category.description",
+            "parent.category_id",
+            "parent.category_name",
+            "category_id",
+            "category_name",
+            "image_url",
+            "description",
+            "parent_category_name"
+        ]);
     },
     updateCategory: async (em, input) => {
         const categoryRepo = em.getRepository(category_1.Category);
@@ -86,6 +102,23 @@ exports.CategoryRepo = {
         existing.image_url = input.image_url;
         await categoryRepo.save(existing);
         return true;
+    },
+    searchCategoriesByName: async (em, query) => {
+        return em
+            .getRepository(category_1.Category)
+            .createQueryBuilder("child")
+            .leftJoin(category_1.Category, "parent", "parent.category_id = child.parentCategory")
+            .select([
+            "child.category_id AS category_id",
+            "child.category_name AS category_name",
+            "child.image_url AS image_url",
+            "child.description AS description",
+            "parent.category_id AS parent_category_id",
+            "parent.category_name AS parent_category_name",
+        ])
+            .where("child.category_name LIKE CONCAT('%', :query, '%')", { query })
+            .limit(5)
+            .getRawMany();
     },
     wrapTransaction: transaction_1.wrapTransaction,
 };

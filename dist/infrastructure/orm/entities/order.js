@@ -73,6 +73,10 @@ __decorate([
     __metadata("design:type", Number)
 ], Order.prototype, "total_amount", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ type: 'tinyint', default: 1 }),
+    __metadata("design:type", Number)
+], Order.prototype, "isNew", void 0);
+__decorate([
     (0, typeorm_1.JoinColumn)({ name: 'user_id' }),
     (0, typeorm_1.ManyToOne)(() => user_1.User),
     __metadata("design:type", Object)

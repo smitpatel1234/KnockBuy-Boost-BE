@@ -8,7 +8,7 @@ export const search_items = async (
     em: EntityManager,
     data: searchPageParams,
     itemRepo: ItemRepoPort
-): Promise<PaginationResponse<GetItemModel>> => {
+): Promise<PaginationResponse<Partial<GetItemModel>>> => {
 
     return await itemRepo.searchItems(em, data);
 };

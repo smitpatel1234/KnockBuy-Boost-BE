@@ -47,6 +47,9 @@ export class Order {
 	@Column({ nullable: true, precision: 12, scale: 2, type: 'decimal' })
 	total_amount?: number
 
+	@Column({ type:'tinyint', default: 1})
+	isNew?: number
+
 	@JoinColumn({ name: 'user_id' })
 	@ManyToOne(() => User)
 	user!: Relation<User>

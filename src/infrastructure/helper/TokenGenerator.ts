@@ -63,11 +63,8 @@ export const regenerateToken = (refresh_token: string) => {
     const newPayload: Partial<MYJwtPayload> = { ...decoded };
     delete newPayload.exp;
     delete newPayload.iat;
-
     const newToken = accessTokengenrator(newPayload as MYJwtPayload);
-
     const decoded1 = (decodedToken(newToken)) as MYJwtPayload;
-
     return {
       accesstoken: newToken,
       expIN: decoded1.exp

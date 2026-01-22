@@ -22,5 +22,5 @@ router.delete('/delete-user', (0, authvarification_1.authVerification)([User_mod
 router.get('/get-user/:id', (0, authvarification_1.authVerification)([]), (0, getuser_controller_1.getUserController)(credentials_and_user_manage_repo_1.UserAndCredentialsRepo));
 router.get('/get-user/', (0, authvarification_1.authVerification)([User_models_1.UserRole.USER]), (0, getuserprofile_controller_1.getUserProfileController)(credentials_and_user_manage_repo_1.UserAndCredentialsRepo));
 router.get('/get-all-user', (0, authvarification_1.authVerification)([]), (0, getalluser_controller_1.getAllUserController)(credentials_and_user_manage_repo_1.UserAndCredentialsRepo));
-router.get('/get-all-user-page', (0, authvarification_1.authVerification)([]), (0, getalluserpage_controller_1.getAllUserPageController)(credentials_and_user_manage_repo_1.UserAndCredentialsRepo));
+router.post('/get-all-user-page', (0, authvarification_1.authVerification)([]), (0, getalluserpage_controller_1.getAllUserPageController)(credentials_and_user_manage_repo_1.UserAndCredentialsRepo));
 exports.default = router;

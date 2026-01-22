@@ -69,7 +69,7 @@ export const VariantRepo: VariantRepoPort = {
     item_id: string
   ): Promise<boolean> => {
     const value = await em.delete(ItemVariantValueMapping, {
-      item_id: item_id,
+      item: { item_id: item_id },
     });
     return (value.affected ?? 0) > 0;
   },
@@ -123,11 +123,28 @@ export const VariantRepo: VariantRepoPort = {
         "vp.variantProperty_id AS variantProperty_id",
         "vp.property_name AS property_name",
       ]);
-
+    const cqb = em
+      .getRepository(VariantValues)
+      .createQueryBuilder("vv")
+      .groupBy("vv.variantValue_id")
     return applyPaginationAndFilters<
       VariantValues,
       VariantValueModelWithvariantProperty
-    >(qb, data);
+    >(
+      qb,
+      cqb,
+      data,
+      [
+        "vv.variantValue_id",
+        "vv.variant_value",
+        "vp.variantProperty_id",
+        "vp.property_name",
+        "variantValue_id",
+        "variant_value",
+        "variantProperty_id",
+        "property_name"
+      ]
+    );
   },
 
   getAllVariantProperties: async (
@@ -174,7 +191,7 @@ export const VariantRepo: VariantRepoPort = {
         "item.rating AS rating",
         "item.sku AS sku",
         "item.stock AS stock",
-         "item.slug AS slug",
+        "item.slug AS slug",
       ])
       .where("vc.main_item = :itemId", { itemId: item_id })
       .addSelect((subQuery) => {
@@ -200,6 +217,7 @@ export const VariantRepo: VariantRepoPort = {
           variantValue: { variantValue_id: v.variantValue_id },
         })
       );
+
       await mappingRepo.save(mappings);
     }
   },

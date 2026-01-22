@@ -10,6 +10,7 @@ export interface OrderAllType {
   total_amount?: number;
   user?:UserProfile
   username?: string;
+  isNew?:number
 }
 
 export interface PlaceOrder {

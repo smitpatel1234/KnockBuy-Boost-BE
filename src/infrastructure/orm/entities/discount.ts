@@ -20,7 +20,7 @@ export class Discount {
 	@Column({ length: 255, nullable: false, type: 'varchar' })
 	discount_name!: string
 
-	@Column({ nullable: true, type: 'timestamp' })
+	@Column({ nullable: true, type: 'date' })
 	discount_start_date?: Date
 
 	@Column({ length: 20, nullable: true, type: 'varchar' })

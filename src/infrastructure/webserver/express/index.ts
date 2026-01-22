@@ -14,9 +14,14 @@ import { GlobelErrorHandler } from '../../helper/middleware/GlobelErrorHandler';
 // import passport from '../../helper/passportStrategy';
 import { AppDataSource } from '../../orm/config/ormconfig';
 import { createRoutes } from './routes';
-export const app = express();
+import {SocketService }from '../../helper/socket/socket';
+import { createServer } from 'http';
 
+export const app = express();
+const httpServer = createServer(app);
 createLoggerInstance();
+
+
 
 AppDataSource.initialize().then(() => {
   console.log('Data Source has been initialized!');
@@ -29,6 +34,7 @@ app.use(cors({
   origin: 'http://localhost:3000'
 }));
 app.use(cookieParser());
+
 //app.use(passport.initialize());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -48,7 +54,9 @@ app.use((req, res, next) => {
   })
   GlobelErrorHandler(notFoundError, req, res, next)
 })
+const socketService = new SocketService(httpServer);
+socketService.initialize();
 
-app.listen(5000, () => logger.info('Server running on port 5000 http://localhost:5000/api-docs'));
+httpServer.listen(5000, () => logger.info('Server running on port 5000 http://localhost:5000/api-docs'));
 
 

@@ -19,7 +19,10 @@ const GlobelErrorHandler_1 = require("../../helper/middleware/GlobelErrorHandler
 // import passport from '../../helper/passportStrategy';
 const ormconfig_1 = require("../../orm/config/ormconfig");
 const routes_1 = require("./routes");
+const socket_1 = require("../../helper/socket/socket");
+const http_1 = require("http");
 exports.app = (0, express_1.default)();
+const httpServer = (0, http_1.createServer)(exports.app);
 (0, logger_2.createLoggerInstance)();
 ormconfig_1.AppDataSource.initialize().then(() => {
     console.log('Data Source has been initialized!');
@@ -50,4 +53,6 @@ exports.app.use((req, res, next) => {
     });
     (0, GlobelErrorHandler_1.GlobelErrorHandler)(notFoundError, req, res, next);
 });
-exports.app.listen(5000, () => logger_1.logger.info('Server running on port 5000 http://localhost:5000/api-docs'));
+const socketService = new socket_1.SocketService(httpServer);
+socketService.initialize();
+httpServer.listen(5000, () => logger_1.logger.info('Server running on port 5000 http://localhost:5000/api-docs'));

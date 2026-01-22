@@ -105,7 +105,7 @@ export const ItemRepo: ItemRepoPort = {
         "item.stock AS stock",
         "item.description AS description",
         "item.slug AS slug",
-      ])
+      ]).groupBy('item.item_id')
       .addSelect((subQuery) => {
         return subQuery
           .select("image.image_URL")
@@ -113,10 +113,33 @@ export const ItemRepo: ItemRepoPort = {
           .where("image.items_id = item.item_id")
           .limit(1);
       }, "image_url");
-
+    const CItemBuilders = em
+      .getRepository(Item)
+      .createQueryBuilder("item")
     return await applyPaginationAndFilters<Item, GetItemModel>(
       ItemBuilders,
-      data
+      CItemBuilders,
+      data,
+      [
+        "item.item_id",
+        "item.item_name",
+        "item.item_price",
+        "category.category_id",
+        "category.category_name",
+        "item.rating",
+        "item.sku",
+        "item.stock",
+        "item.description",
+        "item.slug",
+        "image_url",
+        "item_name",
+        "item_price",
+        "rating",
+        "sku",
+        "stock",
+        "description",
+        "slug"
+      ]
     );
   },
 
@@ -196,8 +219,36 @@ export const ItemRepo: ItemRepoPort = {
           .limit(1);
       }, "image_url")
       .distinct(true);
-
-    return await applySearchAndFilters<Item, GetItemModel>(queryBuilder, data);
+    const CaqueryBuilder = em
+      .getRepository(Item)
+      .createQueryBuilder("item")
+      .select(['max(item.price) as max_price', 'min(item.price) as min_price'])
+      const max_min = await CaqueryBuilder.getRawOne();
+      console.log(max_min);
+    return await applySearchAndFilters<Item, GetItemModel>(
+      queryBuilder,
+      CaqueryBuilder,
+      data,
+      [
+        "item.item_id",
+        "item.item_name",
+        "item.item_price",
+        "category.category_id",
+        "category.category_name",
+        "item.rating",
+        "item.sku",
+        "item.stock",
+        "item.description",
+        "item.slug",
+        "image_url",
+        "item_name",
+        "item_price",
+        "rating",
+        "sku",
+        "stock",
+        "description",
+        "slug"
+      ]);
   },
 
   UpdateItem: async (em: EntityManager, data: ItemModel): Promise<boolean> => {
@@ -245,6 +296,32 @@ export const ItemRepo: ItemRepoPort = {
       .getRepository(Item)
       .findOneOrFail({ where: { item_id: item_id } });
     return item.stock >= quantity;
+  },
+  searchItemsByName: async (
+    em: EntityManager,
+    query: string
+  ): Promise<GetItemModel[]> => {
+    const items = await em
+      .getRepository(Item)
+      .createQueryBuilder("item")
+      .leftJoin("item.category", "category")
+      .select([
+        "item.item_id AS item_id",
+        "item.item_name AS item_name",
+        "item.item_price AS item_price",
+        "category.category_id AS category_id",
+        "category.category_name AS category_name",
+        "item.rating AS rating",
+        "item.sku AS sku",
+        "item.stock AS stock",
+        "item.description AS description",
+        "item.slug AS slug",
+      ])
+      .where("item.item_name LIKE CONCAT('%', :query, '%')", { query })
+      .orWhere("item.description LIKE CONCAT('%', :query, '%')", { query })
+      .limit(5)
+      .getRawMany<GetItemModel>();
+    return items;
   },
   wrapTransaction: wrapTransaction,
 };

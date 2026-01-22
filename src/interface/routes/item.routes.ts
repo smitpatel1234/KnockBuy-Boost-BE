@@ -5,6 +5,7 @@ import { authVerification } from "../../infrastructure/helper/middleware/authvar
 import { validateDetails } from "../../infrastructure/helper/validator";
 import { ItemRepo } from "../../infrastructure/repositories/item.repo";
 import { VariantRepo } from "../../infrastructure/repositories/variant.repo";
+import { CategoryRepo } from "../../infrastructure/repositories/category.repo";
 import {
     createItemController,
     deleteItemController,
@@ -12,7 +13,8 @@ import {
     getAllItemsPageController,
     getItemController,
     searchItemsController,
-    updateItemController
+    updateItemController,
+    searchSuggestionsController
 } from "../controllers/item";
 
 const router = express.Router();
@@ -23,9 +25,10 @@ router.delete('/delete-item', authVerification([]), validateDetails(ItemIdSchema
 router.get('/get-item/:id', getItemController(ItemRepo, VariantRepo));
 router.get('/get-item/slug/:slug', getItemController(ItemRepo, VariantRepo));
 router.get('/get-all-items', getAllItemsController(ItemRepo));
-router.get('/get-all-items-page', getAllItemsPageController(ItemRepo));
-router.get('/public/get-all-items-page', getAllItemsPageController(ItemRepo));
-router.get('/public/search-items', searchItemsController(ItemRepo));
+router.post('/get-all-items-page', getAllItemsPageController(ItemRepo));
+router.post('/public/get-all-items-page', getAllItemsPageController(ItemRepo));
+router.post('/public/search-items', searchItemsController(ItemRepo));
+router.get('/public/search-suggestions', searchSuggestionsController(ItemRepo, CategoryRepo));
 
 
 export default router;

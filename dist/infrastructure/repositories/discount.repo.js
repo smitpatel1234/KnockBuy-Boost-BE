@@ -6,7 +6,6 @@ const transaction_1 = require("../helper/transaction");
 const discount_1 = require("../orm/entities/discount");
 exports.DiscountRepo = {
     CreateDiscount: async (em, data) => {
-        console.log(data);
         const discountRepo = em.getRepository(discount_1.Discount);
         const newDiscount = discountRepo.create({
             active_flag: data.active_flag,
@@ -63,7 +62,30 @@ exports.DiscountRepo = {
             "discount.discount_start_date AS discount_start_date",
             "discount.active_flag AS active_flag",
         ]);
-        return (0, pagination_helper_1.applyPaginationAndFilters)(DiscountBuilder, data);
+        const cqm = em
+            .getRepository(discount_1.Discount)
+            .createQueryBuilder("discount")
+            .groupBy("discount.discount_id");
+        return (0, pagination_helper_1.applyPaginationAndFilters)(DiscountBuilder, cqm, data, [
+            "discount.discount_id",
+            "discount.discount_name",
+            "discount.discount_code",
+            "discount.discount_type",
+            "discount.discount_amount",
+            "discount.duration",
+            "discount.description",
+            "discount.discount_start_date",
+            "discount.active_flag",
+            "discount_id",
+            "discount_name",
+            "discount_code",
+            "discount_type",
+            "discount_amount",
+            "duration",
+            "description",
+            "discount_start_date",
+            "active_flag"
+        ]);
     },
     GetDiscountByCode: async (em, code) => {
         const discount = await em.getRepository(discount_1.Discount).findOne({

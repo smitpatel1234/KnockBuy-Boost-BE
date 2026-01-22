@@ -6,7 +6,7 @@ export const AddDiscountSchema = z.object({
     discount_amount: z.number().min(1, "Discount amount must be positive"),
     discount_code: z.string().min(1, "Discount code is required"),
     discount_name: z.string().min(1, "Discount name is required"),
-    discount_start_date: z.string().or(z.date()).transform((val) => new Date(val)).optional(),
+    discount_start_date: z.iso.date(),
     discount_type: z.enum(["percentage", "flat"]),
     duration: z.number().optional()
 });

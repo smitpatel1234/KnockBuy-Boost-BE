@@ -19,6 +19,6 @@ router.delete('/delete-user', authVerification([UserRole.USER]), validateDetails
 router.get('/get-user/:id', authVerification([]), getUserController(UserAndCredentialsRepo));
 router.get('/get-user/', authVerification([UserRole.USER]), getUserProfileController(UserAndCredentialsRepo));
 router.get('/get-all-user', authVerification([]), getAllUserController(UserAndCredentialsRepo));
-router.get('/get-all-user-page', authVerification([]), getAllUserPageController(UserAndCredentialsRepo));
+router.post('/get-all-user-page', authVerification([]), getAllUserPageController(UserAndCredentialsRepo));
 
 export default router;

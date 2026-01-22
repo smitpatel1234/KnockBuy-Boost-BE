@@ -76,7 +76,7 @@ router.delete(
   deleteVariantValueController(VariantRepo)
 );
 
-router.get(
+router.post(
   "/get-all-variant-values-page",
   authVerification([]),
   getAllVariantValuePageController(VariantRepo)

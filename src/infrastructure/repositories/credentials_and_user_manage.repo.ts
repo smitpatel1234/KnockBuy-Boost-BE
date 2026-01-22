@@ -60,12 +60,24 @@ export const UserAndCredentialsRepo: UserAndCredentialsRepoPort = {
     data: pageParams
   ): Promise<PaginationResponse<UserProfile>> => {
     const userQB = entityManager.getRepository(User).createQueryBuilder("user");
+    const CuserQB = entityManager.getRepository(User).createQueryBuilder("user").groupBy("user.user_id");
 
     userQB.select(["user.user_id", "user.username", "user.email", "user.phone_number"]);
 
     return applyPaginationAndFilters<User, UserProfile>(
       userQB,
+      CuserQB,
       data,
+      [
+        "user.user_id",
+        "user.username",
+        "user.email",
+        "user.phone_number",
+        "user_id",
+        "username",
+        "email",
+        "phone_number"
+      ],
       false
     );
   },
