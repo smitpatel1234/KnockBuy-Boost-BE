@@ -15,7 +15,6 @@ export const updateItemController = (itemRepo: ItemRepoPort) => {
   return async (req: AuthRequest<ItemModel>, res: Express.Response) =>
     itemRepo.wrapTransaction(async (t: EntityManager) => {
       const data = req.body;
-      console.log("data in controller", data);
       const IsUpdated = await update_item(t, data, itemRepo);
       if (!IsUpdated)
         throw new ApplicationError(

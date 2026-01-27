@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn,DeleteDateColumn } from "typeorm";
+import { Column, DeleteDateColumn, Entity,PrimaryGeneratedColumn } from "typeorm";
 
 import { BooleanTransformer } from "../Transformer/numbertoboolean";
 @Entity()
@@ -6,8 +6,11 @@ export class Discount {
 	@Column({ default: false, nullable: true, transformer:new BooleanTransformer() , type: 'tinyint' })
 	active_flag?: 0|1
 
+	@DeleteDateColumn()
+	deletedAt?: Date;
 	@Column({ length: 255, nullable: true, type: 'varchar' })
 	description?: string
+
 	@Column({ nullable: true, type: 'float'  })
 	discount_amount?: number
 
@@ -22,13 +25,10 @@ export class Discount {
 
 	@Column({ nullable: true, type: 'date' })
 	discount_start_date?: Date
-
+    
 	@Column({ length: 20, nullable: true, type: 'varchar' })
 	discount_type?: "flat" | "percentage"
-    
 	@Column({ nullable: true, type: 'int' })
 	duration?: number
-	@DeleteDateColumn()
-	deletedAt?: Date;
 }
 

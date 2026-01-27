@@ -3,9 +3,9 @@ import express from "express";
 import { AddItemSchema, ItemIdSchema, UpdateItemSchema } from "../../domain/schemas/item";
 import { authVerification } from "../../infrastructure/helper/middleware/authvarification";
 import { validateDetails } from "../../infrastructure/helper/validator";
+import { CategoryRepo } from "../../infrastructure/repositories/category.repo";
 import { ItemRepo } from "../../infrastructure/repositories/item.repo";
 import { VariantRepo } from "../../infrastructure/repositories/variant.repo";
-import { CategoryRepo } from "../../infrastructure/repositories/category.repo";
 import {
     createItemController,
     deleteItemController,
@@ -13,8 +13,8 @@ import {
     getAllItemsPageController,
     getItemController,
     searchItemsController,
-    updateItemController,
-    searchSuggestionsController
+    searchSuggestionsController,
+    updateItemController
 } from "../controllers/item";
 
 const router = express.Router();

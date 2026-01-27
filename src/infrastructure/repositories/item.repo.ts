@@ -1,4 +1,6 @@
+/* eslint-disable max-lines-per-function, max-lines */
 import { EntityManager } from "typeorm";
+
 import { ItemRepoPort } from "../../application/port/item-repo.port";
 import {
   pageParams,
@@ -8,9 +10,9 @@ import {
 import {
   AddItemModel,
   GetItemModel,
+  // images as ImageType,
   ItemModel,
-  images as ImageType,
-  VariantCollectionForOneItem,
+  // VariantCollectionForOneItem,
 } from "../../domain/models/item.models";
 import {
   applyPaginationAndFilters,
@@ -18,8 +20,8 @@ import {
 } from "../helper/pagination.helper";
 import { wrapTransaction } from "../helper/transaction";
 import { Category } from "../orm/entities/category";
-import { Item } from "../orm/entities/item";
 import { Image } from "../orm/entities/image";
+import { Item } from "../orm/entities/item";
 import { VariantRepo } from "./variant.repo";
 export const ItemRepo: ItemRepoPort = {
   CreateItem: async (
@@ -185,6 +187,17 @@ export const ItemRepo: ItemRepoPort = {
 
   },
 
+  ISItemInStock: async (
+    em: EntityManager,
+    item_id: string,
+    quantity: number
+  ) => {
+    const item = await em
+      .getRepository(Item)
+      .findOneOrFail({ where: { item_id: item_id } });
+    return item.stock >= quantity;
+  },
+
   searchItems: async (
     em: EntityManager,
     data: searchPageParams
@@ -199,6 +212,7 @@ export const ItemRepo: ItemRepoPort = {
         "mapping.item_id = item.item_id"
       )
       .leftJoin("mapping.variantValue", "variantValue")
+      .leftJoin("variantValue.variantProperty", "variantProperty")
       .select([
         "item.item_id AS item_id",
         "item.item_name AS item_name",
@@ -210,6 +224,9 @@ export const ItemRepo: ItemRepoPort = {
         "item.stock AS stock",
         "item.description AS description",
         "item.slug AS slug",
+        "variantValue.variantValue_id AS variantValue_id",
+        "variantValue.variant_value AS variant_value",
+        "variantProperty.property_name AS property_name",
       ])
       .addSelect((subQuery) => {
         return subQuery
@@ -222,9 +239,8 @@ export const ItemRepo: ItemRepoPort = {
     const CaqueryBuilder = em
       .getRepository(Item)
       .createQueryBuilder("item")
-      .select(['max(item.price) as max_price', 'min(item.price) as min_price'])
-      const max_min = await CaqueryBuilder.getRawOne();
-      console.log(max_min);
+      .leftJoin("item.category", "category")
+
     return await applySearchAndFilters<Item, GetItemModel>(
       queryBuilder,
       CaqueryBuilder,
@@ -247,10 +263,36 @@ export const ItemRepo: ItemRepoPort = {
         "sku",
         "stock",
         "description",
-        "slug"
+        "slug",
+        "variantValue.value"
       ]);
   },
-
+  searchItemsByName: async (
+    em: EntityManager,
+    query: string
+  ): Promise<GetItemModel[]> => {
+    const items = await em
+      .getRepository(Item)
+      .createQueryBuilder("item")
+      .leftJoin("item.category", "category")
+      .select([
+        "item.item_id AS item_id",
+        "item.item_name AS item_name",
+        "item.item_price AS item_price",
+        "category.category_id AS category_id",
+        "category.category_name AS category_name",
+        "item.rating AS rating",
+        "item.sku AS sku",
+        "item.stock AS stock",
+        "item.description AS description",
+        "item.slug AS slug",
+      ])
+      .where("item.item_name LIKE CONCAT('%', :query, '%')", { query })
+      .orWhere("item.description LIKE CONCAT('%', :query, '%')", { query })
+      .limit(5)
+      .getRawMany<GetItemModel>();
+    return items;
+  },
   UpdateItem: async (em: EntityManager, data: ItemModel): Promise<boolean> => {
     const itemRepo = em.getRepository(Item);
     const existing = await itemRepo.findOneBy({ item_id: data.item_id });
@@ -286,42 +328,6 @@ export const ItemRepo: ItemRepoPort = {
       }
     }
     return true;
-  },
-  ISItemInStock: async (
-    em: EntityManager,
-    item_id: string,
-    quantity: number
-  ) => {
-    const item = await em
-      .getRepository(Item)
-      .findOneOrFail({ where: { item_id: item_id } });
-    return item.stock >= quantity;
-  },
-  searchItemsByName: async (
-    em: EntityManager,
-    query: string
-  ): Promise<GetItemModel[]> => {
-    const items = await em
-      .getRepository(Item)
-      .createQueryBuilder("item")
-      .leftJoin("item.category", "category")
-      .select([
-        "item.item_id AS item_id",
-        "item.item_name AS item_name",
-        "item.item_price AS item_price",
-        "category.category_id AS category_id",
-        "category.category_name AS category_name",
-        "item.rating AS rating",
-        "item.sku AS sku",
-        "item.stock AS stock",
-        "item.description AS description",
-        "item.slug AS slug",
-      ])
-      .where("item.item_name LIKE CONCAT('%', :query, '%')", { query })
-      .orWhere("item.description LIKE CONCAT('%', :query, '%')", { query })
-      .limit(5)
-      .getRawMany<GetItemModel>();
-    return items;
   },
   wrapTransaction: wrapTransaction,
 };

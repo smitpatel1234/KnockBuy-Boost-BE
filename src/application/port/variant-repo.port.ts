@@ -4,18 +4,18 @@ import {
   pageParams,
   PaginationResponse,
 } from "../../domain/globalTypes/commonFields";
+import { VariantCollectionForOneItem } from "../../domain/models/item.models";
+import { VariantForOneItem } from "../../domain/models/item.models"
 import {
   GetItemVariantValueMappingModel,
-  ItemVariantValueMappingModel,
-  VariantCollectionModel,
+  // ItemVariantValueMappingModel,
+  // VariantCollectionModel,
   VariantPropertyModel,
   VariantValueModel,
   VariantValueModelWithvariantProperty,
 } from "../../domain/models/Variant.models";
 import { VariantPropertys } from "../../infrastructure/orm/entities/variantPropertys";
 import { VariantValues } from "../../infrastructure/orm/entities/variantValues";
-import { VariantCollectionForOneItem } from "../../domain/models/item.models";
-import { VariantForOneItem } from "../../domain/models/item.models"
 export interface VariantRepoPort {
   createProperty: (
     em: EntityManager,
@@ -28,7 +28,7 @@ export interface VariantRepoPort {
 
   createVariantCollection: (
        em: EntityManager,
-    variant_collections: VariantCollectionForOneItem[] | undefined,
+    variant_collections: undefined | VariantCollectionForOneItem[],
     item_id:string
   ) => Promise<void>;
 
@@ -51,17 +51,17 @@ export interface VariantRepoPort {
 
   getAllVariantProperties: (em: EntityManager) => Promise<VariantPropertys[]>;
 
-  getItemVariantMappingForItem: (
-    em: EntityManager,
-    id: string
-  ) => Promise<GetItemVariantValueMappingModel[]>;
   getItemVariantCollectionForItem: (
     em: EntityManager,
     id: string
   ) => Promise<VariantCollectionForOneItem[]>;
+  getItemVariantMappingForItem: (
+    em: EntityManager,
+    id: string
+  ) => Promise<GetItemVariantValueMappingModel[]>;
   mapItemToVariantValue: (
     em: EntityManager,
-    variant: VariantForOneItem[]  | undefined,
+    variant: undefined  | VariantForOneItem[],
     item_id: string
   ) => Promise<void>;
 

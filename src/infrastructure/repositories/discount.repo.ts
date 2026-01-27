@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { EntityManager } from "typeorm";
 
 import { DiscountRepoPort } from "../../application/port/discount-repo.port";
@@ -59,7 +60,7 @@ export const DiscountRepo: DiscountRepoPort = {
       ])
       .getRawMany<GetDiscountModel>();
 
-    return discounts as GetDiscountModel[];
+    return discounts;
   },
 
   GetAllDiscountsPage: async (

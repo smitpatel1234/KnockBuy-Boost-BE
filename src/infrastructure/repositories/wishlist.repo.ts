@@ -9,28 +9,19 @@ export const WishlistRepo: WishlistRepoPort = {
   AddToWishlist: async (em, user_id, item_id) => {
     const exists = await em.getRepository(Wishlist).count({
       where: {
-        user: { user_id },
         item: { item_id },
+        user: { user_id },
       },
     });
 
     if (exists) return false;
 
     await em.getRepository(Wishlist).save({
-      user: { user_id },
       item: { item_id },
+      user: { user_id },
     });
 
     return true;
-  },
-
-  RemoveFromWishlist: async (em, user_id, item_id) => {
-    const result = await em.getRepository(Wishlist).delete({
-      user: { user_id },
-      item: { item_id },
-    });
-
-    return (result.affected ?? 0) > 0;
   },
 
   GetUserWishlist: async (
@@ -73,12 +64,21 @@ export const WishlistRepo: WishlistRepoPort = {
   IsItemInWishlist: async (em, user_id, item_id) => {
     const count = await em.getRepository(Wishlist).count({
       where: {
-        user: { user_id },
         item: { item_id },
+        user: { user_id },
       },
     });
 
     return count > 0;
+  },
+
+  RemoveFromWishlist: async (em, user_id, item_id) => {
+    const result = await em.getRepository(Wishlist).delete({
+      item: { item_id },
+      user: { user_id },
+    });
+
+    return (result.affected ?? 0) > 0;
   },
 
   wrapTransaction: wrapTransaction,

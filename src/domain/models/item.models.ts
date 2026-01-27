@@ -13,15 +13,6 @@ export interface AddItemModel {
   variant?: VariantForOneItem[];
   variant_collections?: VariantCollectionForOneItem[];
 }
-export interface VariantForOneItem {
-  variantProperty_id: string;
-  variantValue_id: string;
-}
-export interface VariantCollectionForOneItem {
-  item_id: string;
-  item_name: string;
-}
-
 export interface ForGetItemVariantCollection {
   category?: Category;
   category_id?: string;
@@ -38,7 +29,6 @@ export interface ForGetItemVariantCollection {
   variant?: VariantForOneItem[];
   variant_collections?: VariantCollectionForOneItem[];
 }
-
 export interface GetItemModel extends AddItemModel {
   category_name: string;
   image_id?: string;
@@ -57,4 +47,14 @@ export interface ItemModel extends AddItemModel {
   category_name?: string;
   item_id: string;
   slug: string;
+}
+
+export interface VariantCollectionForOneItem {
+  item_id: string;
+  item_name: string;
+}
+
+export interface VariantForOneItem {
+  variantProperty_id: string;
+  variantValue_id: string;
 }

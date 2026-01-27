@@ -25,16 +25,16 @@ export interface ItemRepoPort {
     id?: string,
     slug?: string
   ) => Promise<GetItemModel | undefined>;
-  searchItems: (
-    em: EntityManager,
-    data: searchPageParams
-  ) => Promise<PaginationResponse<Partial<GetItemModel>>>;
-  UpdateItem: (em: EntityManager, data: ItemModel) => Promise<boolean>;
   ISItemInStock: (
     em: EntityManager,
     item_id: string,
     quantity: number
   ) => Promise<boolean>;
+  searchItems: (
+    em: EntityManager,
+    data: searchPageParams
+  ) => Promise<PaginationResponse<Partial<GetItemModel>>>;
   searchItemsByName: (em: EntityManager, query: string) => Promise<GetItemModel[]>;
+  UpdateItem: (em: EntityManager, data: ItemModel) => Promise<boolean>;
   wrapTransaction: <T>(fun: (t: EntityManager) => Promise<T>) => Promise<T>;
 }

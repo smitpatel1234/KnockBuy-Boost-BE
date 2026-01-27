@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import cookieParser from "cookie-parser";
 import cors from 'cors';
 import express, { Express } from 'express';
+import { createServer } from 'http';
 import swaggerUi from 'swagger-ui-express'
 
 // import { swaggerUi, swaggerSpec } from "../../../swagger/swagger";
@@ -11,11 +12,10 @@ import { HttpError } from '../../helper/httpError';
 import { logger } from '../../helper/logger'
 import { createLoggerInstance } from '../../helper/logger';
 import { GlobelErrorHandler } from '../../helper/middleware/GlobelErrorHandler';
+import {SocketService }from '../../helper/socket/socket';
 // import passport from '../../helper/passportStrategy';
 import { AppDataSource } from '../../orm/config/ormconfig';
 import { createRoutes } from './routes';
-import {SocketService }from '../../helper/socket/socket';
-import { createServer } from 'http';
 
 export const app = express();
 const httpServer = createServer(app);

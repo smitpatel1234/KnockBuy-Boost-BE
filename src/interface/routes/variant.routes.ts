@@ -3,8 +3,6 @@ import express from "express";
 import {
   AddVarientPropertysSchema,
   AddVarientWithValuesSchema,
-  ItemVariantValueMappingId,
-  ItemVariantValueMappingSchema,
   VariantCollectionIdSchema,
   VarientPropertysID,
   VarientPropertysSchema,

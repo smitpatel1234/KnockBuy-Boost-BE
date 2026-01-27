@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function, max-lines, @typescript-eslint/no-misused-spread */
 import { EntityManager } from "typeorm";
 
 import { OrderRepoPort } from "../../application/port/order-repo.port";
@@ -10,6 +11,7 @@ import {
   PlaceOrder,
   UpdateOrderModel,
 } from "../../domain/models/order.models";
+import { UserProfile } from "../../domain/models/User.models";
 import {
   ApplicationError,
   ApplicationErrorType,
@@ -23,7 +25,6 @@ import { ItemCart } from "../orm/entities/item_cart";
 import { Order } from "../orm/entities/order";
 import { OrderItems } from "../orm/entities/order_items";
 import { User } from "../orm/entities/user";
-import { UserProfile } from "../../domain/models/User.models";
 
 export const OrderRepo: OrderRepoPort = {
   DeleteOrder: async (
@@ -89,8 +90,8 @@ export const OrderRepo: OrderRepoPort = {
         "discount",
         "address",
       ],
-      withDeleted: true,
       where: { order_id },
+      withDeleted: true,
     });
   
     await em.getRepository(Order).update({order_id},{isNew:0});
@@ -122,8 +123,8 @@ export const OrderRepo: OrderRepoPort = {
         "address",
 
       ],
-      withDeleted: true,
       where: { user: { user_id } },
+      withDeleted: true,
     });
   },
 

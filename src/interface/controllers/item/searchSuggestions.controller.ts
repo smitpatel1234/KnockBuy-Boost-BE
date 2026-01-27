@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { ItemRepoPort } from "../../../application/port/item-repo.port";
+
 import { CategoryRepoPort } from "../../../application/port/category-repo.port";
+import { ItemRepoPort } from "../../../application/port/item-repo.port";
 import { successmessage } from "../../../infrastructure/helper/displaymessage";
 
 export const searchSuggestionsController =
@@ -10,7 +11,7 @@ export const searchSuggestionsController =
                 const query = req.query.query as string;
 
                 if (!query || query.length < 1) {
-                    successmessage(res, "Success", { items: [], categories: [] });
+                    successmessage(res, "Success", { categories: [], items: [] });
                     return;
                 }
 
@@ -22,7 +23,7 @@ export const searchSuggestionsController =
                     categoryRepo.searchCategoriesByName(em, query)
                 );
 
-                successmessage(res, "Success", { items, categories });
+                successmessage(res, "Success", { categories, items });
             } catch (error) {
                 next(error);
             }

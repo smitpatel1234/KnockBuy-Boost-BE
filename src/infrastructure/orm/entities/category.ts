@@ -8,7 +8,6 @@ import {
 } from "typeorm";
 
 import { Item } from "./item";
-import { nullable } from "zod";
 @Entity()
 export class Category {
   @PrimaryGeneratedColumn("uuid")

@@ -80,14 +80,24 @@ async function applyPaginationAndFilters(queryBuilder, forConstraintsQueryBuilde
     const data = raw
         ? await queryBuilder.getRawMany()
         : await queryBuilder.getMany();
-    const constraintFilters = filters.filter((f) => f.isSearchByNumber || f.isSearchByDate);
-    console.log(constraintFilters);
-    let constraintsResult = [];
+    const constraintFilters = filters.filter((f) => f.isSearchByNumber ?? f.isSearchByDate);
+    const constraintsResult = [];
     for (const f of constraintFilters) {
-        constraintsResult.push(` max(${f.column}) as ${f.column}_max , min(${f.column}) as ${f.column}_min `);
+        constraintsResult.push(` max(${f.column}) as ${f.column}_max , min(${f.column}) as ${f.column}_min`);
     }
     const constraintsResultObject = await forConstraintsQueryBuilder
-        .select(constraintsResult).getRawOne();
+        .select(constraintsResult)
+        .getRawOne();
+    if (!constraintsResultObject) {
+        return { data: data,
+            meta: {
+                constraints: [],
+                limit: pagination.limit,
+                page: pagination.page,
+                total,
+                totalPages: Math.ceil(total / pagination.limit),
+            }, };
+    }
     const constraints = constraintFilters.map((f) => ({
         column: f.column,
         max: constraintsResultObject[`${f.column}_max`],
@@ -120,10 +130,29 @@ async function applySearchAndFilters(queryBuilder, forConstraintsQueryBuilder, p
     const data = raw
         ? await queryBuilder.getRawMany()
         : await queryBuilder.getMany();
+    // Apply filters to constraints query builder for price min/max
+    if (filters.length > 0)
+        applySearchFilters(forConstraintsQueryBuilder, filters, allowedColumns);
+    const constraintFilters = filters.filter((f) => f.isSearchByNumber ?? f.isSearchByDate);
+    const constraintsResult = [];
+    for (const f of constraintFilters) {
+        constraintsResult.push(` max(${f.column}) as ${f.column}_max , min(${f.column}) as ${f.column}_min`);
+    }
+    let constraintsResultObject = {};
+    if (constraintsResult.length > 0) {
+        constraintsResultObject =
+            (await forConstraintsQueryBuilder.select(constraintsResult).getRawOne()) ??
+                {};
+    }
+    const constraints = constraintFilters.map((f) => ({
+        column: f.column,
+        max: constraintsResultObject[`${f.column}_max`],
+        min: constraintsResultObject[`${f.column}_min`],
+    }));
     return {
         data: data,
         meta: {
-            constraints: [],
+            constraints: constraints,
             limit: pagination.limit,
             page: pagination.page,
             total,

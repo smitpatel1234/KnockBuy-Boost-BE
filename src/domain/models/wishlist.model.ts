@@ -1,19 +1,19 @@
 export interface WishlistItem {
-  wish_list_id: string;
+  category_id: string;
+
+  category_name?: string;
+  description: string;
+  image_url?: string;
 
   item_id: string;
   item_name: string;
+
   item_price: number;
-
-  category_id: string;
-  category_name?: string;
-
   rating?: number;
   sku?: string;
+
+  slug?: string;
   stock: number;
 
-  description: string;
-  slug?: string;
-
-  image_url?: string;
+  wish_list_id: string;
 }

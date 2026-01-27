@@ -8,6 +8,7 @@ const User_models_1 = require("../../domain/models/User.models");
 const auth_1 = require("../../domain/schemas/auth");
 const user_1 = require("../../domain/schemas/user");
 const authvarification_1 = require("../../infrastructure/helper/middleware/authvarification");
+const recaptchaTokenVerification_1 = require("../../infrastructure/helper/middleware/recaptchaTokenVerification");
 //import passport from "../../infrastructure/helper/passportStrategy"
 const validator_1 = require("../../infrastructure/helper/validator");
 // import { LoginUserInGoogleController } from '../controllers/auth/google.controller';
@@ -19,7 +20,7 @@ const register_controller_1 = require("../controllers/auth/register.controller")
 const router = express_1.default.Router();
 router.post('/register', (0, validator_1.validateDetails)(user_1.userCredentials), (0, register_controller_1.registerUserController)(credentials_and_user_manage_repo_1.UserAndCredentialsRepo));
 router.post('/refresh-token', (0, refresh_controller_1.refreshTokenController)(auth_repo_1.AuthRepo));
-router.post('/login', (0, validator_1.validateDetails)(auth_1.LoginCredentials), (0, login_out_controller_1.LoginUserController)(auth_repo_1.AuthRepo));
+router.post('/login', (0, recaptchaTokenVerification_1.recaptchaTokenVerification)(), (0, validator_1.validateDetails)(auth_1.LoginCredentials), (0, login_out_controller_1.LoginUserController)(auth_repo_1.AuthRepo));
 router.post('/logout', (0, authvarification_1.authVerification)([User_models_1.UserRole.USER]), (0, login_out_controller_1.LogoutUserController)(auth_repo_1.AuthRepo));
 // router.get('/google',
 //   passport.authenticate('google', {

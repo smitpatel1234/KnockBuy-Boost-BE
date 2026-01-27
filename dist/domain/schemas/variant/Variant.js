@@ -29,8 +29,8 @@ exports.AddVarientPropWithCollectionSchema = zod_1.z.object({
     varient_item_Id: user_1.IdField,
 });
 exports.VarientWithValuesSchema = zod_1.z.object({
-    variantProperty_id: user_1.IdField,
     variant_value: zod_1.z.string().max(100).min(1),
+    variantProperty_id: user_1.IdField,
     variantValue_id: user_1.IdField,
 });
 exports.VarientPropWithCollectionSchema = zod_1.z.object({

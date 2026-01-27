@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { EntityManager } from "typeorm";
 
 import { ItemRepoPort } from "../../port/item-repo.port";

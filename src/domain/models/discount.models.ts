@@ -14,11 +14,11 @@ export interface DiscountModel extends AddDiscountModel {
 }
 
 export interface GetDiscountModel  {
-    discount_id: string;
-        active_flag?: 0|1;
-    description?: string;
+    active_flag?: 0|1;
+        description?: string;
     discount_amount: number;
     discount_code: string;
+    discount_id: string;
     discount_name: string;
     discount_start_date?: Date | string ;
     discount_type: "flat" | "percentage";

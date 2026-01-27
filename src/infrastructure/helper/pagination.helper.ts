@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, max-lines-per-function, max-lines */
 import { SelectQueryBuilder } from "typeorm";
 
 import {
@@ -107,21 +108,36 @@ export async function applyPaginationAndFilters<
     : await queryBuilder.getMany();
 
   const constraintFilters = filters.filter(
-    (f) => f.isSearchByNumber || f.isSearchByDate,
+    (f) => f.isSearchByNumber ?? f.isSearchByDate,
   );
-  console.log(constraintFilters);
-  let constraintsResult: string[] = [];
+  const constraintsResult: string[] = [];
 
   for (const f of constraintFilters) {
-      constraintsResult.push(` max(${f.column}) as ${f.column}_max , min(${f.column}) as ${f.column}_min `);
+    constraintsResult.push(
+      ` max(${f.column}) as ${f.column}_max , min(${f.column}) as ${f.column}_min`
+    );
   }
+
   const constraintsResultObject = await forConstraintsQueryBuilder
-      .select(constraintsResult).getRawOne();
+    .select(constraintsResult)
+    .getRawOne();
+  if (!constraintsResultObject) {
+    return { data: data as unknown as T[],
+    meta: {
+      constraints: [],
+      limit: pagination.limit,
+      page: pagination.page,
+      total,
+      totalPages: Math.ceil(total / pagination.limit),
+    },};
+  }
+
   const constraints: MaxMinConstraints[] = constraintFilters.map((f) => ({
     column: f.column,
     max: constraintsResultObject[`${f.column}_max`],
     min: constraintsResultObject[`${f.column}_min`],
   }));
+
   return {
     data: data as unknown as T[],
     meta: {
@@ -157,10 +173,39 @@ export async function applySearchAndFilters<Entity extends object, T = Entity>(
   const data = raw
     ? await queryBuilder.getRawMany()
     : await queryBuilder.getMany();
+
+  // Apply filters to constraints query builder for price min/max
+  if (filters.length > 0)
+    applySearchFilters(forConstraintsQueryBuilder, filters, allowedColumns);
+
+  const constraintFilters = filters.filter(
+    (f) => f.isSearchByNumber ?? f.isSearchByDate,
+  );
+  const constraintsResult: string[] = [];
+
+  for (const f of constraintFilters) {
+    constraintsResult.push(
+      ` max(${f.column}) as ${f.column}_max , min(${f.column}) as ${f.column}_min`
+    );
+  }
+
+  let constraintsResultObject: Record<string, unknown> = {};
+  if (constraintsResult.length > 0) {
+    constraintsResultObject =
+      (await forConstraintsQueryBuilder.select(constraintsResult).getRawOne()) ??
+      {};
+  }
+
+  const constraints: MaxMinConstraints[] = constraintFilters.map((f) => ({
+    column: f.column,
+    max: constraintsResultObject[`${f.column}_max`] as   number | string,
+    min: constraintsResultObject[`${f.column}_min`] as number | string,
+  }));
+
   return {
     data: data as unknown as T[],
     meta: {
-      constraints: [],
+      constraints: constraints,
       limit: pagination.limit,
       page: pagination.page,
       total,

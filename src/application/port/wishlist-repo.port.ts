@@ -1,14 +1,9 @@
 import { EntityManager } from "typeorm";
+
 import { WishlistItem } from "../../domain/models/wishlist.model";
 
 export interface WishlistRepoPort {
   AddToWishlist: (
-    em: EntityManager,
-    user_id: string,
-    item_id: string
-  ) => Promise<boolean>;
-
-  RemoveFromWishlist: (
     em: EntityManager,
     user_id: string,
     item_id: string
@@ -20,6 +15,12 @@ export interface WishlistRepoPort {
   ) => Promise<WishlistItem[]>;
 
   IsItemInWishlist: (
+    em: EntityManager,
+    user_id: string,
+    item_id: string
+  ) => Promise<boolean>;
+
+  RemoveFromWishlist: (
     em: EntityManager,
     user_id: string,
     item_id: string

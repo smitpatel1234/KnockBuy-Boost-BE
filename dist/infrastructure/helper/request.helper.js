@@ -3,14 +3,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.parsePaginationParams = parsePaginationParams;
 exports.parseSearchPaginationParams = parseSearchPaginationParams;
 function parsePaginationParams(req) {
-    if (req.body && (req.body.pagination || req.body.filters || req.body.sort)) {
-        const { pagination, filters, sort } = req.body;
+    if (req.body &&
+        (req.body.pagination ||
+            req.body.filters ||
+            req.body.sort)) {
+        const body = req.body;
+        const { filters, pagination, sort } = body;
         return {
-            pagination: {
-                page: Number(pagination?.page) || 1,
-                limit: Number(pagination?.limit) || 10,
-            },
             filters: Array.isArray(filters) ? filters : [],
+            pagination: {
+                limit: Number(pagination?.limit) || 10,
+                page: Number(pagination?.page) || 1,
+            },
             sort: Array.isArray(sort) ? sort : [],
         };
     }
@@ -22,18 +26,20 @@ function parsePaginationParams(req) {
         try {
             parsedFilters =
                 typeof filters === "string" ? JSON.parse(filters) : filters;
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
         }
-        catch {
-            // Ignore malformed filters
+        catch (_e) {
+            /* empty */
         }
     }
     let parsedSort = [];
     if (sort) {
         try {
             parsedSort = typeof sort === "string" ? JSON.parse(sort) : sort;
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
         }
-        catch {
-            // Ignore malformed sort
+        catch (_e) {
+            /* empty */
         }
     }
     return {
@@ -43,14 +49,15 @@ function parsePaginationParams(req) {
     };
 }
 function parseSearchPaginationParams(req) {
-    if (req.body && (req.body.pagination || req.body.filters || req.body.sort)) {
-        const { pagination, filters, sort } = req.body;
+    const body = req.body;
+    if (body && (body.pagination || body.filters || body.sort)) {
+        const { filters, pagination, sort } = body;
         return {
-            pagination: {
-                page: Number(pagination?.page) || 1,
-                limit: Number(pagination?.limit) || 10,
-            },
             filters: Array.isArray(filters) ? filters : [],
+            pagination: {
+                limit: Number(pagination?.limit) || 10,
+                page: Number(pagination?.page) || 1,
+            },
             sort: Array.isArray(sort) ? sort : [],
         };
     }
@@ -62,15 +69,21 @@ function parseSearchPaginationParams(req) {
         try {
             parsedFilters =
                 typeof filters === "string" ? JSON.parse(filters) : filters;
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
         }
-        catch { }
+        catch (_e) {
+            /* empty */
+        }
     }
     let parsedSort = [];
     if (sort) {
         try {
             parsedSort = typeof sort === "string" ? JSON.parse(sort) : sort;
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
         }
-        catch { }
+        catch (_e) {
+            /* empty */
+        }
     }
     return {
         filters: Array.isArray(parsedFilters)

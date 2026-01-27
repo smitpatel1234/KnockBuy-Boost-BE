@@ -4,15 +4,17 @@ import { EntityManager } from "typeorm";
 import { WishlistRepoPort } from "../../../application/port/wishlist-repo.port";
 import { remove_from_wishlist } from "../../../application/useCases/wishlist/remove_from_wishlist";
 import { successmessage } from "../../../infrastructure/helper/displaymessage";
+import { AuthRequest } from "../../types/request.types";
 
 export const removeFromWishlistController =
   (wishlistRepo: WishlistRepoPort) =>
-  async (req: Express.Request, res: Express.Response) =>
+  async (req: AuthRequest, res: Express.Response) =>
     wishlistRepo.wrapTransaction(async (t: EntityManager) => {
+      const { user } = req.body;
       const data = await remove_from_wishlist(
         t,
         wishlistRepo,
-        req.body.user.id,
+        user.id,
         req.params.item_id
       );
 

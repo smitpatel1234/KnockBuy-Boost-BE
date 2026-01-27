@@ -1,6 +1,18 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import e from "express";
 
  
+export enum MailServices {
+  GMAIL = 'gmail',
+  HOTMAIL = 'hotmail',
+  OUTLOOK = 'outlook365',
+  YAHOO = 'yahoo',
+}
+export enum SocketEvents {
+  CONNECTION = "connection",
+  DISCONNECT = "disconnect",
+  NOTIFICATION = "notification",
+}
 export enum StatusCodes {
   /**
    * Official Documentation @ https://tools.ietf.org/html/rfc7231#section-6.2.1
@@ -332,15 +344,4 @@ export enum StatusCodes {
    * The 511 status code indicates that the client needs to authenticate to gain network access.
    */
   NETWORK_AUTHENTICATION_REQUIRED = 511,
-}
-export enum SocketEvents {
-  CONNECTION = "connection",
-  DISCONNECT = "disconnect",
-  NOTIFICATION = "notification",
-}
-export enum MailServices {
-  GMAIL = 'gmail',
-  YAHOO = 'yahoo',
-  OUTLOOK = 'outlook365',
-  HOTMAIL = 'hotmail',
 }

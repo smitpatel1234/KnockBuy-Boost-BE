@@ -17,7 +17,9 @@ const image_1 = require("./image");
 const variant_collection_1 = require("./variant_collection");
 let Item = class Item extends base_slug_entity_1.BaseSlugEntity {
     getSlugSource() {
-        return `${this.item_name}-${String(this.item_price)}-${this.category.category_id}-${this.description}-${crypto.randomUUID()}`;
+        const category = this.category;
+        const categoryId = category?.category_id ?? '';
+        return `${this.item_name}-${String(this.item_price)}-${categoryId}-${this.description}-${crypto.randomUUID()}`;
     }
 };
 exports.Item = Item;

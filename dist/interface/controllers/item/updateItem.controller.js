@@ -7,7 +7,6 @@ const GlobelErrorHandler_1 = require("../../../infrastructure/helper/middleware/
 const updateItemController = (itemRepo) => {
     return async (req, res) => itemRepo.wrapTransaction(async (t) => {
         const data = req.body;
-        console.log("data in controller", data);
         const IsUpdated = await (0, item_1.update_item)(t, data, itemRepo);
         if (!IsUpdated)
             throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.NOT_FOUND, "Item Not Found");

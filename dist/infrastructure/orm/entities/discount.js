@@ -20,6 +20,10 @@ __decorate([
     __metadata("design:type", Number)
 ], Discount.prototype, "active_flag", void 0);
 __decorate([
+    (0, typeorm_1.DeleteDateColumn)(),
+    __metadata("design:type", Date)
+], Discount.prototype, "deletedAt", void 0);
+__decorate([
     (0, typeorm_1.Column)({ length: 255, nullable: true, type: 'varchar' }),
     __metadata("design:type", String)
 ], Discount.prototype, "description", void 0);
@@ -51,10 +55,6 @@ __decorate([
     (0, typeorm_1.Column)({ nullable: true, type: 'int' }),
     __metadata("design:type", Number)
 ], Discount.prototype, "duration", void 0);
-__decorate([
-    (0, typeorm_1.DeleteDateColumn)(),
-    __metadata("design:type", Date)
-], Discount.prototype, "deletedAt", void 0);
 exports.Discount = Discount = __decorate([
     (0, typeorm_1.Entity)()
 ], Discount);

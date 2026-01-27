@@ -61,8 +61,8 @@ exports.OrderRepo = {
                 "discount",
                 "address",
             ],
-            withDeleted: true,
             where: { order_id },
+            withDeleted: true,
         });
         await em.getRepository(order_1.Order).update({ order_id }, { isNew: 0 });
         const user = await em.getRepository(user_1.User)
@@ -89,8 +89,8 @@ exports.OrderRepo = {
                 "discount",
                 "address",
             ],
-            withDeleted: true,
             where: { user: { user_id } },
+            withDeleted: true,
         });
     },
     placeOrder: async (em, data) => {

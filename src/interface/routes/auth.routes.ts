@@ -4,6 +4,7 @@ import { UserRole } from '../../domain/models/User.models';
 import { LoginCredentials } from '../../domain/schemas/auth';
 import { userCredentials } from '../../domain/schemas/user';
 import { authVerification } from '../../infrastructure/helper/middleware/authvarification';
+import { recaptchaTokenVerification } from '../../infrastructure/helper/middleware/recaptchaTokenVerification';
 //import passport from "../../infrastructure/helper/passportStrategy"
 import { validateDetails } from '../../infrastructure/helper/validator';
 // import { LoginUserInGoogleController } from '../controllers/auth/google.controller';
@@ -18,7 +19,7 @@ router.post('/register', validateDetails(userCredentials),
   registerUserController(UserAndCredentialsRepo),
 );
 router.post('/refresh-token', refreshTokenController(AuthRepo));
-router.post('/login', validateDetails(LoginCredentials),
+router.post('/login', recaptchaTokenVerification(), validateDetails(LoginCredentials),
   LoginUserController(AuthRepo),
 );
 router.post('/logout', authVerification([UserRole.USER]), LogoutUserController(AuthRepo));

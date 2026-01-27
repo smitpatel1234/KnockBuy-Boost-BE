@@ -14,4 +14,4 @@ export interface ItemCartType {
     quantity: number,
     user: string,
 } 
-export type ItemCartUpdateType = Pick<ItemCartType , 'cart_item_id' | 'quantity' | 'item'> 
+export type ItemCartUpdateType = Pick<ItemCartType , 'cart_item_id' | 'item' | 'quantity'> 

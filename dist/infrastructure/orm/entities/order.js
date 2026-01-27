@@ -24,6 +24,10 @@ __decorate([
     __metadata("design:type", Object)
 ], Order.prototype, "address", void 0);
 __decorate([
+    (0, typeorm_1.DeleteDateColumn)(),
+    __metadata("design:type", Date)
+], Order.prototype, "deleted_at", void 0);
+__decorate([
     (0, typeorm_1.Column)({ default: 'pending', length: 50, nullable: true, type: 'varchar' }),
     __metadata("design:type", String)
 ], Order.prototype, "delivery_status", void 0);
@@ -36,6 +40,10 @@ __decorate([
     (0, typeorm_1.Column)({ nullable: true, type: 'timestamp' }),
     __metadata("design:type", Date)
 ], Order.prototype, "invoice_date", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: 1, type: 'tinyint' }),
+    __metadata("design:type", Number)
+], Order.prototype, "isNew", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({ type: 'timestamp' }),
     __metadata("design:type", Date)
@@ -73,18 +81,10 @@ __decorate([
     __metadata("design:type", Number)
 ], Order.prototype, "total_amount", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'tinyint', default: 1 }),
-    __metadata("design:type", Number)
-], Order.prototype, "isNew", void 0);
-__decorate([
     (0, typeorm_1.JoinColumn)({ name: 'user_id' }),
     (0, typeorm_1.ManyToOne)(() => user_1.User),
     __metadata("design:type", Object)
 ], Order.prototype, "user", void 0);
-__decorate([
-    (0, typeorm_1.DeleteDateColumn)(),
-    __metadata("design:type", Date)
-], Order.prototype, "deleted_at", void 0);
 exports.Order = Order = __decorate([
     (0, typeorm_1.Entity)()
 ], Order);

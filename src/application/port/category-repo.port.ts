@@ -8,7 +8,7 @@ export interface CategoryRepoPort {
     deleteCategory: (em: EntityManager, category_id: string) => Promise<boolean>;
     getAllCategories: (em: EntityManager) => Promise<CategoryAllType[]>;
     GetAllCategoryPage: (em: EntityManager, data: pageParams) => Promise<PaginationResponse<CategoryAllType>>;
-    updateCategory: (em: EntityManager, category: CategoryType) => Promise<boolean>;
     searchCategoriesByName: (em: EntityManager, query: string) => Promise<CategoryAllType[]>;
+    updateCategory: (em: EntityManager, category: CategoryType) => Promise<boolean>;
     wrapTransaction: <T>(fun: (t: EntityManager) => Promise<T>) => Promise<T>;
 }   

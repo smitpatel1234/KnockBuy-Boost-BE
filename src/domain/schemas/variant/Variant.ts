@@ -34,8 +34,8 @@ export const AddVarientPropWithCollectionSchema = z.object({
 
 
 export const VarientWithValuesSchema = z.object({
-    variantProperty_id: IdField,
     variant_value: z.string().max(100).min(1),
+    variantProperty_id: IdField,
     variantValue_id: IdField,
 });
 export const VarientPropWithCollectionSchema = z.object({

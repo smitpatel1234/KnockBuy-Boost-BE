@@ -1,9 +1,15 @@
+/* eslint-disable max-lines */
 import { EntityManager } from "typeorm";
+
 import { VariantRepoPort } from "../../application/port/variant-repo.port";
 import {
   pageParams,
   PaginationResponse,
 } from "../../domain/globalTypes/commonFields";
+import {
+  VariantCollectionForOneItem,
+  VariantForOneItem,
+} from "../../domain/models/item.models";
 import {
   GetItemVariantValueMappingModel,
   VariantPropertyModel,
@@ -16,10 +22,6 @@ import { ItemVariantValueMapping } from "../orm/entities/item_variantVlaue_mappi
 import { VariantCollection } from "../orm/entities/variant_collection";
 import { VariantPropertys } from "../orm/entities/variantPropertys";
 import { VariantValues } from "../orm/entities/variantValues";
-import {
-  VariantCollectionForOneItem,
-  VariantForOneItem,
-} from "../../domain/models/item.models";
 export const VariantRepo: VariantRepoPort = {
   createProperty: async (
     em: EntityManager,
@@ -50,7 +52,7 @@ export const VariantRepo: VariantRepoPort = {
 
   createVariantCollection: async (
     em: EntityManager,
-    variant_collections: VariantCollectionForOneItem[] | undefined,
+    variant_collections: undefined | VariantCollectionForOneItem[],
     item_id: string
   ): Promise<void> => {
     if (variant_collections && variant_collections.length > 0) {
@@ -155,26 +157,6 @@ export const VariantRepo: VariantRepoPort = {
     return data;
   },
 
-  getItemVariantMappingForItem: async (
-    em: EntityManager,
-    id: string
-  ): Promise<GetItemVariantValueMappingModel[]> => {
-    return em
-      .getRepository(ItemVariantValueMapping)
-      .createQueryBuilder("ivvm")
-      .leftJoin("ivvm.variantValue", "vv")
-      .leftJoin("vv.variantProperty", "vp")
-      .where("ivvm.item_id=:id", { id: id })
-      .select([
-        "ivvm.item_variantvalue_mapping_id AS item_variantvalue_mapping_id",
-        "ivvm.item_id AS item_id",
-        "vv.variantValue_id AS variantValue_id",
-        "vv.variant_value AS variant_value",
-        "vp.variantProperty_id AS variantProperty_id",
-        "vp.property_name AS property_name",
-      ])
-      .getRawMany();
-  },
   getItemVariantCollectionForItem: async (
     em: EntityManager,
     item_id: string
@@ -203,10 +185,30 @@ export const VariantRepo: VariantRepoPort = {
       }, "image_url")
       .getRawMany<VariantCollectionForOneItem>();
   },
+  getItemVariantMappingForItem: async (
+    em: EntityManager,
+    id: string
+  ): Promise<GetItemVariantValueMappingModel[]> => {
+    return em
+      .getRepository(ItemVariantValueMapping)
+      .createQueryBuilder("ivvm")
+      .leftJoin("ivvm.variantValue", "vv")
+      .leftJoin("vv.variantProperty", "vp")
+      .where("ivvm.item_id=:id", { id: id })
+      .select([
+        "ivvm.item_variantvalue_mapping_id AS item_variantvalue_mapping_id",
+        "ivvm.item_id AS item_id",
+        "vv.variantValue_id AS variantValue_id",
+        "vv.variant_value AS variant_value",
+        "vp.variantProperty_id AS variantProperty_id",
+        "vp.property_name AS property_name",
+      ])
+      .getRawMany();
+  },
 
   mapItemToVariantValue: async (
     em: EntityManager,
-    variant: VariantForOneItem[] | undefined,
+    variant: undefined | VariantForOneItem[],
     item_id: string
   ): Promise<void> => {
     if (variant && variant.length > 0) {

@@ -103,23 +103,6 @@ exports.VariantRepo = {
         const data = await em.find(variantPropertys_1.VariantPropertys);
         return data;
     },
-    getItemVariantMappingForItem: async (em, id) => {
-        return em
-            .getRepository(item_variantVlaue_mapping_1.ItemVariantValueMapping)
-            .createQueryBuilder("ivvm")
-            .leftJoin("ivvm.variantValue", "vv")
-            .leftJoin("vv.variantProperty", "vp")
-            .where("ivvm.item_id=:id", { id: id })
-            .select([
-            "ivvm.item_variantvalue_mapping_id AS item_variantvalue_mapping_id",
-            "ivvm.item_id AS item_id",
-            "vv.variantValue_id AS variantValue_id",
-            "vv.variant_value AS variant_value",
-            "vp.variantProperty_id AS variantProperty_id",
-            "vp.property_name AS property_name",
-        ])
-            .getRawMany();
-    },
     getItemVariantCollectionForItem: async (em, item_id) => {
         return await em
             .getRepository(variant_collection_1.VariantCollection)
@@ -143,6 +126,23 @@ exports.VariantRepo = {
                 .where("image.items_id = item.item_id")
                 .limit(1);
         }, "image_url")
+            .getRawMany();
+    },
+    getItemVariantMappingForItem: async (em, id) => {
+        return em
+            .getRepository(item_variantVlaue_mapping_1.ItemVariantValueMapping)
+            .createQueryBuilder("ivvm")
+            .leftJoin("ivvm.variantValue", "vv")
+            .leftJoin("vv.variantProperty", "vp")
+            .where("ivvm.item_id=:id", { id: id })
+            .select([
+            "ivvm.item_variantvalue_mapping_id AS item_variantvalue_mapping_id",
+            "ivvm.item_id AS item_id",
+            "vv.variantValue_id AS variantValue_id",
+            "vv.variant_value AS variant_value",
+            "vp.variantProperty_id AS variantProperty_id",
+            "vp.property_name AS property_name",
+        ])
             .getRawMany();
     },
     mapItemToVariantValue: async (em, variant, item_id) => {

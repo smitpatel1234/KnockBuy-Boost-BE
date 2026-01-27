@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { WishlistRepo } from "../../infrastructure/repositories/wishlist.repo";
-import { authVerification } from "../../infrastructure/helper/middleware/authvarification"
 
-import {   getUserWishlistController,
-  addToWishlistController,
-  removeFromWishlistController,} from '../controllers/wishlist/index'
 import { UserRole } from "../../domain/models/User.models";
+import { authVerification } from "../../infrastructure/helper/middleware/authvarification"
+import { WishlistRepo } from "../../infrastructure/repositories/wishlist.repo";
+import {   addToWishlistController,
+  getUserWishlistController,
+  removeFromWishlistController,} from '../controllers/wishlist/index'
 
 const router = Router();
 

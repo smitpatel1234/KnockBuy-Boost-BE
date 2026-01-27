@@ -3,8 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ItemRepo = void 0;
 const pagination_helper_1 = require("../helper/pagination.helper");
 const transaction_1 = require("../helper/transaction");
-const item_1 = require("../orm/entities/item");
 const image_1 = require("../orm/entities/image");
+const item_1 = require("../orm/entities/item");
 const variant_repo_1 = require("./variant.repo");
 exports.ItemRepo = {
     CreateItem: async (em, data) => {
@@ -137,6 +137,12 @@ exports.ItemRepo = {
         const data = await item.getRawOne();
         return data;
     },
+    ISItemInStock: async (em, item_id, quantity) => {
+        const item = await em
+            .getRepository(item_1.Item)
+            .findOneOrFail({ where: { item_id: item_id } });
+        return item.stock >= quantity;
+    },
     searchItems: async (em, data) => {
         const queryBuilder = em
             .getRepository(item_1.Item)
@@ -144,6 +150,7 @@ exports.ItemRepo = {
             .leftJoin("item.category", "category")
             .leftJoin("ItemVariantValueMapping", "mapping", "mapping.item_id = item.item_id")
             .leftJoin("mapping.variantValue", "variantValue")
+            .leftJoin("variantValue.variantProperty", "variantProperty")
             .select([
             "item.item_id AS item_id",
             "item.item_name AS item_name",
@@ -155,6 +162,9 @@ exports.ItemRepo = {
             "item.stock AS stock",
             "item.description AS description",
             "item.slug AS slug",
+            "variantValue.variantValue_id AS variantValue_id",
+            "variantValue.variant_value AS variant_value",
+            "variantProperty.property_name AS property_name",
         ])
             .addSelect((subQuery) => {
             return subQuery
@@ -167,9 +177,7 @@ exports.ItemRepo = {
         const CaqueryBuilder = em
             .getRepository(item_1.Item)
             .createQueryBuilder("item")
-            .select(['max(item.price) as max_price', 'min(item.price) as min_price']);
-        const max_min = await CaqueryBuilder.getRawOne();
-        console.log(max_min);
+            .leftJoin("item.category", "category");
         return await (0, pagination_helper_1.applySearchAndFilters)(queryBuilder, CaqueryBuilder, data, [
             "item.item_id",
             "item.item_name",
@@ -188,8 +196,32 @@ exports.ItemRepo = {
             "sku",
             "stock",
             "description",
-            "slug"
+            "slug",
+            "variantValue.value"
         ]);
+    },
+    searchItemsByName: async (em, query) => {
+        const items = await em
+            .getRepository(item_1.Item)
+            .createQueryBuilder("item")
+            .leftJoin("item.category", "category")
+            .select([
+            "item.item_id AS item_id",
+            "item.item_name AS item_name",
+            "item.item_price AS item_price",
+            "category.category_id AS category_id",
+            "category.category_name AS category_name",
+            "item.rating AS rating",
+            "item.sku AS sku",
+            "item.stock AS stock",
+            "item.description AS description",
+            "item.slug AS slug",
+        ])
+            .where("item.item_name LIKE CONCAT('%', :query, '%')", { query })
+            .orWhere("item.description LIKE CONCAT('%', :query, '%')", { query })
+            .limit(5)
+            .getRawMany();
+        return items;
     },
     UpdateItem: async (em, data) => {
         const itemRepo = em.getRepository(item_1.Item);
@@ -220,35 +252,6 @@ exports.ItemRepo = {
             }
         }
         return true;
-    },
-    ISItemInStock: async (em, item_id, quantity) => {
-        const item = await em
-            .getRepository(item_1.Item)
-            .findOneOrFail({ where: { item_id: item_id } });
-        return item.stock >= quantity;
-    },
-    searchItemsByName: async (em, query) => {
-        const items = await em
-            .getRepository(item_1.Item)
-            .createQueryBuilder("item")
-            .leftJoin("item.category", "category")
-            .select([
-            "item.item_id AS item_id",
-            "item.item_name AS item_name",
-            "item.item_price AS item_price",
-            "category.category_id AS category_id",
-            "category.category_name AS category_name",
-            "item.rating AS rating",
-            "item.sku AS sku",
-            "item.stock AS stock",
-            "item.description AS description",
-            "item.slug AS slug",
-        ])
-            .where("item.item_name LIKE CONCAT('%', :query, '%')", { query })
-            .orWhere("item.description LIKE CONCAT('%', :query, '%')", { query })
-            .limit(5)
-            .getRawMany();
-        return items;
     },
     wrapTransaction: transaction_1.wrapTransaction,
 };

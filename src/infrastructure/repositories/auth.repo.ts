@@ -12,7 +12,6 @@ export const AuthRepo: AuthRepoPort = {
     return user?.refresh_token ?? null;
   },
   FindUser: async (t: EntityManager, credentials: LoginCredentials) => {
-
     return await t
       .getRepository(User)
       .createQueryBuilder("user")

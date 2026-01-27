@@ -7,24 +7,17 @@ exports.WishlistRepo = {
     AddToWishlist: async (em, user_id, item_id) => {
         const exists = await em.getRepository(wishlist_1.Wishlist).count({
             where: {
-                user: { user_id },
                 item: { item_id },
+                user: { user_id },
             },
         });
         if (exists)
             return false;
         await em.getRepository(wishlist_1.Wishlist).save({
-            user: { user_id },
             item: { item_id },
+            user: { user_id },
         });
         return true;
-    },
-    RemoveFromWishlist: async (em, user_id, item_id) => {
-        const result = await em.getRepository(wishlist_1.Wishlist).delete({
-            user: { user_id },
-            item: { item_id },
-        });
-        return (result.affected ?? 0) > 0;
     },
     GetUserWishlist: async (em, user_id) => {
         const wishlist = await em
@@ -59,11 +52,18 @@ exports.WishlistRepo = {
     IsItemInWishlist: async (em, user_id, item_id) => {
         const count = await em.getRepository(wishlist_1.Wishlist).count({
             where: {
-                user: { user_id },
                 item: { item_id },
+                user: { user_id },
             },
         });
         return count > 0;
+    },
+    RemoveFromWishlist: async (em, user_id, item_id) => {
+        const result = await em.getRepository(wishlist_1.Wishlist).delete({
+            item: { item_id },
+            user: { user_id },
+        });
+        return (result.affected ?? 0) > 0;
     },
     wrapTransaction: transaction_1.wrapTransaction,
 };

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { EntityManager } from "typeorm";
 
 import { CategoryRepoPort } from "../../application/port/category-repo.port";
@@ -104,6 +105,23 @@ export const CategoryRepo: CategoryRepoPort = {
       ]
     );
   },
+  searchCategoriesByName: async (em: EntityManager, query: string) => {
+    return em
+      .getRepository(Category)
+      .createQueryBuilder("child")
+      .leftJoin(Category, "parent", "parent.category_id = child.parentCategory")
+      .select([
+        "child.category_id AS category_id",
+        "child.category_name AS category_name",
+        "child.image_url AS image_url",
+        "child.description AS description",
+        "parent.category_id AS parent_category_id",
+        "parent.category_name AS parent_category_name",
+      ])
+      .where("child.category_name LIKE CONCAT('%', :query, '%')", { query })
+      .limit(5)
+      .getRawMany<CategoryAllType>();
+  },
   updateCategory: async (em: EntityManager, input: CategoryType) => {
     const categoryRepo = em.getRepository(Category);
     const existing = await categoryRepo.findOne({
@@ -146,23 +164,6 @@ export const CategoryRepo: CategoryRepoPort = {
 
     await categoryRepo.save(existing);
     return true;
-  },
-  searchCategoriesByName: async (em: EntityManager, query: string) => {
-    return em
-      .getRepository(Category)
-      .createQueryBuilder("child")
-      .leftJoin(Category, "parent", "parent.category_id = child.parentCategory")
-      .select([
-        "child.category_id AS category_id",
-        "child.category_name AS category_name",
-        "child.image_url AS image_url",
-        "child.description AS description",
-        "parent.category_id AS parent_category_id",
-        "parent.category_name AS parent_category_name",
-      ])
-      .where("child.category_name LIKE CONCAT('%', :query, '%')", { query })
-      .limit(5)
-      .getRawMany<CategoryAllType>();
   },
   wrapTransaction: wrapTransaction,
 };

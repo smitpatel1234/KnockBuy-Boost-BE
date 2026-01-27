@@ -2,6 +2,7 @@ import { UserProfile } from "./User.models";
 
 export interface OrderAllType {
   delivery_status?: string;
+  isNew?:number
   order_date: Date;
   order_id: string;
   payment_method?: string;
@@ -10,7 +11,6 @@ export interface OrderAllType {
   total_amount?: number;
   user?:UserProfile
   username?: string;
-  isNew?:number
 }
 
 export interface PlaceOrder {

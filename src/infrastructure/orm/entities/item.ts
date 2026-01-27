@@ -44,10 +44,13 @@ export class Item extends BaseSlugEntity {
 	@OneToMany(() => VariantCollection, vc => vc.variant_collection_id)
 	variant_collections?: string[]
    
-	getSlugSource(): string {
-		return `${this.item_name}-${String(this.item_price)}-${this.category.category_id}-${this.description}-${crypto.randomUUID()}`;
-	}
 	@VersionColumn()
     version!: number
+	getSlugSource(): string {
+		const category = this.category as unknown as null | { category_id?: null | string };
+		const categoryId = category?.category_id ?? '';
+		
+		return `${this.item_name}-${String(this.item_price)}-${categoryId}-${this.description}-${crypto.randomUUID()}`;
+	}
 }
 

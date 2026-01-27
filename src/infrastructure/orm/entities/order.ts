@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Relation ,DeleteDateColumn} from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn ,Relation} from "typeorm";
 
 import { Address } from "./address";
 import { Discount } from "./discount";
@@ -10,6 +10,9 @@ export class Order {
 	@ManyToOne(() => Address, { nullable: true ,onDelete:"SET NULL"} )
 	address?: Relation<Address>
 
+	@DeleteDateColumn()
+	deleted_at?: Date;
+
 	@Column({ default: 'pending', length: 50, nullable: true, type: 'varchar' })
 	delivery_status?: string
 
@@ -19,6 +22,9 @@ export class Order {
 
 	@Column({ nullable: true, type: 'timestamp' })
 	invoice_date?: Date
+
+	@Column({ default: 1, type:'tinyint'})
+	isNew?: number
 
 	@CreateDateColumn({ type: 'timestamp' })
 	order_date!: Date
@@ -46,14 +52,8 @@ export class Order {
 
 	@Column({ nullable: true, precision: 12, scale: 2, type: 'decimal' })
 	total_amount?: number
-
-	@Column({ type:'tinyint', default: 1})
-	isNew?: number
-
 	@JoinColumn({ name: 'user_id' })
 	@ManyToOne(() => User)
 	user!: Relation<User>
-	@DeleteDateColumn()
-	deleted_at?: Date;
 }
 
