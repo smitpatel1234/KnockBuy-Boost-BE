@@ -1,44 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ItemRepo = void 0;
+const constants_1 = require("../config/constants");
 const pagination_helper_1 = require("../helper/pagination.helper");
 const transaction_1 = require("../helper/transaction");
 const image_1 = require("../orm/entities/image");
 const item_1 = require("../orm/entities/item");
 const variant_repo_1 = require("./variant.repo");
-const allowed_item = [
-    "item.item_id",
-    "item.item_name",
-    "item.item_price",
-    "category.category_id",
-    "category.category_name",
-    "item.rating",
-    "item.sku",
-    "item.stock",
-    "item.description",
-    "item.slug",
-    "image_url",
-    "item_name",
-    "item_price",
-    "rating",
-    "sku",
-    "stock",
-    "description",
-    "slug",
-    "variantValue.value",
-];
+const itemSelectFields = ["item.item_id AS item_id", "item.item_name AS item_name", "item.item_price AS item_price", "category.category_id AS category_id", "category.category_name AS category_name", "item.rating AS rating", "item.sku AS sku", "item.stock AS stock", "item.description AS description", "item.slug AS slug"];
 exports.ItemRepo = {
     CreateItem: async (em, data) => {
         const itemRepo = em.getRepository(item_1.Item);
-        const newItem = itemRepo.create({
-            category: { category_id: data.category_id },
-            description: data.description,
-            item_name: data.item_name,
-            item_price: data.item_price,
-            rating: data.rating,
-            sku: data.sku,
-            stock: data.stock,
-        });
+        const newItem = itemRepo.create({ category: { category_id: data.category_id },
+            description: data.description, item_name: data.item_name, item_price: data.item_price,
+            rating: data.rating, sku: data.sku, stock: data.stock });
         const savedItem = await itemRepo.save(newItem);
         await variant_repo_1.VariantRepo.createVariantCollection(em, data.variant_collections, savedItem.item_id);
         await variant_repo_1.VariantRepo.mapItemToVariantValue(em, data.variant, savedItem.item_id);
@@ -54,10 +29,7 @@ exports.ItemRepo = {
         return (result.affected ?? 0) > 0;
     },
     GetAllItems: async (em) => {
-        const items = await em
-            .getRepository(item_1.Item)
-            .createQueryBuilder("item")
-            .leftJoin("item.category", "category")
+        const items = await em.getRepository(item_1.Item).createQueryBuilder("item").leftJoin("item.category", "category")
             .select([
             "item.item_id AS item_id",
             "item.slug AS slug",
@@ -78,18 +50,7 @@ exports.ItemRepo = {
             .getRepository(item_1.Item)
             .createQueryBuilder("item")
             .leftJoin("item.category", "category")
-            .select([
-            "item.item_id AS item_id",
-            "item.item_name AS item_name",
-            "item.item_price AS item_price",
-            "category.category_id AS category_id",
-            "category.category_name AS category_name",
-            "item.rating AS rating",
-            "item.sku AS sku",
-            "item.stock AS stock",
-            "item.description AS description",
-            "item.slug AS slug",
-        ])
+            .select(itemSelectFields)
             .groupBy("item.item_id")
             .addSelect((subQuery) => {
             return subQuery
@@ -99,33 +60,16 @@ exports.ItemRepo = {
                 .limit(1);
         }, "image_url");
         const CItemBuilders = em.getRepository(item_1.Item).createQueryBuilder("item");
-        return await (0, pagination_helper_1.applyPaginationAndFilters)(ItemBuilders, CItemBuilders, data, allowed_item);
+        return await (0, pagination_helper_1.applyPaginationAndFilters)(ItemBuilders, CItemBuilders, data, constants_1.allowed_item);
     },
     getImagesByItemId: async (em, id) => {
-        const images = await em
-            .getRepository(image_1.Image)
-            .createQueryBuilder("image")
+        const images = await em.getRepository(image_1.Image).createQueryBuilder("image")
             .where("image.item = :itemId", { itemId: id })
             .getMany();
         return images.map((img) => img.image_URL);
     },
     getItemByIdOrSlug: async (em, id, slug) => {
-        const item = em
-            .getRepository(item_1.Item)
-            .createQueryBuilder("item")
-            .leftJoin("item.category", "category")
-            .select([
-            "item.item_id AS item_id",
-            "item.item_name AS item_name",
-            "item.item_price AS item_price",
-            "item.description AS description",
-            "item.rating AS rating",
-            "item.sku AS sku",
-            "item.stock AS stock",
-            "category.category_id AS category_id",
-            "category.category_name AS category_name",
-            "item.slug AS slug",
-        ]);
+        const item = em.getRepository(item_1.Item).createQueryBuilder("item").leftJoin("item.category", "category").select(itemSelectFields);
         if (id)
             item.where("item.item_id = :id", { id });
         if (slug)
@@ -136,34 +80,15 @@ exports.ItemRepo = {
         return data;
     },
     ISItemInStock: async (em, item_id, quantity) => {
-        const item = await em
-            .getRepository(item_1.Item)
-            .findOneOrFail({ where: { item_id: item_id } });
+        const item = await em.getRepository(item_1.Item).findOneOrFail({ where: { item_id: item_id } });
         return item.stock >= quantity;
     },
     searchItems: async (em, data) => {
-        const queryBuilder = em
-            .getRepository(item_1.Item)
-            .createQueryBuilder("item")
-            .leftJoin("item.category", "category")
+        const queryBuilder = em.getRepository(item_1.Item).createQueryBuilder("item").leftJoin("item.category", "category")
             .leftJoin("ItemVariantValueMapping", "mapping", "mapping.item_id = item.item_id")
             .leftJoin("mapping.variantValue", "variantValue")
             .leftJoin("variantValue.variantProperty", "variantProperty")
-            .select([
-            "item.item_id AS item_id",
-            "item.item_name AS item_name",
-            "item.item_price AS item_price",
-            "category.category_id AS category_id",
-            "category.category_name AS category_name",
-            "item.rating AS rating",
-            "item.sku AS sku",
-            "item.stock AS stock",
-            "item.description AS description",
-            "item.slug AS slug",
-            "variantValue.variantValue_id AS variantValue_id",
-            "variantValue.variant_value AS variant_value",
-            "variantProperty.property_name AS property_name",
-        ])
+            .select([...itemSelectFields, "variantValue.variantValue_id AS variantValue_id", "variantValue.variant_value AS variant_value", "variantProperty.property_name AS property_name"])
             .addSelect((subQuery) => {
             return subQuery
                 .select("image.image_URL")
@@ -176,29 +101,12 @@ exports.ItemRepo = {
             .getRepository(item_1.Item)
             .createQueryBuilder("item")
             .leftJoin("item.category", "category");
-        return await (0, pagination_helper_1.applySearchAndFilters)(queryBuilder, CaqueryBuilder, data, allowed_item);
+        return await (0, pagination_helper_1.applySearchAndFilters)(queryBuilder, CaqueryBuilder, data, constants_1.allowed_item);
     },
     searchItemsByName: async (em, query) => {
-        const items = await em
-            .getRepository(item_1.Item)
-            .createQueryBuilder("item")
-            .leftJoin("item.category", "category")
-            .select([
-            "item.item_id AS item_id",
-            "item.item_name AS item_name",
-            "item.item_price AS item_price",
-            "category.category_id AS category_id",
-            "category.category_name AS category_name",
-            "item.rating AS rating",
-            "item.sku AS sku",
-            "item.stock AS stock",
-            "item.description AS description",
-            "item.slug AS slug",
-        ])
-            .where("item.item_name LIKE CONCAT('%', :query, '%')", { query })
-            .orWhere("item.description LIKE CONCAT('%', :query, '%')", { query })
-            .limit(5)
-            .getRawMany();
+        const items = await em.getRepository(item_1.Item).createQueryBuilder("item").leftJoin("item.category", "category")
+            .select(itemSelectFields).where("item.item_name LIKE CONCAT('%', :query, '%')", { query })
+            .orWhere("item.description LIKE CONCAT('%', :query, '%')", { query }).limit(5).getRawMany();
         return items;
     },
     UpdateItem: async (em, data) => {

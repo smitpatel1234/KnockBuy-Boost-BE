@@ -19,31 +19,12 @@ function parsePaginationParams(req) {
         };
     }
     const { filters, limit, page, sort } = req.query;
-    const parsedPage = parseInt(page) || 1;
-    const parsedLimit = parseInt(limit) || 10;
-    let parsedFilters = [];
-    if (filters) {
-        try {
-            parsedFilters =
-                typeof filters === "string" ? JSON.parse(filters) : filters;
-        }
-        catch {
-            // Invalid JSON, keep empty array
-        }
-    }
-    let parsedSort = [];
-    if (sort) {
-        try {
-            parsedSort = typeof sort === "string" ? JSON.parse(sort) : sort;
-        }
-        catch {
-            // Invalid JSON, keep empty array
-        }
-    }
+    const parsedPage = Number.parseInt(page) || 1;
+    const parsedLimit = Number.parseInt(limit) || 10;
     return {
-        filters: Array.isArray(parsedFilters) ? parsedFilters : [],
+        filters: Array.isArray(filters) ? filters : [],
         pagination: { limit: parsedLimit, page: parsedPage },
-        sort: Array.isArray(parsedSort) ? parsedSort : [],
+        sort: Array.isArray(sort) ? sort : [],
     };
 }
 function parseSearchPaginationParams(req) {
@@ -60,27 +41,10 @@ function parseSearchPaginationParams(req) {
         };
     }
     const { filters, limit, page, sort } = req.query;
-    const parsedPage = parseInt(page) || 1;
-    const parsedLimit = parseInt(limit) || 10;
-    let parsedFilters = [];
-    if (filters) {
-        try {
-            parsedFilters =
-                typeof filters === "string" ? JSON.parse(filters) : filters;
-        }
-        catch {
-            // Invalid JSON, keep empty array
-        }
-    }
-    let parsedSort = [];
-    if (sort) {
-        try {
-            parsedSort = typeof sort === "string" ? JSON.parse(sort) : sort;
-        }
-        catch {
-            // Invalid JSON, keep empty array
-        }
-    }
+    const parsedPage = Number.parseInt(page) || 1;
+    const parsedLimit = Number.parseInt(limit) || 10;
+    const parsedFilters = filters;
+    const parsedSort = sort;
     return {
         filters: Array.isArray(parsedFilters)
             ? parsedFilters

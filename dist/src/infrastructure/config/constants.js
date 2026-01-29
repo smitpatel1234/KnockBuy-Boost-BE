@@ -1,6 +1,27 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.StatusCodes = exports.SocketEvents = exports.MailServices = void 0;
+exports.StatusCodes = exports.SocketEvents = exports.MailServices = exports.allowed_item = void 0;
+exports.allowed_item = [
+    "item.item_id",
+    "item.item_name",
+    "item.item_price",
+    "category.category_id",
+    "category.category_name",
+    "item.rating",
+    "item.sku",
+    "item.stock",
+    "item.description",
+    "item.slug",
+    "image_url",
+    "item_name",
+    "item_price",
+    "rating",
+    "sku",
+    "stock",
+    "description",
+    "slug",
+    "variantValue.value",
+];
 var MailServices;
 (function (MailServices) {
     MailServices["GMAIL"] = "gmail";

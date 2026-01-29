@@ -35,33 +35,13 @@ export function parsePaginationParams(req: Request): pageParams {
     };
   }
   const { filters, limit, page, sort } = req.query;
-
-  const parsedPage = parseInt(page as string) || 1;
-  const parsedLimit = parseInt(limit as string) || 10;
-
-  let parsedFilters: unknown = [];
-  if (filters) {
-    try {
-      parsedFilters =
-        typeof filters === "string" ? JSON.parse(filters) : filters;
-    } catch {
-      // Invalid JSON, keep empty array
-    }
-  }
-
-  let parsedSort: unknown = [];
-  if (sort) {
-    try {
-      parsedSort = typeof sort === "string" ? JSON.parse(sort) : sort;
-    } catch {
-      // Invalid JSON, keep empty array
-    }
-  }
+  const parsedPage = Number.parseInt(page as string) || 1;
+  const parsedLimit = Number.parseInt(limit as string) || 10;
 
   return {
-    filters: Array.isArray(parsedFilters) ? (parsedFilters as Filter[]) : [],
+    filters: Array.isArray(filters) ? (filters as unknown as Filter[]) : [],
     pagination: { limit: parsedLimit, page: parsedPage },
-    sort: Array.isArray(parsedSort) ? (parsedSort as Sort[]) : [],
+    sort: Array.isArray(sort) ? (sort as unknown as Sort[]) : [],
   };
 }
 
@@ -85,32 +65,15 @@ export function parseSearchPaginationParams(req: Request): searchPageParams {
     };
   }
   const { filters, limit, page, sort } = req.query;
-  const parsedPage = parseInt(page as string) || 1;
-  const parsedLimit = parseInt(limit as string) || 10;
-  let parsedFilters: unknown = [];
-  if (filters) {
-    try {
-      parsedFilters =
-        typeof filters === "string" ? JSON.parse(filters) : filters;
-    } catch {
-      // Invalid JSON, keep empty array
-    }
-  }
+  const parsedPage = Number.parseInt(page as string) || 1;
+  const parsedLimit = Number.parseInt(limit as string) || 10;
 
-  let parsedSort: unknown = [];
-  if (sort) {
-    try {
-      parsedSort = typeof sort === "string" ? JSON.parse(sort) : sort;
-    } catch {
-      // Invalid JSON, keep empty array
-    }
-  }
 
   return {
-    filters: Array.isArray(parsedFilters)
-      ? (parsedFilters as SearchFilter[])
+    filters: Array.isArray(filters)
+      ? (filters as unknown as SearchFilter[])
       : [],
     pagination: { limit: parsedLimit, page: parsedPage },
-    sort: Array.isArray(parsedSort) ? (parsedSort as Sort[]) : [],
+    sort: Array.isArray(sort) ? (sort as unknown as Sort[]) : [],
   };
 }
