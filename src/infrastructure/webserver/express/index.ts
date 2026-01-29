@@ -12,29 +12,27 @@ import { HttpError } from '../../helper/httpError';
 import { logger } from '../../helper/logger'
 import { createLoggerInstance } from '../../helper/logger';
 import { GlobelErrorHandler } from '../../helper/middleware/GlobelErrorHandler';
-import {SocketService }from '../../helper/socket/socket';
+import { SocketService } from '../../helper/socket/socket';
 // import passport from '../../helper/passportStrategy';
 import { AppDataSource } from '../../orm/config/ormconfig';
 import { createRoutes } from './routes';
 
 export const app = express();
-const httpServer = createServer(app);
+export const httpServer = createServer(app);
 createLoggerInstance();
-
-
-
-AppDataSource.initialize().then(() => {
-  console.log('Data Source has been initialized!');
-}).catch((err: unknown) => {
-  console.error('Error during Data Source initialization', err);
-});
+if (process.env.NODE_ENV !== 'test') {
+  AppDataSource.initialize().then(() => {
+    console.log('Data Source has been initialized!');
+  }).catch((err: unknown) => {
+    console.error('Error during Data Source initialization', err);
+  });
+}
 app.use(cors({
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   origin: 'http://localhost:3000'
 }));
 app.use(cookieParser());
-
 //app.use(passport.initialize());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -43,7 +41,6 @@ app.use(GlobelErrorHandler)
 const setupSwagger = (app: Express) => {
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 }
-
 setupSwagger(app);
 app.use((req, res, next) => {
   const notFoundError = new HttpError({
@@ -56,7 +53,5 @@ app.use((req, res, next) => {
 })
 const socketService = new SocketService(httpServer);
 socketService.initialize();
-
 httpServer.listen(5000, () => logger.info('Server running on port 5000 http://localhost:5000/api-docs'));
-
 

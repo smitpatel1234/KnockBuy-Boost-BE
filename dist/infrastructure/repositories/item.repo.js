@@ -178,6 +178,7 @@ exports.ItemRepo = {
             .getRepository(item_1.Item)
             .createQueryBuilder("item")
             .leftJoin("item.category", "category");
+        console.log('Applying eq filter: \n\n\n\n');
         return await (0, pagination_helper_1.applySearchAndFilters)(queryBuilder, CaqueryBuilder, data, [
             "item.item_id",
             "item.item_name",

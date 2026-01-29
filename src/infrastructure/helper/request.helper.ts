@@ -44,9 +44,8 @@ export function parsePaginationParams(req: Request): pageParams {
     try {
       parsedFilters =
         typeof filters === "string" ? JSON.parse(filters) : filters;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (_e) {
-      /* empty */
+    } catch {
+      // Invalid JSON, keep empty array
     }
   }
 
@@ -54,9 +53,8 @@ export function parsePaginationParams(req: Request): pageParams {
   if (sort) {
     try {
       parsedSort = typeof sort === "string" ? JSON.parse(sort) : sort;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (_e) {
-      /* empty */
+    } catch {
+      // Invalid JSON, keep empty array
     }
   }
 
@@ -94,9 +92,8 @@ export function parseSearchPaginationParams(req: Request): searchPageParams {
     try {
       parsedFilters =
         typeof filters === "string" ? JSON.parse(filters) : filters;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (_e) {
-      /* empty */
+    } catch {
+      // Invalid JSON, keep empty array
     }
   }
 
@@ -104,9 +101,8 @@ export function parseSearchPaginationParams(req: Request): searchPageParams {
   if (sort) {
     try {
       parsedSort = typeof sort === "string" ? JSON.parse(sort) : sort;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (_e) {
-      /* empty */
+    } catch {
+      // Invalid JSON, keep empty array
     }
   }
 

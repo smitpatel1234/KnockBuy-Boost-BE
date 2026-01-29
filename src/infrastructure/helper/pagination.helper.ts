@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, max-lines-per-function, max-lines */
 import { SelectQueryBuilder } from "typeorm";
 
 import {
@@ -46,6 +45,14 @@ const applyCommonFilters = <Entity extends object>(
   });
 };
 
+const buildConstraintSelects = (constraintFilters: Filter[]): string[] => {
+  return constraintFilters.map((f) => ` max(${f.column}) as ${f.column}_max , min(${f.column}) as ${f.column}_min`);
+};
+
+const buildConstraints = (constraintFilters: Filter[], constraintsResultObject: Record<string, unknown>): MaxMinConstraints[] => {
+  return constraintFilters.map((f) => ({ column: f.column, max: constraintsResultObject[`${f.column}_max`] as number | string, min: constraintsResultObject[`${f.column}_min`] as number | string }));
+};
+
 const applySearchFilters = <Entity extends object>(
   queryBuilder: SelectQueryBuilder<Entity>,
   filters: SearchFilter[],
@@ -55,16 +62,19 @@ const applySearchFilters = <Entity extends object>(
     if (!allowedColumns.includes(f.column)) return;
     const idx = String(index);
     const pName = `val${idx}`;
-    const minP = `min${idx}`;
-    const maxP = `max${idx}`;
+    // const minP = `min${idx}`;
+    // const maxP = `max${idx}`;
 
     if (f.between && Array.isArray(f.between)) {
-      queryBuilder.andWhere(`${f.column} BETWEEN :${minP} AND :${maxP}`, {
-        [maxP]: f.between[1],
-        [minP]: f.between[0],
-      });
+      // queryBuilder.andWhere(`${f.column} BETWEEN :${minP} AND :${maxP}`, {
+      //   [maxP]: f.between[1],
+      //   [minP]: f.between[0],
+      // });
     } else if (f.eq !== undefined)
+    {
       queryBuilder.andWhere(`${f.column} = :${pName}`, { [pName]: f.eq });
+      console.log('Applying eq filter:', f.column, f.eq);
+    }
     else if (f.gt !== undefined)
       queryBuilder.andWhere(`${f.column} >= :${pName}`, { [pName]: f.gt });
     else if (f.lt !== undefined)
@@ -80,10 +90,7 @@ const applySearchFilters = <Entity extends object>(
   });
 };
 
-export async function applyPaginationAndFilters<
-  Entity extends object,
-  T = Entity,
->(
+export async function applyPaginationAndFilters<Entity extends object, T = Entity>(
   queryBuilder: SelectQueryBuilder<Entity>,
   forConstraintsQueryBuilder: SelectQueryBuilder<Entity>,
   params: pageParams,
@@ -107,47 +114,19 @@ export async function applyPaginationAndFilters<
     ? await queryBuilder.getRawMany()
     : await queryBuilder.getMany();
 
-  const constraintFilters = filters.filter(
-    (f) => f.isSearchByNumber ?? f.isSearchByDate,
-  );
-  const constraintsResult: string[] = [];
-
-  for (const f of constraintFilters) {
-    constraintsResult.push(
-      ` max(${f.column}) as ${f.column}_max , min(${f.column}) as ${f.column}_min`
-    );
-  }
-
-  const constraintsResultObject = await forConstraintsQueryBuilder
-    .select(constraintsResult)
-    .getRawOne();
-  if (!constraintsResultObject) {
-    return { data: data as unknown as T[],
-    meta: {
-      constraints: [],
-      limit: pagination.limit,
-      page: pagination.page,
-      total,
-      totalPages: Math.ceil(total / pagination.limit),
-    },};
-  }
-
-  const constraints: MaxMinConstraints[] = constraintFilters.map((f) => ({
-    column: f.column,
-    max: constraintsResultObject[`${f.column}_max`],
-    min: constraintsResultObject[`${f.column}_min`],
-  }));
-
-  return {
+  const constraintFilters = filters.filter((f) => f.isSearchByNumber ?? f.isSearchByDate);
+  const constraintsResult = buildConstraintSelects(constraintFilters);
+  const constraintsResultObject = await forConstraintsQueryBuilder.select(constraintsResult).getRawOne() as null | Record<string, unknown> ;
+  if (!constraintsResultObject)
+     return { 
     data: data as unknown as T[],
-    meta: {
-      constraints: constraints,
-      limit: pagination.limit,
-      page: pagination.page,
-      total,
-      totalPages: Math.ceil(total / pagination.limit),
-    },
-  };
+     meta: { constraints: [], limit: pagination.limit, page: pagination.page, total, totalPages: Math.ceil(total / pagination.limit) } 
+    };
+  const constraints = buildConstraints(constraintFilters, constraintsResultObject);
+  return {
+     data: data as unknown as T[], 
+     meta: { constraints, limit: pagination.limit, page: pagination.page, total, totalPages: Math.ceil(total / pagination.limit) } 
+    };
 }
 
 export async function applySearchAndFilters<Entity extends object, T = Entity>(
@@ -175,41 +154,13 @@ export async function applySearchAndFilters<Entity extends object, T = Entity>(
     : await queryBuilder.getMany();
 
   // Apply filters to constraints query builder for price min/max
-  if (filters.length > 0)
-    applySearchFilters(forConstraintsQueryBuilder, filters, allowedColumns);
-
-  const constraintFilters = filters.filter(
-    (f) => f.isSearchByNumber ?? f.isSearchByDate,
-  );
-  const constraintsResult: string[] = [];
-
-  for (const f of constraintFilters) {
-    constraintsResult.push(
-      ` max(${f.column}) as ${f.column}_max , min(${f.column}) as ${f.column}_min`
-    );
-  }
-
+  if (filters.length > 0) applySearchFilters(forConstraintsQueryBuilder, filters, allowedColumns);
+  const constraintFilters = filters.filter((f) => f.isSearchByNumber ?? f.isSearchByDate);
+  const constraintsResult = buildConstraintSelects(constraintFilters);
   let constraintsResultObject: Record<string, unknown> = {};
-  if (constraintsResult.length > 0) {
-    constraintsResultObject =
-      (await forConstraintsQueryBuilder.select(constraintsResult).getRawOne()) ??
-      {};
-  }
-
-  const constraints: MaxMinConstraints[] = constraintFilters.map((f) => ({
-    column: f.column,
-    max: constraintsResultObject[`${f.column}_max`] as   number | string,
-    min: constraintsResultObject[`${f.column}_min`] as number | string,
-  }));
-
+  if (constraintsResult.length > 0) constraintsResultObject = (await forConstraintsQueryBuilder.select(constraintsResult).getRawOne()) ?? {};
+  const constraints = buildConstraints(constraintFilters, constraintsResultObject);
   return {
-    data: data as unknown as T[],
-    meta: {
-      constraints: constraints,
-      limit: pagination.limit,
-      page: pagination.page,
-      total,
-      totalPages: Math.ceil(total / pagination.limit),
-    },
-  };
+     data: data as unknown as T[],
+     meta: { constraints, limit: pagination.limit, page: pagination.page, total, totalPages: Math.ceil(total / pagination.limit) } };
 }

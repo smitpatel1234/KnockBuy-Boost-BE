@@ -1,0 +1,28 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const Variant_1 = require("../../domain/schemas/variant/Variant");
+const authvarification_1 = require("../../infrastructure/helper/middleware/authvarification");
+const validator_1 = require("../../infrastructure/helper/validator");
+const variant_repo_1 = require("../../infrastructure/repositories/variant.repo");
+const deleteVariantCollection_controller_1 = require("../controllers/variant-collection/deleteVariantCollection.controller");
+const createvariantprop_controller_1 = require("../controllers/variantProperys/createvariantprop.controller");
+const deletevariantprop_controller_1 = require("../controllers/variantProperys/deletevariantprop.controller");
+const getallvariantprop_controller_1 = require("../controllers/variantProperys/getallvariantprop.controller");
+const updatevariantprop_controller_1 = require("../controllers/variantProperys/updatevariantprop.controller");
+const index_1 = require("../controllers/variantValues/index");
+const router = express_1.default.Router();
+router.get("/get-all-variant-properties", (0, authvarification_1.authVerification)([]), (0, getallvariantprop_controller_1.getAllVariantPropertiesController)(variant_repo_1.VariantRepo));
+router.post("/create-variant-property", (0, authvarification_1.authVerification)([]), (0, validator_1.validateDetails)(Variant_1.AddVarientPropertysSchema), (0, createvariantprop_controller_1.createVariantPropController)(variant_repo_1.VariantRepo));
+router.put("/update-variant-property", (0, authvarification_1.authVerification)([]), (0, validator_1.validateDetails)(Variant_1.VarientPropertysSchema), (0, updatevariantprop_controller_1.UpdateVariantPropController)(variant_repo_1.VariantRepo));
+router.delete("/delete-variant-property", (0, authvarification_1.authVerification)([]), (0, validator_1.validateDetails)(Variant_1.VarientPropertysID), (0, deletevariantprop_controller_1.deleteVariantPropController)(variant_repo_1.VariantRepo));
+router.get("/get-all-variant-values", (0, authvarification_1.authVerification)([]), (0, index_1.getAllVariantValuesController)(variant_repo_1.VariantRepo));
+router.post("/create-variant-value", (0, authvarification_1.authVerification)([]), (0, validator_1.validateDetails)(Variant_1.AddVarientWithValuesSchema), (0, index_1.createVariantValueController)(variant_repo_1.VariantRepo));
+router.put("/update-variant-value", (0, authvarification_1.authVerification)([]), (0, validator_1.validateDetails)(Variant_1.VarientWithValuesSchema), (0, index_1.updateVariantValueController)(variant_repo_1.VariantRepo));
+router.delete("/delete-variant-value", (0, authvarification_1.authVerification)([]), (0, validator_1.validateDetails)(Variant_1.VarientValuesID), (0, index_1.deleteVariantValueController)(variant_repo_1.VariantRepo));
+router.post("/get-all-variant-values-page", (0, authvarification_1.authVerification)([]), (0, index_1.getAllVariantValuePageController)(variant_repo_1.VariantRepo));
+router.delete("/delete-variant-collection", (0, authvarification_1.authVerification)([]), (0, validator_1.validateDetails)(Variant_1.VariantCollectionIdSchema), (0, deleteVariantCollection_controller_1.deleteVariantCollectionController)(variant_repo_1.VariantRepo));
+exports.default = router;

@@ -13,7 +13,8 @@ exports.CategoryRepo = {
             description: input.description,
             image_url: input.image_url,
         });
-        if (input.parent_category_id) {
+        console.log("input.parent_category_id", input.parent_category_id);
+        if (input.parent_category_id && input.parent_category_id !== "root_none") {
             const parent = await categoryRepo.findOne({
                 select: ["category_id"],
                 where: { category_id: input.parent_category_id },
@@ -22,6 +23,9 @@ exports.CategoryRepo = {
                 throw new Error("Parent category does not exist");
             }
             newCategory.parentCategory = parent;
+        }
+        else {
+            newCategory.parentCategory = null;
         }
         await categoryRepo.save(newCategory);
     },
@@ -101,7 +105,7 @@ exports.CategoryRepo = {
         if (!existing) {
             throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.NOT_FOUND, "Category not found");
         }
-        if (input.parent_category_id) {
+        if (input.parent_category_id && input.parent_category_id !== "root_none") {
             if (input.parent_category_id === input.category_id) {
                 throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.NOT_FOUND, "Category cannot be its own parent");
             }
@@ -113,6 +117,9 @@ exports.CategoryRepo = {
                 throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.NOT_FOUND, "Parent category does not exist");
             }
             existing.parentCategory = parent;
+        }
+        else {
+            existing.parentCategory = null;
         }
         existing.category_name = input.category_name;
         existing.description = input.description;

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.app = void 0;
+exports.httpServer = exports.app = void 0;
 require("reflect-metadata");
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const cors_1 = __importDefault(require("cors"));
@@ -22,7 +22,7 @@ const socket_1 = require("../../helper/socket/socket");
 const ormconfig_1 = require("../../orm/config/ormconfig");
 const routes_1 = require("./routes");
 exports.app = (0, express_1.default)();
-const httpServer = (0, http_1.createServer)(exports.app);
+exports.httpServer = (0, http_1.createServer)(exports.app);
 (0, logger_2.createLoggerInstance)();
 ormconfig_1.AppDataSource.initialize().then(() => {
     console.log('Data Source has been initialized!');
@@ -53,6 +53,6 @@ exports.app.use((req, res, next) => {
     });
     (0, GlobelErrorHandler_1.GlobelErrorHandler)(notFoundError, req, res, next);
 });
-const socketService = new socket_1.SocketService(httpServer);
+const socketService = new socket_1.SocketService(exports.httpServer);
 socketService.initialize();
-httpServer.listen(5000, () => logger_1.logger.info('Server running on port 5000 http://localhost:5000/api-docs'));
+exports.httpServer.listen(5000, () => logger_1.logger.info('Server running on port 5000 http://localhost:5000/api-docs'));

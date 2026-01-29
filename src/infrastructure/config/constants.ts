@@ -1,6 +1,24 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import e from "express";
-
+export const allowed_item = [
+  "item.item_id",
+  "item.item_name",
+  "item.item_price",
+  "category.category_id",
+  "category.category_name",
+  "item.rating",
+  "item.sku",
+  "item.stock",
+  "item.description",
+  "item.slug",
+  "image_url",
+  "item_name",
+  "item_price",
+  "rating",
+  "sku",
+  "stock",
+  "description",
+  "slug",
+  "variantValue.value",
+];
  
 export enum MailServices {
   GMAIL = 'gmail',

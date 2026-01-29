@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { EntityManager } from "typeorm";
 
 import { ItemRepoPort } from "../../port/item-repo.port";
@@ -28,7 +27,7 @@ export const get_item_by_id = async (
     slug: item.slug,
     stock: item.stock,
     variant: variant,
-    variant_collections: varient_collection ?? []
+    variant_collections: varient_collection 
   };
   return data;
 };
@@ -63,7 +62,7 @@ export const get_item_by_slug = async (
     slug: item.slug,
     stock: item.stock,
     variant: variant,
-    variant_collections: varient_collection ??  []
+    variant_collections: varient_collection 
   };
   return data;
 };
