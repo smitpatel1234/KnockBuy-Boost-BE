@@ -10,7 +10,7 @@ const GetOrderController = (OrderRepo) => {
         const { id } = req.params;
         const user = req.body.user;
         const order = await (0, getOrder_usecase_1.getOrder)(t, OrderRepo, id);
-        if (user.role !== User_models_1.UserRole.ADMIN) {
+        if (order.user?.user_id !== user.id && user.role !== User_models_1.UserRole.ADMIN) {
             throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.FORBIDDEN, "Access denied");
         }
         (0, displaymessage_1.successmessage)(res, "Order fetched successfully", order);

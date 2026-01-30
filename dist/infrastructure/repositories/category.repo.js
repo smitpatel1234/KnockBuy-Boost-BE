@@ -13,15 +13,13 @@ exports.CategoryRepo = {
             description: input.description,
             image_url: input.image_url,
         });
-        console.log("input.parent_category_id", input.parent_category_id);
         if (input.parent_category_id && input.parent_category_id !== "root_none") {
             const parent = await categoryRepo.findOne({
                 select: ["category_id"],
                 where: { category_id: input.parent_category_id },
             });
-            if (!parent) {
+            if (!parent)
                 throw new Error("Parent category does not exist");
-            }
             newCategory.parentCategory = parent;
         }
         else {
@@ -77,7 +75,7 @@ exports.CategoryRepo = {
             "category_name",
             "image_url",
             "description",
-            "parent_category_name"
+            "parent_category_name",
         ]);
     },
     searchCategoriesByName: async (em, query) => {

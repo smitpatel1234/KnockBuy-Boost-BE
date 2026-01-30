@@ -5,7 +5,7 @@ import { SocketEvents } from "../../config/constants";
 import { sendNotificationEmail } from "../email/sendEmail";
 import { logger } from "../logger";
 export class SocketService {
-  private io: Server;
+ private readonly  io: Server;
 
   constructor(server: HttpServer) {
     logger.info("Initializing SocketService...");

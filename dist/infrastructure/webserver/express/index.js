@@ -24,11 +24,13 @@ const routes_1 = require("./routes");
 exports.app = (0, express_1.default)();
 exports.httpServer = (0, http_1.createServer)(exports.app);
 (0, logger_2.createLoggerInstance)();
-ormconfig_1.AppDataSource.initialize().then(() => {
-    console.log('Data Source has been initialized!');
-}).catch((err) => {
-    console.error('Error during Data Source initialization', err);
-});
+if (process.env.NODE_ENV !== 'test') {
+    ormconfig_1.AppDataSource.initialize().then(() => {
+        console.log('Data Source has been initialized!');
+    }).catch((err) => {
+        console.error('Error during Data Source initialization', err);
+    });
+}
 exports.app.use((0, cors_1.default)({
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],

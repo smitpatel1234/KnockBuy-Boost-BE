@@ -8,22 +8,13 @@ exports.DiscountRepo = {
     CreateDiscount: async (em, data) => {
         const discountRepo = em.getRepository(discount_1.Discount);
         const newDiscount = discountRepo.create({
-            active_flag: data.active_flag,
-            description: data.description,
-            discount_amount: data.discount_amount,
-            discount_code: data.discount_code,
-            discount_name: data.discount_name,
-            discount_start_date: data.discount_start_date,
-            discount_type: data.discount_type,
-            duration: data.duration,
+            active_flag: data.active_flag, description: data.description,
+            discount_amount: data.discount_amount, discount_code: data.discount_code,
+            discount_name: data.discount_name, discount_start_date: data.discount_start_date,
+            discount_type: data.discount_type, duration: data.duration
         });
-        try {
-            await discountRepo.save(newDiscount);
-        }
-        catch (error) {
-            console.log(error);
-        }
-        return true;
+        const result = await discountRepo.save(newDiscount);
+        return !!result;
     },
     DeleteDiscount: async (em, id) => {
         const result = await em.getRepository(discount_1.Discount).delete(id);
@@ -88,9 +79,7 @@ exports.DiscountRepo = {
         ]);
     },
     GetDiscountByCode: async (em, code) => {
-        const discount = await em.getRepository(discount_1.Discount).findOne({
-            where: { discount_code: code },
-        });
+        const discount = await em.getRepository(discount_1.Discount).findOne({ where: { discount_code: code } });
         return discount;
     },
     GetDiscountById: async (em, id) => {

@@ -10,7 +10,6 @@ import {
   PlaceOrder,
   UpdateOrderModel,
 } from "../../domain/models/order.models";
-import { UserProfile } from "../../domain/models/User.models";
 import {
   ApplicationError,
   ApplicationErrorType,
@@ -23,7 +22,6 @@ import { Item } from "../orm/entities/item";
 import { ItemCart } from "../orm/entities/item_cart";
 import { Order } from "../orm/entities/order";
 import { OrderItems } from "../orm/entities/order_items";
-import { User } from "../orm/entities/user";
 
 export const OrderRepo: OrderRepoPort = {
   DeleteOrder: async (em: EntityManager, order_id: string): Promise<boolean> => {
@@ -47,10 +45,8 @@ export const OrderRepo: OrderRepoPort = {
     return applyPaginationAndFilters<Order, OrderAllType>(
       qb, cqb, data,
       [
-        "order.order_id",
-        "order.order_date",
-        "order.status",
-        "order.delivery_status",
+        "order.order_id","order.order_date",
+        "order.status", "order.delivery_status",
         "user.username",
         "order.total_amount",
         "order.payment_status",
@@ -70,16 +66,20 @@ export const OrderRepo: OrderRepoPort = {
 
   getOrderById: async (em: EntityManager, order_id: string) => {
     const order = await em.getRepository(Order).findOne({ 
-      relations: [ "order_items", "order_items.item", "order_items.item.images", "discount", "address" ],
+      relations: [ "order_items", "order_items.item", "order_items.item.images", "discount", "address" ,"user"],
       where: { order_id }, withDeleted: true 
     });
 
     await em.getRepository(Order).update({order_id},{isNew:0});
-    const user = await em.getRepository(User).createQueryBuilder('user')
-      .select([ "user.username as username", "user.email as email", "user.user_id as user_id", "user.phone_number as phone_number" ])
-      .getRawOne<UserProfile>()
-    if (!order || !user) return order;
-    order.user = Object.assign(order.user, user);
+
+    if (!order) {return order};   
+     Reflect.deleteProperty(order.user, 'password');
+     Reflect.deleteProperty(order.user, 'refresh_token');
+     Reflect.deleteProperty(order.user, 'refresh_expires_at');
+     Reflect.deleteProperty(order.user, 'role');
+     Reflect.deleteProperty(order.user, 'deleted_at');
+     Reflect.deleteProperty(order.user, 'created_at');
+     Reflect.deleteProperty(order.user, 'updated_at');  
     return order;
   },
   getOrdersByUserId: async (em: EntityManager, user_id: string) => {

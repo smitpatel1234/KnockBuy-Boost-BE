@@ -62,13 +62,16 @@ const applySearchFilters = <Entity extends object>(
     if (!allowedColumns.includes(f.column)) return;
     const idx = String(index);
     const pName = `val${idx}`;
+    // const minP = `min${idx}`;
+    // const maxP = `max${idx}`;
 
     if (f.between && Array.isArray(f.between)) {
-      const minP = `min${idx}`; const maxP = `max${idx}`;
-      queryBuilder.andWhere(`${f.column} BETWEEN :${minP} AND :${maxP}`, {
-        [maxP]: f.between[1], [minP]: f.between[0],
-      });
-    } else if (f.eq !== undefined) {
+      // queryBuilder.andWhere(`${f.column} BETWEEN :${minP} AND :${maxP}`, {
+      //   [maxP]: f.between[1],
+      //   [minP]: f.between[0],
+      // });
+    } else if (f.eq !== undefined)
+    {
       queryBuilder.andWhere(`${f.column} = :${pName}`, { [pName]: f.eq });
       console.log('Applying eq filter:', f.column, f.eq);
     }

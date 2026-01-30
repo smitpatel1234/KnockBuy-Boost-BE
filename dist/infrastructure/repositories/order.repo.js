@@ -9,17 +9,13 @@ const item_1 = require("../orm/entities/item");
 const item_cart_1 = require("../orm/entities/item_cart");
 const order_1 = require("../orm/entities/order");
 const order_items_1 = require("../orm/entities/order_items");
-const user_1 = require("../orm/entities/user");
 exports.OrderRepo = {
     DeleteOrder: async (em, order_id) => {
         const result = await em.getRepository(order_1.Order).softDelete(order_id);
         return (result.affected ?? 0) > 0;
     },
     GetAllOrdersPage: async (em, data) => {
-        const qb = em
-            .getRepository(order_1.Order)
-            .createQueryBuilder("order")
-            .leftJoin("order.user", "user")
+        const qb = em.getRepository(order_1.Order).createQueryBuilder("order").leftJoin("order.user", "user")
             .select([
             "order.order_id AS order_id",
             "order.order_date AS order_date",
@@ -33,10 +29,8 @@ exports.OrderRepo = {
         ]).groupBy('order_id').addOrderBy('order.isNew', 'DESC');
         const cqb = em.getRepository(order_1.Order).createQueryBuilder("order");
         return (0, pagination_helper_1.applyPaginationAndFilters)(qb, cqb, data, [
-            "order.order_id",
-            "order.order_date",
-            "order.status",
-            "order.delivery_status",
+            "order.order_id", "order.order_date",
+            "order.status", "order.delivery_status",
             "user.username",
             "order.total_amount",
             "order.payment_status",
@@ -54,43 +48,28 @@ exports.OrderRepo = {
     },
     getOrderById: async (em, order_id) => {
         const order = await em.getRepository(order_1.Order).findOne({
-            relations: [
-                "order_items",
-                "order_items.item",
-                "order_items.item.images",
-                "discount",
-                "address",
-            ],
-            where: { order_id },
-            withDeleted: true,
+            relations: ["order_items", "order_items.item", "order_items.item.images", "discount", "address", "user"],
+            where: { order_id }, withDeleted: true
         });
         await em.getRepository(order_1.Order).update({ order_id }, { isNew: 0 });
-        const user = await em.getRepository(user_1.User)
-            .createQueryBuilder('user')
-            .select([
-            "user.username as username",
-            "user.email as email",
-            "user.user_id as user_id",
-            "user.phone_number as phone_number",
-        ]).getRawOne();
-        if (!order || !user) {
+        if (!order) {
             return order;
         }
-        order.user = { ...order.user, ...user };
+        ;
+        Reflect.deleteProperty(order.user, 'password');
+        Reflect.deleteProperty(order.user, 'refresh_token');
+        Reflect.deleteProperty(order.user, 'refresh_expires_at');
+        Reflect.deleteProperty(order.user, 'role');
+        Reflect.deleteProperty(order.user, 'deleted_at');
+        Reflect.deleteProperty(order.user, 'created_at');
+        Reflect.deleteProperty(order.user, 'updated_at');
         return order;
     },
     getOrdersByUserId: async (em, user_id) => {
         return await em.getRepository(order_1.Order).find({
             order: { order_date: "DESC" },
-            relations: [
-                "order_items",
-                "order_items.item",
-                "order_items.item.images",
-                "discount",
-                "address",
-            ],
-            where: { user: { user_id } },
-            withDeleted: true,
+            relations: ["order_items", "order_items.item", "order_items.item.images", "discount", "address"],
+            where: { user: { user_id } }, withDeleted: true
         });
     },
     placeOrder: async (em, data) => {
@@ -98,9 +77,8 @@ exports.OrderRepo = {
             relations: ["item"],
             where: { user: { user_id: data.user_id } },
         });
-        if (cartItems.length === 0) {
+        if (cartItems.length === 0)
             throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.NOT_FOUND, "Cart is empty");
-        }
         let subtotal = 0;
         cartItems.forEach((cartItem) => {
             subtotal += cartItem.item.item_price * cartItem.quantity;
@@ -113,49 +91,35 @@ exports.OrderRepo = {
             });
             if (appliedDiscount) {
                 if (appliedDiscount.discount_type === "percentage") {
-                    total_amount =
-                        subtotal -
-                            (subtotal * (appliedDiscount.discount_amount ?? 0)) / 100;
+                    total_amount = subtotal - (subtotal * (appliedDiscount.discount_amount ?? 0)) / 100;
                 }
                 else {
                     total_amount = subtotal - (appliedDiscount.discount_amount ?? 0);
                 }
             }
         }
+        for (const cartItem of cartItems)
+            if (cartItem.item.stock < cartItem.quantity)
+                throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.BAD_REQUEST, `Insufficient stock for item: ${cartItem.item.item_name}`);
         for (const cartItem of cartItems) {
             const item = cartItem.item;
-            if (item.stock < cartItem.quantity) {
-                throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.BAD_REQUEST, `Insufficient stock for item: ${item.item_name}`);
-            }
             item.stock -= cartItem.quantity;
             await em.getRepository(item_1.Item).save(item);
         }
         const order = em.create(order_1.Order, {
             address: data.address_id ? { address_id: data.address_id } : undefined,
-            delivery_status: "pending",
-            discount: appliedDiscount
-                ? { discount_id: appliedDiscount.discount_id }
-                : undefined,
-            payment_method: data.payment_method,
-            payment_status: "pending",
-            status: "pending",
-            subtotal,
-            total_amount,
-            user: { user_id: data.user_id },
+            delivery_status: "pending", discount: appliedDiscount ? { discount_id: appliedDiscount.discount_id } : undefined,
+            payment_method: data.payment_method, payment_status: "pending",
+            status: "pending", subtotal,
+            total_amount, user: { user_id: data.user_id }
         });
         const savedOrder = await em.save(order_1.Order, order);
-        const orderItems = cartItems.map((cartItem) => {
-            return em.create(order_items_1.OrderItems, {
-                item: { item_id: cartItem.item.item_id },
-                item_purchase_price: cartItem.item.item_price,
-                item_quantity: cartItem.quantity,
-                order: { order_id: savedOrder.order_id },
-            });
-        });
+        const orderItems = cartItems.map((cartItem) => em.create(order_items_1.OrderItems, { item: { item_id: cartItem.item.item_id },
+            item_purchase_price: cartItem.item.item_price,
+            item_quantity: cartItem.quantity,
+            order: { order_id: savedOrder.order_id } }));
         await em.getRepository(order_items_1.OrderItems).save(orderItems);
-        await em
-            .getRepository(item_cart_1.ItemCart)
-            .delete({ user: { user_id: data.user_id } });
+        await em.getRepository(item_cart_1.ItemCart).delete({ user: { user_id: data.user_id } });
         return savedOrder.order_id;
     },
     UpdateOrder: async (em, data) => {

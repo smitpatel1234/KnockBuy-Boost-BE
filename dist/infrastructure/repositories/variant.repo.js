@@ -9,62 +9,40 @@ const variantPropertys_1 = require("../orm/entities/variantPropertys");
 const variantValues_1 = require("../orm/entities/variantValues");
 exports.VariantRepo = {
     createProperty: async (em, data) => {
-        const entity = em.create(variantPropertys_1.VariantPropertys, {
-            property_name: data.property_name,
-        });
+        const entity = em.create(variantPropertys_1.VariantPropertys, { property_name: data.property_name });
         return em.save(entity);
     },
     createValue: async (em, data) => {
-        const property = await em.findOneOrFail(variantPropertys_1.VariantPropertys, {
-            where: {
-                variantProperty_id: data.variantProperty_id,
-            },
-        });
-        const entity = em.create(variantValues_1.VariantValues, {
-            variant_value: data.variant_value,
-            variantProperty: property,
-        });
+        const property = await em.findOneOrFail(variantPropertys_1.VariantPropertys, { where: { variantProperty_id: data.variantProperty_id } });
+        const entity = em.create(variantValues_1.VariantValues, { variant_value: data.variant_value, variantProperty: property });
         return em.save(entity);
     },
     createVariantCollection: async (em, variant_collections, item_id) => {
         if (variant_collections && variant_collections.length > 0) {
             const vcRepo = em.getRepository(variant_collection_1.VariantCollection);
-            const vcs = variant_collections.map((vid) => vcRepo.create({
-                main_item: { item_id: item_id },
-                variant_item: { item_id: vid.item_id },
-            }));
+            const vcs = variant_collections.map((vid) => vcRepo.create({ main_item: { item_id: item_id }, variant_item: { item_id: vid.item_id } }));
             if (vcs.length > 0)
                 await vcRepo.save(vcs);
         }
     },
     deleteItemVariantMapping: async (em, item_id) => {
-        const value = await em.delete(item_variantVlaue_mapping_1.ItemVariantValueMapping, {
-            item: { item_id: item_id },
-        });
+        const value = await em.delete(item_variantVlaue_mapping_1.ItemVariantValueMapping, { item: { item_id: item_id } });
         return (value.affected ?? 0) > 0;
     },
     deleteProperty: async (em, id) => {
-        const result = await em.delete(variantPropertys_1.VariantPropertys, {
-            variantProperty_id: id,
-        });
+        const result = await em.delete(variantPropertys_1.VariantPropertys, { variantProperty_id: id });
         return (result.affected ?? 0) > 0;
     },
     deleteValue: async (em, id) => {
-        const result = await em.delete(variantValues_1.VariantValues, {
-            variantValue_id: id,
-        });
+        const result = await em.delete(variantValues_1.VariantValues, { variantValue_id: id });
         return (result.affected ?? 0) > 0;
     },
     deleteVariantCollection: async (em, item_id) => {
-        await em.delete(variant_collection_1.VariantCollection, {
-            main_item: { item_id: item_id },
-        });
+        await em.delete(variant_collection_1.VariantCollection, { main_item: { item_id: item_id } });
     },
     getall_variant_values: async (em) => {
         return em
-            .getRepository(variantValues_1.VariantValues)
-            .createQueryBuilder("vv")
-            .leftJoin("vv.variantProperty", "vp")
+            .getRepository(variantValues_1.VariantValues).createQueryBuilder("vv").leftJoin("vv.variantProperty", "vp")
             .select([
             "vv.variantValue_id AS variantValue_id",
             "vv.variant_value AS variant_value",
@@ -75,19 +53,14 @@ exports.VariantRepo = {
     },
     getall_variant_values_page: async (em, data) => {
         const qb = em
-            .getRepository(variantValues_1.VariantValues)
-            .createQueryBuilder("vv")
-            .leftJoin("vv.variantProperty", "vp")
+            .getRepository(variantValues_1.VariantValues).createQueryBuilder("vv").leftJoin("vv.variantProperty", "vp")
             .select([
             "vv.variantValue_id AS variantValue_id",
             "vv.variant_value AS variant_value",
             "vp.variantProperty_id AS variantProperty_id",
             "vp.property_name AS property_name",
         ]);
-        const cqb = em
-            .getRepository(variantValues_1.VariantValues)
-            .createQueryBuilder("vv")
-            .groupBy("vv.variantValue_id");
+        const cqb = em.getRepository(variantValues_1.VariantValues).createQueryBuilder("vv").groupBy("vv.variantValue_id");
         return (0, pagination_helper_1.applyPaginationAndFilters)(qb, cqb, data, [
             "vv.variantValue_id",
             "vv.variant_value",
@@ -105,9 +78,7 @@ exports.VariantRepo = {
     },
     getItemVariantCollectionForItem: async (em, item_id) => {
         return await em
-            .getRepository(variant_collection_1.VariantCollection)
-            .createQueryBuilder("vc")
-            .leftJoin("vc.variant_item", "item")
+            .getRepository(variant_collection_1.VariantCollection).createQueryBuilder("vc").leftJoin("vc.variant_item", "item")
             .select([
             "item.item_id AS item_id",
             "item.item_name AS item_name",
@@ -120,11 +91,7 @@ exports.VariantRepo = {
         ])
             .where("vc.main_item = :itemId", { itemId: item_id })
             .addSelect((subQuery) => {
-            return subQuery
-                .select("image.image_URL")
-                .from("image", "image")
-                .where("image.items_id = item.item_id")
-                .limit(1);
+            return subQuery.select("image.image_URL").from("image", "image").where("image.items_id = item.item_id").limit(1);
         }, "image_url")
             .getRawMany();
     },
@@ -148,40 +115,27 @@ exports.VariantRepo = {
     mapItemToVariantValue: async (em, variant, item_id) => {
         if (variant && variant.length > 0) {
             const mappingRepo = em.getRepository(item_variantVlaue_mapping_1.ItemVariantValueMapping);
-            const mappings = variant.map((v) => mappingRepo.create({
-                item: { item_id: item_id },
-                variantValue: { variantValue_id: v.variantValue_id },
-            }));
+            const mappings = variant.map((v) => mappingRepo.create({ item: { item_id: item_id }, variantValue: { variantValue_id: v.variantValue_id } }));
             await mappingRepo.save(mappings);
         }
     },
     updateProperty: async (em, data) => {
-        if (!data.variantProperty_id) {
+        if (!data.variantProperty_id)
             return null;
-        }
-        const entity = await em.findOne(variantPropertys_1.VariantPropertys, {
-            where: { variantProperty_id: data.variantProperty_id },
-        });
-        if (!entity) {
+        const entity = await em.findOne(variantPropertys_1.VariantPropertys, { where: { variantProperty_id: data.variantProperty_id } });
+        if (!entity)
             return null;
-        }
         entity.property_name = data.property_name;
         const variant = await em.save(entity);
         return variant;
     },
     updateValue: async (em, data) => {
-        if (!data.variantValue_id) {
+        if (!data.variantValue_id)
             return null;
-        }
-        const entity = await em.findOne(variantValues_1.VariantValues, {
-            where: { variantValue_id: data.variantValue_id },
-        });
-        if (!entity) {
+        const entity = await em.findOne(variantValues_1.VariantValues, { where: { variantValue_id: data.variantValue_id } });
+        if (!entity)
             return null;
-        }
-        const variantProperty = await em.findOneOrFail(variantPropertys_1.VariantPropertys, {
-            where: { variantProperty_id: data.variantProperty_id },
-        });
+        const variantProperty = await em.findOneOrFail(variantPropertys_1.VariantPropertys, { where: { variantProperty_id: data.variantProperty_id } });
         entity.variant_value = data.variant_value;
         entity.variantProperty = variantProperty;
         await em.save(entity);

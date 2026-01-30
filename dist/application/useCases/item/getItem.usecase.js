@@ -21,7 +21,7 @@ const get_item_by_id = async (em, id, itemRepo, variantRepo) => {
         slug: item.slug,
         stock: item.stock,
         variant: variant,
-        variant_collections: varient_collection ?? []
+        variant_collections: varient_collection
     };
     return data;
 };
@@ -46,7 +46,7 @@ const get_item_by_slug = async (em, slug, itemRepo, variantRepo) => {
         slug: item.slug,
         stock: item.stock,
         variant: variant,
-        variant_collections: varient_collection ?? []
+        variant_collections: varient_collection
     };
     return data;
 };
