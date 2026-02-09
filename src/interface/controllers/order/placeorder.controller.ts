@@ -13,13 +13,14 @@ export const PlaceorderController = (OrderRepo: OrderRepoPort, ItemCartRepo: Ite
     OrderRepo.wrapTransaction(async (t: EntityManager) => {
       const data = req.body;
       const user_id = req.body.user.id;
-
+      
       const placeorderparams = {
         address_id: data.address_id,
         discount_id: data.discount_id,
         payment_method: data.payment_method,
         user_id: user_id,
       };
+
 
       const order_id = await placeOrder(t, OrderRepo, ItemCartRepo, placeorderparams);
       successmessage(res, "Order placed successfully", { order_id });

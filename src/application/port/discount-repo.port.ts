@@ -4,6 +4,7 @@ import { pageParams, PaginationResponse } from "../../domain/globalTypes/commonF
 import { AddDiscountModel, DiscountModel, GetDiscountModel } from "../../domain/models/discount.models";
 
 export interface DiscountRepoPort {
+    AlreadyApplied: (em: EntityManager, discount_id: string, user_id: string) => Promise<boolean>;
     CreateDiscount: (em: EntityManager, data: AddDiscountModel) => Promise<boolean>;
     DeleteDiscount: (em: EntityManager, id: string) => Promise<boolean>;
     GetAllDiscounts: (em: EntityManager) => Promise<GetDiscountModel[]>;
