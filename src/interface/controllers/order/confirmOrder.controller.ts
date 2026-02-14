@@ -16,7 +16,6 @@ export const ConfirmOrderController = (OrderRepo: OrderRepoPort) => {
 
             if (!user_id) throw new ApplicationError(ApplicationErrorType.UNAUTHORIZED, "User not authenticated");
             if (!address_id || !payment_method) throw new ApplicationError(ApplicationErrorType.BAD_REQUEST, "Address and Payment Method are required");
-
             await confirmOrder(t, OrderRepo, {
                 address_id,
                 order_id: id,

@@ -17,7 +17,6 @@ export const GetOrderController = (OrderRepo: OrderRepoPort) => {
             if (order.user?.user_id !== user.id && user.role !== UserRole.ADMIN) {
                 throw new ApplicationError(ApplicationErrorType.FORBIDDEN, "Access denied");  
             }
-            
             successmessage(res, "Order fetched successfully", order);
         });
 };

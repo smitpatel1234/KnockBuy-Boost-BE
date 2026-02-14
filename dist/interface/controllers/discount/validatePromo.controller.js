@@ -9,7 +9,8 @@ const validatePromoController = (discountRepo) => {
         const { code } = req.body;
         if (!code)
             throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.BAD_REQUEST, "Promo code is required");
-        const discount = await (0, validatePromo_usecase_1.validatePromo)(t, code, discountRepo);
+        const user_id = req.body.user.id;
+        const discount = await (0, validatePromo_usecase_1.validatePromo)(t, code, discountRepo, user_id);
         if (!discount)
             throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.NOT_FOUND, "Invalid or inactive promo code");
         (0, displaymessage_1.successmessage)(res, "Promo code validated successfully", discount);

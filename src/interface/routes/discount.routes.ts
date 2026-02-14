@@ -20,7 +20,7 @@ const router = express.Router();
 router.post('/create-discount', authVerification([]), validateDetails(AddDiscountSchema), createDiscountController(DiscountRepo));
 router.put('/update-discount', authVerification([]), validateDetails(UpdateDiscountSchema), updateDiscountController(DiscountRepo));
 router.delete('/delete-discount', authVerification([]), validateDetails(DiscountIdSchema), deleteDiscountController(DiscountRepo));
-router.get('/get-discount', authVerification([]), getDiscountController(DiscountRepo));
+router.get('/get-discount', authVerification([UserRole.USER]), getDiscountController(DiscountRepo));
 router.get('/get-all-discounts', authVerification([UserRole.USER]), getAllDiscountsController(DiscountRepo));
 router.post('/get-all-discounts-page', authVerification([UserRole.USER]), getAllDiscountsPageController(DiscountRepo));
 router.post('/validate-promo', authVerification([UserRole.USER]), validateDetails(ValidatePromoSchema), validatePromoController(DiscountRepo));

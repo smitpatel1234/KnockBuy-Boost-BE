@@ -12,8 +12,8 @@ export const validatePromoController = (discountRepo: DiscountRepoPort) => {
         discountRepo.wrapTransaction(async (t: EntityManager) => {
             const { code } = req.body;
             if (!code) throw new ApplicationError(ApplicationErrorType.BAD_REQUEST, "Promo code is required");
-
-            const discount = await validatePromo(t, code, discountRepo);
+            const user_id = req.body.user.id;
+            const discount = await validatePromo(t, code, discountRepo,user_id);
             if (!discount) throw new ApplicationError(ApplicationErrorType.NOT_FOUND, "Invalid or inactive promo code");
 
             successmessage(res, "Promo code validated successfully", discount);

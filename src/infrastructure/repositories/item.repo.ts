@@ -16,8 +16,8 @@ import {
 import { allowed_item } from "../config/constants";
 import {
   applyPaginationAndFilters,
-  applySearchAndFilters,
 } from "../helper/pagination.helper";
+import { applySearchAndFilters } from "../helper/paginationWithsearch.helper";
 import { wrapTransaction } from "../helper/transaction";
 import { Category } from "../orm/entities/category";
 import { Image } from "../orm/entities/image";
