@@ -20,7 +20,7 @@ exports.AppDataSource = new typeorm_1.DataSource({
     logging: false,
     password: exports.Envvar.dbpassword,
     port: exports.Envvar.dbport,
-    // synchronize: true,
+    synchronize: true,
     timezone: 'Z',
     type: 'mysql',
     username: exports.Envvar.dbusername,

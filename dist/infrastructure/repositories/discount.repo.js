@@ -1,10 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DiscountRepo = void 0;
+const typeorm_1 = require("typeorm");
 const pagination_helper_1 = require("../helper/pagination.helper");
 const transaction_1 = require("../helper/transaction");
 const discount_1 = require("../orm/entities/discount");
+const order_1 = require("../orm/entities/order");
 exports.DiscountRepo = {
+    AlreadyApplied: async (em, discount_id, user_id) => {
+        const order = await em.getRepository(order_1.Order).findOne({ where: { discount: { discount_id: discount_id }, user: { user_id: user_id } } });
+        return !!order;
+    },
     CreateDiscount: async (em, data) => {
         const discountRepo = em.getRepository(discount_1.Discount);
         const newDiscount = discountRepo.create({
@@ -79,7 +85,25 @@ exports.DiscountRepo = {
         ]);
     },
     GetDiscountByCode: async (em, code) => {
-        const discount = await em.getRepository(discount_1.Discount).findOne({ where: { discount_code: code } });
+        const discount = await em
+            .getRepository(discount_1.Discount)
+            .createQueryBuilder("discount")
+            .select([
+            "discount.discount_id AS discount_id",
+            "discount.discount_name AS discount_name",
+            "discount.discount_code AS discount_code",
+            "discount.discount_type AS discount_type",
+            "discount.discount_amount AS discount_amount",
+            "discount.duration AS duration",
+            "discount.description AS description",
+            "discount.discount_start_date AS discount_start_date",
+            "discount.active_flag AS active_flag",
+        ]).where("discount.active_flag = 1 AND discount.discount_code = :code", { code })
+            .andWhere("discount.discount_start_date IS NULL OR discount.discount_start_date <= CURRENT_DATE")
+            .andWhere(new typeorm_1.Brackets(qb => {
+            qb.where("discount.duration IS NULL")
+                .orWhere("DATE_ADD(discount.discount_start_date, INTERVAL discount.duration DAY) >= CURRENT_DATE");
+        })).getRawOne();
         return discount;
     },
     GetDiscountById: async (em, id) => {

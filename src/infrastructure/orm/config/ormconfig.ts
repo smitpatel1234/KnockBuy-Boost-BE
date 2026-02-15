@@ -19,7 +19,7 @@ export const AppDataSource = new DataSource({
     logging: false,
     password: Envvar.dbpassword,
     port: Envvar.dbport,
-   // synchronize: true,
+   synchronize: true,
     timezone: 'Z',
     type: 'mysql',
     username: Envvar.dbusername,

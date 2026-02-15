@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ItemRepo = void 0;
 const constants_1 = require("../config/constants");
 const pagination_helper_1 = require("../helper/pagination.helper");
+const paginationWithsearch_helper_1 = require("../helper/paginationWithsearch.helper");
 const transaction_1 = require("../helper/transaction");
 const image_1 = require("../orm/entities/image");
 const item_1 = require("../orm/entities/item");
@@ -101,7 +102,7 @@ exports.ItemRepo = {
             .getRepository(item_1.Item)
             .createQueryBuilder("item")
             .leftJoin("item.category", "category");
-        return await (0, pagination_helper_1.applySearchAndFilters)(queryBuilder, CaqueryBuilder, data, constants_1.allowed_item);
+        return await (0, paginationWithsearch_helper_1.applySearchAndFilters)(queryBuilder, CaqueryBuilder, data, constants_1.allowed_item);
     },
     searchItemsByName: async (em, query) => {
         const items = await em.getRepository(item_1.Item).createQueryBuilder("item").leftJoin("item.category", "category")
