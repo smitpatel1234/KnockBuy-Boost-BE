@@ -14,6 +14,8 @@ const typeorm_1 = require("typeorm");
 const base_slug_entity_1 = require("../commanEntity/base-slug.entity");
 const category_1 = require("./category");
 const image_1 = require("./image");
+const item_description_1 = require("./item_description");
+const review_1 = require("./review");
 const variant_collection_1 = require("./variant_collection");
 let Item = class Item extends base_slug_entity_1.BaseSlugEntity {
     getSlugSource() {
@@ -53,9 +55,13 @@ __decorate([
     __metadata("design:type", Number)
 ], Item.prototype, "item_price", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true, precision: 3, scale: 2, type: 'decimal' }),
-    __metadata("design:type", Number)
-], Item.prototype, "rating", void 0);
+    (0, typeorm_1.OneToMany)(() => review_1.Review, (review) => review.item),
+    __metadata("design:type", Array)
+], Item.prototype, "reviews", void 0);
+__decorate([
+    (0, typeorm_1.OneToOne)(() => item_description_1.ItemDescription, (id) => id.item),
+    __metadata("design:type", Object)
+], Item.prototype, "rich_description", void 0);
 __decorate([
     (0, typeorm_1.Column)({ length: 100, nullable: true, type: 'varchar' }),
     __metadata("design:type", String)

@@ -1,19 +1,27 @@
 import { EntityManager } from "typeorm";
 
+import { ItemDescriptionRepoPort } from "../../port/item-description-repo.port";
 import { ItemRepoPort } from "../../port/item-repo.port";
+import { ReviewRepoPort } from "../../port/review-repo.port";
 import { VariantRepoPort } from "../../port/variant-repo.port";
+
 export const get_item_by_id = async (
   em: EntityManager,
   id: string,
   itemRepo: ItemRepoPort,
-  variantRepo: VariantRepoPort
+  variantRepo: VariantRepoPort,
+  descRepo: ItemDescriptionRepoPort,
+  reviewRepo: ReviewRepoPort
 ) => {
-  const item = await itemRepo.getItemByIdOrSlug(em, id,undefined);
-   
+  const item = await itemRepo.getItemByIdOrSlug(em, id, undefined);
+
   if (!item) return null;
   const variant = await variantRepo.getItemVariantMappingForItem(em, id);
   const images = await itemRepo.getImagesByItemId(em, id);
   const varient_collection = await variantRepo.getItemVariantCollectionForItem(em, item.item_id);
+  const richDescription = await descRepo.getDescriptionByItemId(em, item.item_id);
+  const averageRating = await reviewRepo.calculateAverageRating(em, item.item_id);
+
   const data = {
     category_id: item.category_id,
     category_name: item.category_name,
@@ -22,12 +30,13 @@ export const get_item_by_id = async (
     item_id: item.item_id,
     item_name: item.item_name,
     item_price: item.item_price,
-    rating: item.rating,
+    rating: averageRating,
+    rich_description: richDescription,
     sku: item.sku,
     slug: item.slug,
     stock: item.stock,
     variant: variant,
-    variant_collections: varient_collection 
+    variant_collections: varient_collection
   };
   return data;
 };
@@ -36,10 +45,11 @@ export const get_item_by_slug = async (
   em: EntityManager,
   slug: string,
   itemRepo: ItemRepoPort,
-  variantRepo: VariantRepoPort
+  variantRepo: VariantRepoPort,
+  descRepo: ItemDescriptionRepoPort,
+  reviewRepo: ReviewRepoPort
 ) => {
-  
-  const item = await itemRepo.getItemByIdOrSlug(em,undefined,slug);
+  const item = await itemRepo.getItemByIdOrSlug(em, undefined, slug);
 
   if (!item) return null;
   const variant = await variantRepo.getItemVariantMappingForItem(
@@ -48,6 +58,8 @@ export const get_item_by_slug = async (
   );
   const images = await itemRepo.getImagesByItemId(em, item.item_id);
   const varient_collection = await variantRepo.getItemVariantCollectionForItem(em, item.item_id);
+  const richDescription = await descRepo.getDescriptionByItemId(em, item.item_id);
+  const averageRating = await reviewRepo.calculateAverageRating(em, item.item_id);
 
   const data = {
     category_id: item.category_id,
@@ -57,12 +69,13 @@ export const get_item_by_slug = async (
     item_id: item.item_id,
     item_name: item.item_name,
     item_price: item.item_price,
-    rating: item.rating,
+    rating: averageRating,
+    rich_description: richDescription,
     sku: item.sku,
     slug: item.slug,
     stock: item.stock,
     variant: variant,
-    variant_collections: varient_collection 
+    variant_collections: varient_collection
   };
   return data;
 };

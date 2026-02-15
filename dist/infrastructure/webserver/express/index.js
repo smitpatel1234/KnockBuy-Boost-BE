@@ -11,7 +11,7 @@ const express_1 = __importDefault(require("express"));
 const http_1 = require("http");
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 // import { swaggerUi, swaggerSpec } from "../../../swagger/swagger";
-const _openapi_json_1 = __importDefault(require("../../../../api-docs/_openapi.json"));
+const _openapi_json_1 = __importDefault(require("../../../api-docs/_openapi.json"));
 const constants_1 = require("../../config/constants");
 const httpError_1 = require("../../helper/httpError");
 const logger_1 = require("../../helper/logger");
@@ -56,5 +56,9 @@ exports.app.use((req, res, next) => {
     (0, GlobelErrorHandler_1.GlobelErrorHandler)(notFoundError, req, res, next);
 });
 const socketService = new socket_1.SocketService(exports.httpServer);
-socketService.initialize();
-exports.httpServer.listen(5000, () => logger_1.logger.info('Server running on port 5000 http://localhost:5000/api-docs'));
+if (process.env.NODE_ENV !== 'test') {
+    socketService.initialize();
+}
+if (process.env.NODE_ENV !== 'test') {
+    exports.httpServer.listen(5000, () => logger_1.logger.info('Server running on port 5000 http://localhost:5000/api-docs'));
+}

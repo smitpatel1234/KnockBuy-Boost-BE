@@ -26,7 +26,7 @@ exports.userProfile = zod_1.z.object({
     email: exports.EmailField,
     phone_number: exports.PhoneField,
     profile_image: zod_1.z.string().optional(),
-    user_id: exports.IdField,
+    user_id: exports.IdField.optional(),
     username: exports.UsernameField,
     wishlist_name: zod_1.z.string().max(100).optional()
 });

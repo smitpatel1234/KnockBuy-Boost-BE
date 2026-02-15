@@ -11,10 +11,12 @@ import { getAllUserController } from "../controllers/user/getalluser.controller"
 import { getAllUserPageController } from "../controllers/user/getalluserpage.controller";
 import { getUserController } from '../controllers/user/getuser.controller';
 import { getUserProfileController } from "../controllers/user/getuserprofile.controller";
+import { updateSelfProfileController } from '../controllers/user/updateSelfProfile.controller';
 import { updateUserController } from '../controllers/user/updateuser.controller';
 
 const router = express.Router();
 router.put('/update-user', authVerification([UserRole.USER]), validateDetails(userProfile), updateUserController(UserAndCredentialsRepo));
+router.put('/update-profile', authVerification([UserRole.USER]), validateDetails(userProfile), updateSelfProfileController(UserAndCredentialsRepo));
 router.delete('/delete-user', authVerification([UserRole.USER]), validateDetails(user_id_schema), deleteUserController(UserAndCredentialsRepo));
 router.get('/get-user/:id', authVerification([]), getUserController(UserAndCredentialsRepo));
 router.get('/get-user/', authVerification([UserRole.USER]), getUserProfileController(UserAndCredentialsRepo));

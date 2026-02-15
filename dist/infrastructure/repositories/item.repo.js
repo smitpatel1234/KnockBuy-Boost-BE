@@ -7,22 +7,26 @@ const paginationWithsearch_helper_1 = require("../helper/paginationWithsearch.he
 const transaction_1 = require("../helper/transaction");
 const image_1 = require("../orm/entities/image");
 const item_1 = require("../orm/entities/item");
+const item_description_repo_1 = require("./item_description.repo");
 const variant_repo_1 = require("./variant.repo");
-const itemSelectFields = ["item.item_id AS item_id", "item.item_name AS item_name", "item.item_price AS item_price", "category.category_id AS category_id", "category.category_name AS category_name", "item.rating AS rating", "item.sku AS sku", "item.stock AS stock", "item.description AS description", "item.slug AS slug"];
+const itemSelectFields = ["item.item_id AS item_id", "item.item_name AS item_name", "item.item_price AS item_price", "category.category_id AS category_id", "category.category_name AS category_name", "item.sku AS sku", "item.stock AS stock", "item.description AS description", "item.slug AS slug"];
 exports.ItemRepo = {
     CreateItem: async (em, data) => {
         const itemRepo = em.getRepository(item_1.Item);
-        const newItem = itemRepo.create({ category: { category_id: data.category_id },
+        const newItem = itemRepo.create({
+            category: { category_id: data.category_id },
             description: data.description, item_name: data.item_name, item_price: data.item_price,
-            rating: data.rating, sku: data.sku, stock: data.stock });
+            sku: data.sku, stock: data.stock
+        });
         const savedItem = await itemRepo.save(newItem);
         await variant_repo_1.VariantRepo.createVariantCollection(em, data.variant_collections, savedItem.item_id);
         await variant_repo_1.VariantRepo.mapItemToVariantValue(em, data.variant, savedItem.item_id);
-        if (data.images && data.images.length > 0) {
-            const imageRepo = em.getRepository("Image");
-            const images = data.images.map((url) => imageRepo.create({ image_URL: url, item: savedItem }));
-            await imageRepo.save(images);
+        if (data.images?.length) {
+            const imageRepo = em.getRepository(image_1.Image);
+            await imageRepo.save(data.images.map(url => imageRepo.create({ image_URL: url, item: savedItem })));
         }
+        if (data.rich_description)
+            await item_description_repo_1.ItemDescriptionRepo.upsertDescription(em, savedItem.item_id, data.rich_description);
         return true;
     },
     DeleteItem: async (em, id) => {
@@ -38,7 +42,6 @@ exports.ItemRepo = {
             "item.item_price AS item_price",
             "category.category_id AS category_id",
             "category.category_name AS category_name",
-            "item.rating AS rating",
             "item.sku AS sku",
             "item.stock AS stock",
             "item.description AS description",
@@ -118,7 +121,6 @@ exports.ItemRepo = {
         existing.item_name = data.item_name;
         existing.item_price = data.item_price;
         existing.description = data.description;
-        existing.rating = data.rating;
         existing.sku = data.sku;
         existing.stock = data.stock;
         existing.category = { category_id: data.category_id };
@@ -130,11 +132,12 @@ exports.ItemRepo = {
         if (data.images) {
             const imageRepo = em.getRepository(image_1.Image);
             await imageRepo.delete({ item: { item_id: data.item_id } });
-            if (data.images.length > 0) {
-                const images = data.images.map((url) => imageRepo.create({ image_URL: url, item: { item_id: data.item_id } }));
-                await imageRepo.save(images);
+            if (data.images.length) {
+                await imageRepo.save(data.images.map(url => imageRepo.create({ image_URL: url, item: { item_id: data.item_id } })));
             }
         }
+        if (data.rich_description)
+            await item_description_repo_1.ItemDescriptionRepo.upsertDescription(em, data.item_id, data.rich_description);
         return true;
     },
     wrapTransaction: transaction_1.wrapTransaction,

@@ -22,24 +22,27 @@ import { wrapTransaction } from "../helper/transaction";
 import { Category } from "../orm/entities/category";
 import { Image } from "../orm/entities/image";
 import { Item } from "../orm/entities/item";
+import { ItemDescriptionRepo } from "./item_description.repo";
 import { VariantRepo } from "./variant.repo";
 
-const itemSelectFields = ["item.item_id AS item_id", "item.item_name AS item_name", "item.item_price AS item_price", "category.category_id AS category_id", "category.category_name AS category_name", "item.rating AS rating", "item.sku AS sku", "item.stock AS stock", "item.description AS description", "item.slug AS slug"];
+const itemSelectFields = ["item.item_id AS item_id", "item.item_name AS item_name", "item.item_price AS item_price", "category.category_id AS category_id", "category.category_name AS category_name", "item.sku AS sku", "item.stock AS stock", "item.description AS description", "item.slug AS slug"];
 
 export const ItemRepo: ItemRepoPort = {
   CreateItem: async (em: EntityManager, data: AddItemModel): Promise<boolean> => {
     const itemRepo = em.getRepository(Item);
-    const newItem = itemRepo.create({ category: { category_id: data.category_id },
-      description: data.description, item_name: data.item_name, item_price: data.item_price, 
-      rating: data.rating, sku: data.sku, stock: data.stock });
+    const newItem = itemRepo.create({
+      category: { category_id: data.category_id },
+      description: data.description, item_name: data.item_name, item_price: data.item_price,
+      sku: data.sku, stock: data.stock
+    });
     const savedItem = await itemRepo.save(newItem);
     await VariantRepo.createVariantCollection(em, data.variant_collections, savedItem.item_id);
     await VariantRepo.mapItemToVariantValue(em, data.variant, savedItem.item_id);
-    if (data.images && data.images.length > 0) {
-      const imageRepo = em.getRepository("Image");
-      const images = data.images.map((url) => imageRepo.create({ image_URL: url, item: savedItem }));
-      await imageRepo.save(images);
+    if (data.images?.length) {
+      const imageRepo = em.getRepository(Image);
+      await imageRepo.save(data.images.map(url => imageRepo.create({ image_URL: url, item: savedItem })));
     }
+    if (data.rich_description) await ItemDescriptionRepo.upsertDescription(em, savedItem.item_id, data.rich_description);
     return true;
   },
   DeleteItem: async (em: EntityManager, id: string): Promise<boolean> => {
@@ -55,7 +58,6 @@ export const ItemRepo: ItemRepoPort = {
         "item.item_price AS item_price",
         "category.category_id AS category_id",
         "category.category_name AS category_name",
-        "item.rating AS rating",
         "item.sku AS sku",
         "item.stock AS stock",
         "item.description AS description",
@@ -78,11 +80,11 @@ export const ItemRepo: ItemRepoPort = {
           .limit(1);
       }, "image_url");
     const CItemBuilders = em.getRepository(Item).createQueryBuilder("item");
-    return await applyPaginationAndFilters<Item, GetItemModel>(ItemBuilders, CItemBuilders,data,allowed_item,);
+    return await applyPaginationAndFilters<Item, GetItemModel>(ItemBuilders, CItemBuilders, data, allowed_item,);
   },
   getImagesByItemId: async (em: EntityManager, id: string): Promise<string[]> => {
     const images = await em.getRepository(Image).createQueryBuilder("image")
-    .where("image.item = :itemId", { itemId: id })
+      .where("image.item = :itemId", { itemId: id })
       .getMany();
     return images.map((img) => img.image_URL);
   },
@@ -116,12 +118,12 @@ export const ItemRepo: ItemRepoPort = {
       .getRepository(Item)
       .createQueryBuilder("item")
       .leftJoin("item.category", "category");
-    return await applySearchAndFilters<Item, GetItemModel>( queryBuilder , CaqueryBuilder , data , allowed_item );
+    return await applySearchAndFilters<Item, GetItemModel>(queryBuilder, CaqueryBuilder, data, allowed_item);
   },
   searchItemsByName: async (em: EntityManager, query: string): Promise<GetItemModel[]> => {
     const items = await em.getRepository(Item).createQueryBuilder("item").leftJoin("item.category", "category")
-    .select(itemSelectFields).where("item.item_name LIKE CONCAT('%', :query, '%')", { query })
-    .orWhere("item.description LIKE CONCAT('%', :query, '%')", { query }).limit(5).getRawMany<GetItemModel>();
+      .select(itemSelectFields).where("item.item_name LIKE CONCAT('%', :query, '%')", { query })
+      .orWhere("item.description LIKE CONCAT('%', :query, '%')", { query }).limit(5).getRawMany<GetItemModel>();
     return items;
   },
   UpdateItem: async (em: EntityManager, data: ItemModel): Promise<boolean> => {
@@ -131,7 +133,6 @@ export const ItemRepo: ItemRepoPort = {
     existing.item_name = data.item_name;
     existing.item_price = data.item_price;
     existing.description = data.description;
-    existing.rating = data.rating;
     existing.sku = data.sku;
     existing.stock = data.stock;
     existing.category = { category_id: data.category_id } as Category;
@@ -143,11 +144,11 @@ export const ItemRepo: ItemRepoPort = {
     if (data.images) {
       const imageRepo = em.getRepository(Image);
       await imageRepo.delete({ item: { item_id: data.item_id } });
-      if (data.images.length > 0) {
-        const images = data.images.map((url) => imageRepo.create({ image_URL: url, item: { item_id: data.item_id } }));
-        await imageRepo.save(images);
+      if (data.images.length) {
+        await imageRepo.save(data.images.map(url => imageRepo.create({ image_URL: url, item: { item_id: data.item_id } })));
       }
     }
+    if (data.rich_description) await ItemDescriptionRepo.upsertDescription(em, data.item_id, data.rich_description);
     return true;
   },
   wrapTransaction: wrapTransaction,

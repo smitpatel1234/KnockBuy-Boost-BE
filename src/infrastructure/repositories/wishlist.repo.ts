@@ -42,7 +42,6 @@ export const WishlistRepo: WishlistRepoPort = {
         "item.stock AS stock",
         "item.description AS description",
         "item.slug AS slug",
-        "item.rating AS rating",
         "item.sku AS sku",
 
         "category.category_id AS category_id",
@@ -58,7 +57,7 @@ export const WishlistRepo: WishlistRepoPort = {
       .where("wishlist.user = :user_id", { user_id })
       .getRawMany<WishlistItem>();
 
-    return wishlist ;
+    return wishlist;
   },
 
   IsItemInWishlist: async (em, user_id, item_id) => {

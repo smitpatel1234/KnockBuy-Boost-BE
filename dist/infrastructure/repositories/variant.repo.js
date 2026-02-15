@@ -84,7 +84,6 @@ exports.VariantRepo = {
             "item.item_name AS item_name",
             "item.item_price AS item_price",
             "item.description AS description",
-            "item.rating AS rating",
             "item.sku AS sku",
             "item.stock AS stock",
             "item.slug AS slug",

@@ -26,3 +26,10 @@ export const UpdateItemSchema = AddItemSchema.extend({
 export const ItemIdSchema = z.object({
     item_id: z.string()
 });
+
+export const UpdateItemDescriptionSchema = z.object({
+    how_its_made: z.string().optional(),
+    how_to_use: z.string().optional(),
+    key_features: z.record(z.string(), z.string()).optional(),
+    specifications: z.array(z.string()).optional(),
+});
