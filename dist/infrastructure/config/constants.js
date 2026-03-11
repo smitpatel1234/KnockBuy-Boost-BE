@@ -7,7 +7,6 @@ exports.allowed_item = [
     "item.item_price",
     "category.category_id",
     "category.category_name",
-    "item.rating",
     "item.sku",
     "item.stock",
     "item.description",

@@ -1,9 +1,11 @@
-import { Column, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, VersionColumn } from "typeorm";
+import { Column, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, VersionColumn } from "typeorm";
 import { Relation } from "typeorm";
 
 import { BaseSlugEntity } from "../commanEntity/base-slug.entity";
 import { Category } from "./category";
 import { Image } from "./image";
+import { ItemDescription } from "./item_description";
+import { Review } from "./review";
 import { VariantCollection } from "./variant_collection";
 
 @Entity()
@@ -32,8 +34,11 @@ export class Item extends BaseSlugEntity {
 	@Column({ type: 'int' })
 	item_price!: number
 
-	@Column({ nullable: true, precision: 3, scale: 2, type: 'decimal' })
-	rating?: number
+	@OneToMany(() => Review, (review) => review.item)
+	reviews?: Review[];
+
+	@OneToOne(() => ItemDescription, (id) => id.item)
+	rich_description?: Relation<ItemDescription>;
 
 	@Column({ length: 100, nullable: true, type: 'varchar' })
 	sku?: string
@@ -43,9 +48,9 @@ export class Item extends BaseSlugEntity {
 
 	@OneToMany(() => VariantCollection, vc => vc.variant_collection_id)
 	variant_collections?: string[]
-   
+
 	@VersionColumn()
-    version!: number
+	version!: number
 	getSlugSource(): string {
 		const category = this.category as unknown as null | { category_id?: null | string };
 		const categoryId = category?.category_id ?? '';

@@ -21,4 +21,5 @@ __exportStar(require("./getAllItems.controller"), exports);
 __exportStar(require("./getItem.controller"), exports);
 __exportStar(require("./searchItems.controller"), exports);
 __exportStar(require("./searchSuggestions.controller"), exports);
+__exportStar(require("./updateDescription.controller"), exports);
 __exportStar(require("./updateItem.controller"), exports);

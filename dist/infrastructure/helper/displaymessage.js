@@ -3,7 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.successmessage = exports.displaymessage = void 0;
 const constants_1 = require("../config/constants");
 const displaymessage = (StatusCodes, res, message, data) => {
-    res.status(StatusCodes).json({ data, message });
+    const success = StatusCodes < 400;
+    res.status(StatusCodes).json({ data, message, success });
 };
 exports.displaymessage = displaymessage;
 const successmessage = (res, message, data) => {

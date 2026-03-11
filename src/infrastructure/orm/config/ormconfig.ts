@@ -14,12 +14,13 @@ export const Envvar = {
 }
 export const AppDataSource = new DataSource({
     database: Envvar.database,
+    //dropSchema: process.env.NODE_ENV === 'test',
     entities: [__dirname + '/../entities/*{.ts,.js}'],
     host: Envvar.dbhost,
     logging: false,
     password: Envvar.dbpassword,
     port: Envvar.dbport,
-   synchronize: true,
+//  synchronize: true,
     timezone: 'Z',
     type: 'mysql',
     username: Envvar.dbusername,

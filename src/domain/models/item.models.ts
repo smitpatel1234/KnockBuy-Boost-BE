@@ -8,6 +8,12 @@ export interface AddItemModel {
   item_name: string;
   item_price: number;
   rating?: number;
+  rich_description?: {
+    how_its_made?: string;
+    how_to_use?: string;
+    key_features?: Record<string, string>;
+    specifications?: string[];
+  };
   sku?: string;
   stock: number;
   variant?: VariantForOneItem[];

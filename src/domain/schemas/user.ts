@@ -25,14 +25,14 @@ export const UsernameAsIdentifier = z.object({ username: UsernameField });
 export const emailAsIdentifier = z.object({ email: EmailField });
 export const phoneNumberAsIdentifier = z.object({ phone_number: PhoneField });
 
-export const userProfile  = z.object({
-    email: EmailField,
-    phone_number: PhoneField,
-    profile_image: z.string().optional(),
-    user_id:IdField,
-    username: UsernameField,
-    wishlist_name: z.string().max(100).optional()
+export const userProfile = z.object({
+  email: EmailField,
+  phone_number: PhoneField,
+  profile_image: z.string().optional(),
+  user_id: IdField.optional(),
+  username: UsernameField,
+  wishlist_name: z.string().max(100).optional()
 });
 export const user_id_schema = z.object({
-    user_id:IdField
+  user_id: IdField
 });

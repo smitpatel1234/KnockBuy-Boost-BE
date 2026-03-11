@@ -6,7 +6,7 @@ import { createServer } from 'http';
 import swaggerUi from 'swagger-ui-express'
 
 // import { swaggerUi, swaggerSpec } from "../../../swagger/swagger";
-import swaggerDocument from '../../../../api-docs/_openapi.json';
+import swaggerDocument from '../../../api-docs/_openapi.json';
 import { StatusCodes } from '../../config/constants';
 import { HttpError } from '../../helper/httpError';
 import { logger } from '../../helper/logger'
@@ -52,6 +52,10 @@ app.use((req, res, next) => {
   GlobelErrorHandler(notFoundError, req, res, next)
 })
 const socketService = new SocketService(httpServer);
-socketService.initialize();
-httpServer.listen(5000, () => logger.info('Server running on port 5000 http://localhost:5000/api-docs'));
+if (process.env.NODE_ENV !== 'test') {
+  socketService.initialize();
+}
+if (process.env.NODE_ENV !== 'test') {
+  httpServer.listen(5000, () => logger.info('Server running on port 5000 http://localhost:5000/api-docs'));
+}
 

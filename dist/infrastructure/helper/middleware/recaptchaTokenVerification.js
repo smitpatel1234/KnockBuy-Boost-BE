@@ -5,6 +5,10 @@ const index_1 = require("../env/index");
 const GlobelErrorHandler_1 = require("./GlobelErrorHandler");
 const recaptchaTokenVerification = () => {
     return async (req, res, next) => {
+        if (process.env.NODE_ENV === 'test') {
+            next();
+            return;
+        }
         const token = req.body.recaptchaToken;
         if (!token) {
             throw new GlobelErrorHandler_1.ApplicationError(GlobelErrorHandler_1.ApplicationErrorType.UNAUTHORIZED, "Invalid access token");

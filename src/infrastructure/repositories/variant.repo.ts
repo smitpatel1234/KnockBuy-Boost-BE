@@ -16,13 +16,13 @@ import { VariantCollection } from "../orm/entities/variant_collection";
 import { VariantPropertys } from "../orm/entities/variantPropertys";
 import { VariantValues } from "../orm/entities/variantValues";
 export const VariantRepo: VariantRepoPort = {
-  createProperty: async ( em: EntityManager, data: VariantPropertyModel ) : Promise<VariantPropertys> => {
-    const entity = em.create(VariantPropertys, { property_name: data.property_name});
+  createProperty: async (em: EntityManager, data: VariantPropertyModel): Promise<VariantPropertys> => {
+    const entity = em.create(VariantPropertys, { property_name: data.property_name });
     return em.save(entity);
   },
-  createValue: async ( em: EntityManager, data: VariantValueModel ): Promise<VariantValues> => {
+  createValue: async (em: EntityManager, data: VariantValueModel): Promise<VariantValues> => {
     const property = await em.findOneOrFail(VariantPropertys, { where: { variantProperty_id: data.variantProperty_id } });
-    const entity = em.create(VariantValues, { variant_value: data.variant_value, variantProperty: property }); 
+    const entity = em.create(VariantValues, { variant_value: data.variant_value, variantProperty: property });
     return em.save(entity);
   },
   createVariantCollection: async (em: EntityManager, variant_collections: undefined | VariantCollectionForOneItem[], item_id: string): Promise<void> => {
@@ -94,15 +94,15 @@ export const VariantRepo: VariantRepoPort = {
         "item.item_name AS item_name",
         "item.item_price AS item_price",
         "item.description AS description",
-        "item.rating AS rating",
         "item.sku AS sku",
         "item.stock AS stock",
         "item.slug AS slug",
       ])
       .where("vc.main_item = :itemId", { itemId: item_id })
       .addSelect((subQuery) => {
-        return subQuery.select("image.image_URL").from("image", "image").where("image.items_id = item.item_id").limit(1);}, "image_url")
-        .getRawMany<VariantCollectionForOneItem>();
+        return subQuery.select("image.image_URL").from("image", "image").where("image.items_id = item.item_id").limit(1);
+      }, "image_url")
+      .getRawMany<VariantCollectionForOneItem>();
   },
   getItemVariantMappingForItem: async (em: EntityManager, id: string): Promise<GetItemVariantValueMappingModel[]> => {
     return em

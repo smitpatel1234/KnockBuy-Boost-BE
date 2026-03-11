@@ -33,7 +33,6 @@ exports.WishlistRepo = {
             "item.stock AS stock",
             "item.description AS description",
             "item.slug AS slug",
-            "item.rating AS rating",
             "item.sku AS sku",
             "category.category_id AS category_id",
             "category.category_name AS category_name",

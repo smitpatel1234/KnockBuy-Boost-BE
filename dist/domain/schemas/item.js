@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ItemIdSchema = exports.UpdateItemSchema = exports.AddItemSchema = void 0;
+exports.UpdateItemDescriptionSchema = exports.ItemIdSchema = exports.UpdateItemSchema = exports.AddItemSchema = void 0;
 const zod_1 = require("zod");
 exports.AddItemSchema = zod_1.z.object({
     category_id: zod_1.z.string(),
@@ -25,4 +25,10 @@ exports.UpdateItemSchema = exports.AddItemSchema.extend({
 }).partial().required({ item_id: true });
 exports.ItemIdSchema = zod_1.z.object({
     item_id: zod_1.z.string()
+});
+exports.UpdateItemDescriptionSchema = zod_1.z.object({
+    how_its_made: zod_1.z.string().optional(),
+    how_to_use: zod_1.z.string().optional(),
+    key_features: zod_1.z.record(zod_1.z.string(), zod_1.z.string()).optional(),
+    specifications: zod_1.z.array(zod_1.z.string()).optional(),
 });

@@ -1,10 +1,15 @@
 import { NextFunction, Request, Response } from "express";
 
-import {ENV} from "../env/index";
+import { ENV } from "../env/index";
 import { ApplicationError, ApplicationErrorType } from "./GlobelErrorHandler";
 
 export const recaptchaTokenVerification = () => {
   return async (req: Request, res: Response, next: NextFunction) => {
+
+    if (process.env.NODE_ENV === 'test') {
+      next();
+      return;
+    }
 
     const token = (req.body as Record<string, unknown>).recaptchaToken as string;
     if (!token) {

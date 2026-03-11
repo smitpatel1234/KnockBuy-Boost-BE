@@ -15,9 +15,11 @@ const getalluser_controller_1 = require("../controllers/user/getalluser.controll
 const getalluserpage_controller_1 = require("../controllers/user/getalluserpage.controller");
 const getuser_controller_1 = require("../controllers/user/getuser.controller");
 const getuserprofile_controller_1 = require("../controllers/user/getuserprofile.controller");
+const updateSelfProfile_controller_1 = require("../controllers/user/updateSelfProfile.controller");
 const updateuser_controller_1 = require("../controllers/user/updateuser.controller");
 const router = express_1.default.Router();
 router.put('/update-user', (0, authvarification_1.authVerification)([User_models_1.UserRole.USER]), (0, validator_1.validateDetails)(user_1.userProfile), (0, updateuser_controller_1.updateUserController)(credentials_and_user_manage_repo_1.UserAndCredentialsRepo));
+router.put('/update-profile', (0, authvarification_1.authVerification)([User_models_1.UserRole.USER]), (0, validator_1.validateDetails)(user_1.userProfile), (0, updateSelfProfile_controller_1.updateSelfProfileController)(credentials_and_user_manage_repo_1.UserAndCredentialsRepo));
 router.delete('/delete-user', (0, authvarification_1.authVerification)([User_models_1.UserRole.USER]), (0, validator_1.validateDetails)(user_2.user_id_schema), (0, deleteuser_controller_1.deleteUserController)(credentials_and_user_manage_repo_1.UserAndCredentialsRepo));
 router.get('/get-user/:id', (0, authvarification_1.authVerification)([]), (0, getuser_controller_1.getUserController)(credentials_and_user_manage_repo_1.UserAndCredentialsRepo));
 router.get('/get-user/', (0, authvarification_1.authVerification)([User_models_1.UserRole.USER]), (0, getuserprofile_controller_1.getUserProfileController)(credentials_and_user_manage_repo_1.UserAndCredentialsRepo));

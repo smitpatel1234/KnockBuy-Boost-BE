@@ -15,12 +15,13 @@ exports.Envvar = {
 };
 exports.AppDataSource = new typeorm_1.DataSource({
     database: exports.Envvar.database,
+    //dropSchema: process.env.NODE_ENV === 'test',
     entities: [__dirname + '/../entities/*{.ts,.js}'],
     host: exports.Envvar.dbhost,
     logging: false,
     password: exports.Envvar.dbpassword,
     port: exports.Envvar.dbport,
-    synchronize: true,
+    //  synchronize: true,
     timezone: 'Z',
     type: 'mysql',
     username: exports.Envvar.dbusername,
