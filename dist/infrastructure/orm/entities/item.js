@@ -19,7 +19,7 @@ let Item = class Item extends base_slug_entity_1.BaseSlugEntity {
     getSlugSource() {
         const category = this.category;
         const categoryId = category?.category_id ?? '';
-        return `${this.item_name}-${String(this.item_price)}-${categoryId}-${this.description}-${crypto.randomUUID()}`;
+        return `${this.item_name}-${String(this.item_price)}-${categoryId}-${this.description.substring(0, 20)}-${crypto.randomUUID()}`;
     }
 };
 exports.Item = Item;

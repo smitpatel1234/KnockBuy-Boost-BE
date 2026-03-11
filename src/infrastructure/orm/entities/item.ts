@@ -50,7 +50,7 @@ export class Item extends BaseSlugEntity {
 		const category = this.category as unknown as null | { category_id?: null | string };
 		const categoryId = category?.category_id ?? '';
 		
-		return `${this.item_name}-${String(this.item_price)}-${categoryId}-${this.description}-${crypto.randomUUID()}`;
+		return `${this.item_name}-${String(this.item_price)}-${categoryId}-${this.description.substring(0,20)}-${crypto.randomUUID()}`;
 	}
 }
 
